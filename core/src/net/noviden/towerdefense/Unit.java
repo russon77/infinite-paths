@@ -23,8 +23,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Unit {
-    private static final float BASE_RADIUS = 10.0f;
-    private static final float BASE_SPEED = 100.0f;
+    private static final float BASE_RADIUS = 13.0f;
     private static final int BASE_WORTH = 20;
 
     private float health, maxHealth;
@@ -36,12 +35,13 @@ public class Unit {
     private int currentDestinationIndex;
     private float xVelocity, yVelocity;
     private float percentSlowed, timeSlowed;
+    private float speed;
 
     private int worth;
 
     private float rotation;
 
-    public Unit(float health, float damage, Path path) {
+    public Unit(float health, float damage, float speed, Path path) {
         this.health = this.maxHealth = health;
         this.damage = damage;
         this.path = path;
@@ -51,6 +51,7 @@ public class Unit {
         this.currentDestinationIndex = 1;
         this.radius = BASE_RADIUS;
         this.worth = BASE_WORTH;
+        this.speed = speed;
 
         this.rotation = 0.0f;
 
@@ -105,8 +106,8 @@ public class Unit {
             }
         }
 
-        location.x += xVelocity * deltaTime * BASE_SPEED * (1.0f - percentSlowed);
-        location.y += yVelocity * deltaTime * BASE_SPEED * (1.0f - percentSlowed);
+        location.x += xVelocity * deltaTime * speed * (1.0f - percentSlowed);
+        location.y += yVelocity * deltaTime * speed * (1.0f - percentSlowed);
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

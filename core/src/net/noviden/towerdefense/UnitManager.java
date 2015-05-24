@@ -28,6 +28,7 @@ public class UnitManager {
     private static final float PRE_WAVE_COOLDOWN_TIME = 5.0f;
     private static final float BASE_COOLDOWN = 2.0f;
     private static final float BASE_UNIT_HEALTH = 100.0f;
+    private static final float BASE_UNIT_SPEED = 100.0f;
     private static final int BASE_UNIT_DAMAGE = 1;
 
     private Path path;
@@ -60,7 +61,8 @@ public class UnitManager {
             // every 15 seconds units double in health/damage
             float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
                     unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f));
-            units.add(new Unit(unitHealth, unitDamage, path));
+//                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 15.0f));
+            units.add(new Unit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
             cooldownTimer = BASE_COOLDOWN;
         }
 
