@@ -119,21 +119,20 @@ public class GameScreen implements Screen {
 
 		TextButton exitButton = new TextButton("Exit", skin);
 		exitButton.addListener(new ClickListener() {
-		   @Override
-		   public void clicked(InputEvent event, float x, float y) {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
 				towerDefense.setScreen(new MainMenuScreen(towerDefense));
-		   }
-	   	});
+			}
+		});
 
 		Table selectTypeTable = new Table();
 		selectTypeTable.setDebug(true);
 
-		TextButton buttonSelectBasicTurret = new TextButton("Basic", skin, "default");
-		buttonSelectBasicTurret.setChecked(true); // TODO
-		TextButton buttonSelectChaingunTurret = new TextButton("Chaingun", skin);
-		TextButton buttonSelectShotgunTurret = new TextButton("Shotgun", skin);
-		TextButton buttonSelectRocketTurret = new TextButton("Rocket", skin);
-		TextButton buttonSelectHomingTurret = new TextButton("Homing", skin);
+		TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
+		TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
+		TextButton buttonSelectShotgunTurret = new TextButton("Shotgun (R50)", skin);
+		TextButton buttonSelectRocketTurret = new TextButton("Rocket (R50)", skin);
+		TextButton buttonSelectHomingTurret = new TextButton("Homing (R50)", skin);
 
 		selectTypeTable.add(buttonSelectBasicTurret).fillX();
 		selectTypeTable.add(buttonSelectChaingunTurret);
@@ -329,10 +328,15 @@ public class GameScreen implements Screen {
 		batch.setProjectionMatrix(orthoCamera.combined);
 		shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
-		for (UnitManager unitManager : unitManagers) {
-			unitManager.act(deltaTime, player);
-			turretManager.act(deltaTime / (float) unitManagers.length, unitManager);
-			CollisionManager.processCollisions(unitManager);
+		if (player.getHealth() > 0) {
+			for (UnitManager unitManager : unitManagers) {
+				unitManager.act(deltaTime, player);
+				turretManager.act(deltaTime / (float) unitManagers.length, unitManager);
+				CollisionManager.processCollisions(unitManager);
+			}
+		} else {
+			// otherwise player is dead
+			gameOver();
 		}
 
 		net.noviden.towerdefense.MissileFactory.MissileManager.act(deltaTime);
@@ -367,12 +371,6 @@ public class GameScreen implements Screen {
 
 		shapeRenderer.end();
 		batch.end();
-
-		// check if game is over
-		if (player.getHealth() <= 0) {
-			gameOver();
-			dispose();
-		}
 
 		stage.act(deltaTime);
 		stage.draw();
@@ -455,7 +453,6 @@ public class GameScreen implements Screen {
 	}
 
 	public void dispose() {
-
 	}
 
 	public void pause() {}
@@ -477,6 +474,10 @@ public class GameScreen implements Screen {
 
 		@Override
 		public boolean tap(float screenX, float screenY, int count, int button) {
+
+			if (gameOverTable.isVisible()) {
+				return true;
+			}
 
 			vector3.set(screenX, screenY, 0);
 			orthoCamera.unproject(vector3);
