@@ -107,8 +107,10 @@ public class ChaingunTurret extends BaseTurret {
     }
 
     public void upgradeUniqueModifier() {
-        preUpgrade();
-        this.slowPercentage += 0.1f;
+        if (this.slowPercentage < 0.8f) {
+            preUpgrade();
+            this.slowPercentage += 0.1f;
+        }
     }
 
     public void upgradeRange() {
