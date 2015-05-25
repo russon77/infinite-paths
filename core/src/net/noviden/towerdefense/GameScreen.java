@@ -24,8 +24,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
@@ -63,6 +66,7 @@ public class GameScreen implements Screen {
 	private Player player;
 
 	private Vector3 vector3;
+	private FPSLogger fpsLogger;
 
 	private Point mouseLocation;
 
@@ -80,18 +84,18 @@ public class GameScreen implements Screen {
 
 	public GameScreen(final TowerDefense towerDefense, Map gameMap) {
 
+		// store our callback to the Game class
 		this.towerDefense = towerDefense;
 
-		float width = Gdx.graphics.getWidth(),
-				height = Gdx.graphics.getHeight();
-
-		// other init things
+		// initialize our input vector here, to save the precious gc
 		vector3 = new Vector3();
+		// get the initial mouse location, where we draw the next turret to be created
 		mouseLocation = new Point(Gdx.input.getX(), Gdx.input.getY());
 
-		// select a map here
+		// get the map from the arguments
 		map = gameMap;
 
+		// create a unit manager for each path on this map
 		unitManagers = new UnitManager[map.paths.length];
 		for (int i = 0; i< map.paths.length; i++) {
 			unitManagers[i] = new UnitManager(map.paths[i]);
@@ -101,13 +105,15 @@ public class GameScreen implements Screen {
 		player = new Player();
 		MissileManager.initialize();
 
-		// camera and ui
+		// set up the camera
+		// TODO there's something fishy with this and the screen size
 		orthoCamera = new OrthographicCamera();
 		orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
 		orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
 		orthoCamera.update();
 
-		// set up ui
+		// set up the ui by creating the base Stage, where the resources table, upgrade table,
+		// 	information table and other fun takes place
 		stage = new Stage();
 
 		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
@@ -275,7 +281,7 @@ public class GameScreen implements Screen {
 			}
 		});
 
-		// set up gameOver menu
+		// set up gameOver menu, which includes its own stage for alignment purposes
 		gameOverTable = new Table();
 		gameOverTable.setFillParent(true);
 		gameOverTable.setDebug(true);
@@ -304,7 +310,7 @@ public class GameScreen implements Screen {
 			}
 		});
 
-		// now set input processing
+		// now set input processing, by adding all input sources to the inputMultiplexer
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
 		inputMultiplexer.addProcessor(gameOverStage);
@@ -314,20 +320,30 @@ public class GameScreen implements Screen {
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
+		// instantiate the spritebatch, where all drawing takes place, and shapeRenderer likewise
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
+
+		// instantiate the fpsLogger
+		// TODO the fpsLogger should display in the corner of the screen if toggled `on`
+		fpsLogger = new FPSLogger();
 	}
 
 	public void render (float deltaTime) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// log the FPS to the console
+		fpsLogger.log();
+
+		// write all updates to the game state to the game user interface
 		updateUi();
 
 		orthoCamera.update();
 		batch.setProjectionMatrix(orthoCamera.combined);
 		shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
+		// call all actors to `act`, or if game is over, set appropriate state
 		if (player.getHealth() > 0) {
 			for (UnitManager unitManager : unitManagers) {
 				unitManager.act(deltaTime, player);
@@ -339,9 +355,10 @@ public class GameScreen implements Screen {
 			gameOver();
 		}
 
-		net.noviden.towerdefense.MissileFactory.MissileManager.act(deltaTime);
+		MissileManager.act(deltaTime);
 		player.act(deltaTime);
 
+		// call the drawing functions
 		shapeRenderer.setAutoShapeType(true);
 
 		batch.begin();
@@ -372,6 +389,7 @@ public class GameScreen implements Screen {
 		shapeRenderer.end();
 		batch.end();
 
+		// act and draw all stages
 		stage.act(deltaTime);
 		stage.draw();
 
@@ -392,6 +410,7 @@ public class GameScreen implements Screen {
 
 		shapeRenderer.circle(mouseLocation.x, mouseLocation.y, 10.0f);
 
+		// TODO should be a better way to get values
 		float range = 0.0f;
 		switch (player.getSelectedTurretType()) {
 			case NORMAL:
@@ -452,8 +471,7 @@ public class GameScreen implements Screen {
 		gameOverTable.setVisible(true);
 	}
 
-	public void dispose() {
-	}
+	public void dispose() {}
 
 	public void pause() {}
 	public void resume() {}
@@ -475,10 +493,12 @@ public class GameScreen implements Screen {
 		@Override
 		public boolean tap(float screenX, float screenY, int count, int button) {
 
+			// if the game is over, do not process any input outside of the gameOver stage
 			if (gameOverTable.isVisible()) {
 				return true;
 			}
 
+			// unmap the input coordinates
 			vector3.set(screenX, screenY, 0);
 			orthoCamera.unproject(vector3);
 
@@ -493,6 +513,8 @@ public class GameScreen implements Screen {
 						turretManager.addTurret(targetLocation, player.getSelectedTurretType());
 						player.purchaseTurret();
 						upgradeTable.setVisible(false);
+
+						return true;
 					}
 
 					break;
@@ -502,12 +524,14 @@ public class GameScreen implements Screen {
 						player.setState(Player.State.TURRET_UPGRADE);
 						player.setTurretForUpgrade(turret);
 						upgradeTable.setVisible(true);
+
+						return true;
 					}
 
 					break;
 			}
 
-			return true;
+			return false;
 		}
 
 		@Override
@@ -591,6 +615,8 @@ public class GameScreen implements Screen {
 
 		@Override
 		public boolean mouseMoved(int screenX, int screenY) {
+
+			// for setting the proper mouseLocation and for setting the proper state
 			vector3.set(screenX, screenY, 0);
 			orthoCamera.unproject(vector3);
 
@@ -602,7 +628,7 @@ public class GameScreen implements Screen {
 				player.setState(Player.State.VIEW);
 			}
 
-			return false;
+			return true;
 		}
 
 		@Override
