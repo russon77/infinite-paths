@@ -35,7 +35,7 @@ public class HomingTurret extends BaseTurret {
     private static final float BASE_DAMAGE = 100.0f;
     private static final float BASE_COOLDOWN = 5.0f;
 
-    private static final String UNIQUE_MODIFIER_NAME = "Extra missiles";
+    private static final String UNIQUE_MODIFIER_NAME = "Extra activeMissiles";
 
     private int extraMissilesPerShot;
 
@@ -84,12 +84,12 @@ public class HomingTurret extends BaseTurret {
                     MissileManager.addMissile(new HomingMissile(this.location,
                             target, unitManager, this.damage, this.range));
 
-                    // now shoot every extra missile, but not from the same starting location
-                    // so that you can see the different ones
+                    // shoot every extra missile
                     for (int i = 0; i < this.extraMissilesPerShot; i++) {
                         MissileManager.addMissile(new HomingMissile(this.location,
                                 target, unitManager, this.damage, this.range));
                     }
+
                     cooldownTimer = cooldownLength;
                 }
 

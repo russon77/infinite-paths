@@ -25,7 +25,7 @@ import net.noviden.towerdefense.UnitManager;
 
 import java.util.LinkedList;
 
-public class HomingMissile extends net.noviden.towerdefense.MissileFactory.Missile {
+public class HomingMissile extends Missile {
 
     private static final float BASE_RADIUS = 5.0f;
     private static final float BASE_SPEED = 5.0f;
@@ -50,6 +50,7 @@ public class HomingMissile extends net.noviden.towerdefense.MissileFactory.Missi
         this.target = initialTarget;
         this.unitManager = unitManager;
 
+        // TODO fix this behavior
         // find a random point within small radius and set course for that
         //  before locking on and heading towards main target
         Point randomHeading = new Point(
@@ -90,7 +91,7 @@ public class HomingMissile extends net.noviden.towerdefense.MissileFactory.Missi
                 }
             }
 
-            // if target is still dead, that means no other valid target is available within range
+            // if target is alive, recalculate velocities to hit the target
             if (!target.isDead()) {
                 // recalculate velocities
                 float distanceBetween = (float) Math.sqrt(

@@ -28,7 +28,7 @@ import net.noviden.towerdefense.TurretFactory.ShotgunTurret;
 
 public class Player {
 
-    public static final float BASE_TURRET_PLACE_COOLDOWN = 3.0f;
+    public static final float BASE_TURRET_PLACE_COOLDOWN = 0.25f;
     private static final int BASE_RESOURCES = 50;
     private static final int BASE_HEALTH = 100;
 

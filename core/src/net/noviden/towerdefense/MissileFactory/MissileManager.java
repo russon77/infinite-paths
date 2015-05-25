@@ -25,28 +25,46 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.ArrayList;
 
 public class MissileManager {
-    public static ArrayList<Missile> missiles;
+    private static ArrayList<Missile> activeMissiles;
 
     private MissileManager() {}
 
     public static void initialize() {
-        missiles = new ArrayList<Missile>();
-    }
-
-    public static void addMissile(Missile missile) {
-        missiles.add(missile);
+        // upon a new game, have to reset pool and array
+        if (activeMissiles != null) {
+            activeMissiles.clear();
+        } else {
+            activeMissiles = new ArrayList<Missile>();
+        }
     }
 
     public static void act(float deltaTime) {
-        for (Missile missile : missiles) {
+        for (int i = 0; i < activeMissiles.size(); i++) {
+            Missile missile = activeMissiles.get(i);
+
             missile.act(deltaTime);
+
+            // check if missile should be removed
+            if (!missile.isAlive) {
+                activeMissiles.remove(i);
+
+                i--;
+            }
         }
     }
 
     public static void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.WHITE);
-        for (Missile missile : missiles) {
+        for (Missile missile : activeMissiles) {
             missile.draw(shapeRenderer);
         }
+    }
+
+    public static void addMissile(Missile missile) {
+        activeMissiles.add(missile);
+    }
+
+    public static ArrayList<Missile> getActiveMissiles() {
+        return activeMissiles;
     }
 }

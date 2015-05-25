@@ -24,23 +24,26 @@ import net.noviden.towerdefense.MissileFactory.PierceMissile;
 import net.noviden.towerdefense.MissileFactory.SlowingMissile;
 import net.noviden.towerdefense.MissileFactory.SplittingMissile;
 
+import java.util.ArrayList;
+
 public class CollisionManager {
 
+    // if distance between unit and missile is less than sum of their radii,
+    //  then collision has occurred
     public static void processCollisions(UnitManager unitManager) {
+
+        ArrayList<Missile> activeMissiles = MissileManager.getActiveMissiles();
+        Missile tmpMissile;
+
         for (Unit unit : unitManager.units) {
 
             if (unit.isDead()) {
                 continue;
             }
 
-            for (int i = 0; i < net.noviden.towerdefense.MissileFactory.MissileManager.missiles.size(); i++) {
-                // if distance between is less than sum of their radii, then collision has occurred
+            for (int i = 0; i < activeMissiles.size(); i++) {
 
-//                if (net.noviden.towerdefense.MissileFactory.MissileManager.missiles.size() == 0) {
-//                    return;
-//                }
-
-                Missile tmpMissile = MissileManager.missiles.get(i);
+                tmpMissile = activeMissiles.get(i);
 
                 if (tmpMissile.ignoresUnit(unit)) {
                     continue;
@@ -84,7 +87,7 @@ public class CollisionManager {
                     }
 
                     // FINALLY, DELETE THIS MISSILE
-                    net.noviden.towerdefense.MissileFactory.MissileManager.missiles.remove(i);
+                    activeMissiles.remove(i);
 
                     i--;
                 }

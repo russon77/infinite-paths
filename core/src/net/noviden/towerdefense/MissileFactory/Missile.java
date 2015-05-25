@@ -22,6 +22,7 @@ package net.noviden.towerdefense.MissileFactory;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Point;
+import net.noviden.towerdefense.TowerDefense;
 import net.noviden.towerdefense.Unit;
 
 import java.util.LinkedList;
@@ -36,15 +37,19 @@ public class Missile {
     public float damage;
 
     protected float xVelocity, yVelocity;
+    protected boolean isAlive;
 
     // to make "piercing rounds" and splitting work correctly, keep a list of
     protected LinkedList<Unit> ignoredUnits;
 
-    public Missile() {}
+    public Missile() {
+        isAlive = true;
+    }
 
     public Missile(Point origin, Point destination, float damage) {
         this.location = origin.clone();
         this.radius = BASE_RADIUS; this.damage = damage;
+        this.isAlive = true;
 
         float distanceBetween = (float) Math.sqrt(
                 Math.pow(origin.x - destination.x, 2) + Math.pow(origin.y - destination.y, 2));
@@ -52,12 +57,17 @@ public class Missile {
         this.xVelocity = (destination.x - origin.x) / distanceBetween * BASE_SPEED;
         this.yVelocity = (destination.y - origin.y) / distanceBetween * BASE_SPEED;
 
-        ignoredUnits = new LinkedList<Unit>();
+        this.ignoredUnits = new LinkedList<Unit>();
     }
 
     public void act(float deltaTime) {
         this.location.x += xVelocity * deltaTime * BASE_SPEED;
         this.location.y += yVelocity * deltaTime * BASE_SPEED;
+
+        if (this.location.x < 0.0f || this.location.x > TowerDefense.SCREEN_WIDTH ||
+                this.location.y < 0.0f || this.location.y > TowerDefense.SCREEN_HEIGHT) {
+            this.isAlive = false;
+        }
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

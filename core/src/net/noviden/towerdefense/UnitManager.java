@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class UnitManager {
 
     private static final float PRE_WAVE_COOLDOWN_TIME = 5.0f;
-    private static final float BASE_COOLDOWN = 2.0f;
+    private static final float BASE_COOLDOWN = 0.5f;
     private static final float BASE_UNIT_HEALTH = 100.0f;
     private static final float BASE_UNIT_SPEED = 100.0f;
     private static final int BASE_UNIT_DAMAGE = 1;
