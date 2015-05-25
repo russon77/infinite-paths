@@ -43,6 +43,8 @@ public class Player {
     private int resources;
     private int score;
     private float health;
+    private int numTurretsCreated;
+    private int numUnitsKilled;
 
     private BaseTurret turretSelectedForUpgrade;
 
@@ -52,7 +54,7 @@ public class Player {
         this.placeTurretCooldown = BASE_TURRET_PLACE_COOLDOWN;
         this.resources = BASE_RESOURCES;
         this.health = BASE_HEALTH;
-        this.score = 0;
+        this.score = this.numTurretsCreated = this.numUnitsKilled = 0;
     }
 
     public void act(float deltaTime) {
@@ -64,6 +66,7 @@ public class Player {
     public void purchaseTurret() {
         resetCooldown();
         this.resources -= getCostOfSelectedTurret();
+        this.numTurretsCreated++;
     }
 
     public State getState() {
@@ -147,16 +150,24 @@ public class Player {
         return (int) this.health;
     }
 
-    public boolean isDead() {
-        return (this.health > 0);
-    }
-
     public int getScore() {
         return this.score;
     }
 
+    public int getNumTurretsCreated() {
+        return this.numTurretsCreated;
+    }
+
+    public int getNumUnitsKilled() {
+        return this.numUnitsKilled;
+    }
+
     public void increaseScore(int amount) {
         this.score += amount;
+    }
+
+    public void increaseNumUnitsKilled() {
+        this.numUnitsKilled++;
     }
 
     public void setTurretForUpgrade(BaseTurret turret) {

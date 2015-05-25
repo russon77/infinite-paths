@@ -82,6 +82,16 @@ public class Unit {
             percentSlowed = 0.0f;
         }
 
+        // check for boundaries
+        if (location.x < 0 || location.x > TowerDefense.SCREEN_WIDTH ||
+                location.y < 0 || location.y > TowerDefense.SCREEN_HEIGHT) {
+
+            // set unit to be removed
+            this.health = (-1.0f);
+
+            return;
+        }
+
         Point destination = path.set.get(currentDestinationIndex);
 
         // base case: time to find a new destination
@@ -92,7 +102,6 @@ public class Unit {
 
             // check for end of the line
             if (currentDestinationIndex >= path.set.size()) {
-                player.decreaseHealth(this.damage);
                 this.health = -1.0f;
             } else {
                 // recalculate xVel and yVel
@@ -123,6 +132,10 @@ public class Unit {
 
     }
 
+    public float getDamage() {
+        return this.damage;
+    }
+
     public void takeDamage(float amount) {
         this.health -= amount;
     }
@@ -142,5 +155,9 @@ public class Unit {
 
     public int getWorth() {
         return this.worth;
+    }
+
+    public boolean reachedEndOfPath() {
+        return (currentDestinationIndex >= path.set.size());
     }
 }

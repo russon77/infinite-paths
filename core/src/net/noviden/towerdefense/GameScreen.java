@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
 
 	private Point mouseLocation;
 
-	private Label resourcesLabel, scoreLabel, healthLabel;
+	private Label resourcesLabel, scoreLabel, healthLabel, numTurretsLabel, numUnitsKilledLabel;
 
 	private Table upgradeTable;
 	private Label selectedTurretLabel, damageLabel, rangeLabel, uniqueModifierLabel;
@@ -204,12 +204,18 @@ public class GameScreen implements Screen {
 		resourcesLabel = new Label("Resources: " + player.getResources(), skin);
 		scoreLabel = new Label("Score: " + player.getScore(), skin);
 		healthLabel = new Label("Health: " + player.getHealth(), skin);
+		numTurretsLabel = new Label("Turrets Created: " + player.getNumTurretsCreated(), skin);
+		numUnitsKilledLabel = new Label("Units killed: " + player.getNumUnitsKilled(), skin);
 
 		infoTable.add(healthLabel);
 		infoTable.row();
 		infoTable.add(scoreLabel);
 		infoTable.row();
 		infoTable.add(resourcesLabel);
+		infoTable.row();
+		infoTable.add(numTurretsLabel);
+		infoTable.row();
+		infoTable.add(numUnitsKilledLabel);
 
 		// turret upgrade user interface
 		upgradeTable = new Table();
@@ -377,7 +383,6 @@ public class GameScreen implements Screen {
 			gameOver();
 		}
 
-
 		player.act(deltaTime);
 
 		// call the drawing functions
@@ -460,6 +465,8 @@ public class GameScreen implements Screen {
 		resourcesLabel.setText("Resources: " + player.getResources());
 		scoreLabel.setText("Score: " + player.getScore());
 		healthLabel.setText("Health: " + player.getHealth());
+		numTurretsLabel.setText("Turrets Built: " + player.getNumTurretsCreated());
+		numUnitsKilledLabel.setText("Units killed: " + player.getNumUnitsKilled());
 
 		// update upgrade ui
 		if (upgradeTable.isVisible()) {

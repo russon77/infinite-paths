@@ -25,8 +25,8 @@ import java.util.ArrayList;
 
 public class UnitManager {
 
-    private static final float PRE_WAVE_COOLDOWN_TIME = 5.0f;
-    private static final float BASE_COOLDOWN = 0.5f;
+    private static final float PRE_WAVE_COOLDOWN_TIME = 3.0f;
+    private static final float BASE_COOLDOWN = 1.0f;
     private static final float BASE_UNIT_HEALTH = 100.0f;
     private static final float BASE_UNIT_SPEED = 100.0f;
     private static final int BASE_UNIT_DAMAGE = 1;
@@ -73,9 +73,16 @@ public class UnitManager {
             unit.act(deltaTime, player);
 
             if (unit.isDead()) {
-                // update player fields and remove unit from game
-                player.addResources(unit.getWorth());
-                player.increaseScore(unit.getWorth());
+
+                // update player fields based on cause of death and remove unit
+
+                if (unit.reachedEndOfPath()) {
+                    player.decreaseHealth(unit.getDamage());
+                } else {
+                    player.addResources(unit.getWorth());
+                    player.increaseScore(unit.getWorth());
+                    player.increaseNumUnitsKilled();
+                }
 
                 units.remove(i);
             }
