@@ -80,6 +80,8 @@ public class GameScreen implements Screen {
 	private Label highScoreLabel, lastScoreLabel;
 	private TextButton continueButton;
 
+	private boolean isPaused;
+
 	public GameScreen(final TowerDefense towerDefense, Map gameMap) {
 
 		// store our callback to the Game class
@@ -126,6 +128,20 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				towerDefense.setScreen(new MainMenuScreen(towerDefense));
+			}
+		});
+
+		final TextButton pauseButton = new TextButton("Pause", skin);
+		pauseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				isPaused = !isPaused;
+
+				if (isPaused) {
+					pauseButton.setText("Unpause");
+				} else {
+					pauseButton.setText("Pause");
+				}
 			}
 		});
 
@@ -225,6 +241,8 @@ public class GameScreen implements Screen {
 
 		table.add(exitButton);
 		table.row();
+		table.add(pauseButton);
+		table.row();
 		table.add(infoTable);
 		table.row();
 		table.add(selectTypeTable);
@@ -322,6 +340,9 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 
+		// game starts off going fast!
+		isPaused = false;
+
 		// instantiate the fpsLogger
 		// TODO the fpsLogger should display in the corner of the screen if toggled `on`
 		fpsLogger = new FPSLogger();
@@ -342,18 +363,21 @@ public class GameScreen implements Screen {
 		shapeRenderer.setProjectionMatrix(orthoCamera.combined);
 
 		// call all actors to `act`, or if game is over, set appropriate state
-		if (player.getHealth() > 0) {
+		if (!isPaused && player.getHealth() > 0) {
+
+			MissileManager.act(deltaTime);
+
 			for (UnitManager unitManager : unitManagers) {
 				unitManager.act(deltaTime, player);
 				turretManager.act(deltaTime / (float) unitManagers.length, unitManager);
 				CollisionManager.processCollisions(unitManager);
 			}
-		} else {
+		} else if (!isPaused) {
 			// otherwise player is dead
 			gameOver();
 		}
 
-		MissileManager.act(deltaTime);
+
 		player.act(deltaTime);
 
 		// call the drawing functions
@@ -491,8 +515,10 @@ public class GameScreen implements Screen {
 		@Override
 		public boolean tap(float screenX, float screenY, int count, int button) {
 
-			// if the game is over, do not process any input outside of the gameOver stage
-			if (gameOverTable.isVisible()) {
+			// if the game is paused, or if game is completed,
+			//  do not process any input outside of the gameOver stage
+			if (isPaused ||
+					gameOverTable.isVisible()) {
 				return true;
 			}
 
