@@ -69,32 +69,76 @@ public class PentagonUnit extends Unit {
         //       *     *
         //        D * C
 
-        // TODO draw missing health
-
-        // draw triangle AMB
+        // draw triangle MAB
         shapeRenderer.triangle(0,0,
                 0, centerToVertex,
                 s1, c1);
 
-        // draw triangle BMC
+        // draw triangle MBC
         shapeRenderer.triangle(0,0,
                 s1, c1,
                 s2, -c2);
 
-        // draw triangle CMD
+        // draw triangle MCD
         shapeRenderer.triangle(0,0,
                 s2, -c2,
                 -s2, -c2);
 
-        // draw triangle DME
+        // draw triangle MDE
         shapeRenderer.triangle(0,0,
                 -s2, -c2,
                 -s1, c1);
 
-        // draw triangle EMA
+        // draw triangle MEA
         shapeRenderer.triangle(0,0,
                 -s1, c1,
                 0, centerToVertex);
+
+        // draw missing health
+        shapeRenderer.setColor(Color.GREEN);
+
+        if (percentHealthMissing > 0.0f) {
+
+            // triangle MAB
+            percentToDraw =
+                    MathUtils.clamp(percentHealthMissing / 0.2f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    0, centerToVertex,
+                    s1 * percentToDraw,
+                    centerToVertex - (Math.abs(centerToVertex - c1) * percentToDraw));
+
+            // triangle MBC
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.2f) / 0.2f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    s1, c1,
+                    s1 - (Math.abs(s1 - s2) * percentToDraw),
+                        c1 - ((c1 + c2) * percentToDraw));
+
+            // triangle MCD
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.4f) / 0.2f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    s2, -c2,
+                    s2 - (s2 * 2 * percentToDraw), -c2);
+
+            // triangle MDE
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.6f) / 0.2f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    -s2, -c2,
+                    -s2 - (Math.abs(s1 - s2) * percentToDraw),
+                    -c2 + ((c1 + c2) * percentToDraw));
+
+            // triangle MEA
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.8f) / 0.2f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    -s1, c1,
+                    -s1 + (s1 * percentToDraw),
+                    c1 + (Math.abs(centerToVertex - c1) * percentToDraw));
+
+        }
 
         shapeRenderer.identity();
     }

@@ -20,6 +20,7 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
@@ -41,6 +42,19 @@ public class TriangleUnit extends Unit {
     public void draw(ShapeRenderer shapeRenderer) {
         // draw each unit's health as a percent of its shape
         float percentHealthMissing = 1.0f - (this.health / this.maxHealth);
+        float percentToDraw;
+
+        //      A
+        //    *   *
+        //   *  M  *
+        //  *       *
+        // C * * * * B
+
+        float ax = 0, ay = centerToVertex,
+                bx = (float) Math.sqrt(3.0f) * centerToVertex / 2,
+                by = -centerToVertex / 2,
+                cx = (-1.0f) * (float) Math.sqrt(3.0f) * centerToVertex / 2,
+                cy = -centerToVertex / 2;
 
         // draw a square centered at the current location
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
@@ -51,10 +65,34 @@ public class TriangleUnit extends Unit {
         shapeRenderer.translate(location.x, location.y, 0.f);
         shapeRenderer.rotate(0f, 0f, 1f, rotation);
 
-        shapeRenderer.triangle(0, centerToVertex,
-                centerToVertex / 2, (-1.0f) * (float) Math.sqrt(3.0f) * centerToVertex / 2,
-                -centerToVertex / 2, (-1.0f) *(float)  Math.sqrt(3.0f) * centerToVertex / 2);
+        shapeRenderer.triangle(ax, ay, bx, by, cx, cy);
 
+        // draw in health missing, break down large triangle into three smaller ones
+        shapeRenderer.setColor(Color.GREEN);
+
+        if (percentHealthMissing > 0.0f) {
+
+            // draw 1 / 3, MAB
+            percentToDraw =
+                    MathUtils.clamp(percentHealthMissing / 0.33f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    ax, ay,
+                    ax + (Math.abs(ax - bx) * percentToDraw), ay - (Math.abs(ay - by) * percentToDraw));
+
+            // draw 2 / 3, MBC
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.33f) / 0.33f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    bx, by,
+                    bx - (bx * percentToDraw * 2), cy);
+
+            // draw 3 / 3, MCA
+            percentToDraw =
+                    MathUtils.clamp((percentHealthMissing - 0.66f) / 0.33f, 0, 1.0f);
+            shapeRenderer.triangle(0, 0,
+                    cx, cy,
+                    cx + (Math.abs(cx - ax) * percentToDraw), cy + (Math.abs(cy - ay) * percentToDraw));
+        }
 
         shapeRenderer.identity();
     }

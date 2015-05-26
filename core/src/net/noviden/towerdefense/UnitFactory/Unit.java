@@ -145,13 +145,13 @@ public class Unit {
 
     public void draw(ShapeRenderer shapeRenderer) {
         // draw each unit's health as a percent of its circle
-        float percentHealthMissing = this.health / this.maxHealth;
+        float percentHealthMissing = (1.0f - this.health / this.maxHealth);
         float degrees = percentHealthMissing * 360.0f;
 
         shapeRenderer.setColor(Color.PURPLE);
         shapeRenderer.circle(location.x, location.y, BASE_RADIUS);
 
-        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
 
     }
