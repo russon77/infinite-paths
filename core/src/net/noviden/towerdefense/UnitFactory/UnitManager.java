@@ -17,16 +17,19 @@
  */
 
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Player;
 
 import java.util.ArrayList;
 
 public class UnitManager {
 
     private static final float PRE_WAVE_COOLDOWN_TIME = 3.0f;
-    private static final float BASE_COOLDOWN = 1.0f;
+    private static final float BASE_COOLDOWN = 2.0f;
     private static final float BASE_UNIT_HEALTH = 100.0f;
     private static final float BASE_UNIT_SPEED = 100.0f;
     private static final int BASE_UNIT_DAMAGE = 1;
@@ -62,7 +65,7 @@ public class UnitManager {
             float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
                     unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f));
 //                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 15.0f));
-            units.add(new Unit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
+            units.add(new PentagonUnit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
             cooldownTimer = BASE_COOLDOWN;
         }
 
@@ -82,6 +85,18 @@ public class UnitManager {
                     player.addResources(unit.getWorth());
                     player.increaseScore(unit.getWorth());
                     player.increaseNumUnitsKilled();
+                }
+
+
+                if (unit.getClass() == PentagonUnit.class) {
+                    units.add(new SquareUnit(unit.maxHealth, unit.getDamage(),
+                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
+                } else if (unit.getClass() == SquareUnit.class) {
+                    units.add(new TriangleUnit(unit.maxHealth, unit.getDamage(),
+                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
+                } else if (unit.getClass() == TriangleUnit.class) {
+                    units.add(new Unit(unit.maxHealth, unit.getDamage(),
+                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
                 }
 
                 units.remove(i);

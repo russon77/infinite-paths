@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
-import net.noviden.towerdefense.Unit;
+import net.noviden.towerdefense.UnitFactory.Unit;
 
 import java.util.LinkedList;
 

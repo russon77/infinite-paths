@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.UnitManager;
+import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.ArrayList;
 

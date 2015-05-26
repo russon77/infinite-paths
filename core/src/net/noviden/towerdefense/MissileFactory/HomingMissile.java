@@ -20,8 +20,8 @@
 package net.noviden.towerdefense.MissileFactory;
 
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.Unit;
-import net.noviden.towerdefense.UnitManager;
+import net.noviden.towerdefense.UnitFactory.Unit;
+import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.LinkedList;
 

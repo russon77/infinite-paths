@@ -17,29 +17,36 @@
  */
 
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Player;
+import net.noviden.towerdefense.Point;
+import net.noviden.towerdefense.TowerDefense;
+
 public class Unit {
-    private static final float BASE_RADIUS = 13.0f;
+    private static final float BASE_RADIUS = 10.0f;
     private static final int BASE_WORTH = 20;
 
-    private float health, maxHealth;
+    protected float health, maxHealth;
     private float damage;
     public Point location;
     public float radius;
 
     private Path path;
-    private int currentDestinationIndex;
+    protected int currentDestinationIndex;
     private float xVelocity, yVelocity;
     private float percentSlowed, timeSlowed;
     private float speed;
 
     private int worth;
 
-    private float rotation;
+    protected float rotation;
+
+    public Unit() {}
 
     public Unit(float health, float damage, float speed, Path path) {
         this.health = this.maxHealth = health;
@@ -54,6 +61,23 @@ public class Unit {
         this.speed = speed;
 
         this.rotation = 0.0f;
+
+        // set initial xVel and yVel based on destination
+        Point destination = path.set.get(currentDestinationIndex);
+
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(location.x - destination.x, 2) + Math.pow(location.y - destination.y, 2));
+
+        this.xVelocity = (destination.x - location.x) / distanceBetween;
+        this.yVelocity = (destination.y - location.y) / distanceBetween;
+    }
+
+    public Unit(float health, float damage, float speed, Path path, Point initialLocation,
+                int currentDestinationIndex) {
+        this(health, damage, speed, path);
+
+        this.location = initialLocation.clone();
+        this.currentDestinationIndex = currentDestinationIndex;
 
         // set initial xVel and yVel based on destination
         Point destination = path.set.get(currentDestinationIndex);
@@ -95,8 +119,8 @@ public class Unit {
         Point destination = path.set.get(currentDestinationIndex);
 
         // base case: time to find a new destination
-        if (Math.abs(location.x - destination.x) < 1.2f &&
-                Math.abs(location.y - destination.y) < 1.2f) {
+        if (Math.abs(location.x - destination.x) < 2.5f &&
+                Math.abs(location.y - destination.y) < 2.5f) {
             // close enough! on to the next destination
             currentDestinationIndex++;
 

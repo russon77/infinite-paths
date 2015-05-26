@@ -48,6 +48,7 @@ import net.noviden.towerdefense.TurretFactory.HomingTurret;
 import net.noviden.towerdefense.TurretFactory.RocketTurret;
 import net.noviden.towerdefense.TurretFactory.ShotgunTurret;
 import net.noviden.towerdefense.TurretFactory.TurretManager;
+import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 public class GameScreen implements Screen {
 

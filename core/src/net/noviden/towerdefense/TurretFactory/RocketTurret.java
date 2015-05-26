@@ -25,8 +25,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
 import net.noviden.towerdefense.MissileFactory.SplittingMissile;
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.Unit;
-import net.noviden.towerdefense.UnitManager;
+import net.noviden.towerdefense.UnitFactory.Unit;
+import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 public class RocketTurret extends BaseTurret {
 
