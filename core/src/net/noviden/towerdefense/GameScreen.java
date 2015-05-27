@@ -50,6 +50,9 @@ import net.noviden.towerdefense.TurretFactory.ShotgunTurret;
 import net.noviden.towerdefense.TurretFactory.TurretManager;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GameScreen implements Screen {
 
 	private final TowerDefense towerDefense;
@@ -69,7 +72,11 @@ public class GameScreen implements Screen {
 
 	private Point mouseLocation;
 
-	private Label resourcesLabel, scoreLabel, healthLabel, numTurretsLabel, numUnitsKilledLabel;
+	private Label resourcesLabel, scoreLabel, healthLabel, numTurretsLabel, numUnitsKilledLabel,
+		timeLabel;
+
+	private Date startDate;
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
 
 	private Table upgradeTable;
 	private Label selectedTurretLabel, damageLabel, rangeLabel, uniqueModifierLabel;
@@ -107,7 +114,7 @@ public class GameScreen implements Screen {
 		MissileManager.initialize();
 
 		// set up the camera
-		// TODO there's something fishy with this and the screen size
+		// FIXME there's something fishy with this and the screen size
 		orthoCamera = new OrthographicCamera();
 		orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
 		orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
@@ -208,6 +215,9 @@ public class GameScreen implements Screen {
 		numTurretsLabel = new Label("Turrets Created: " + player.getNumTurretsCreated(), skin);
 		numUnitsKilledLabel = new Label("Units killed: " + player.getNumUnitsKilled(), skin);
 
+		startDate = new Date();
+		timeLabel = new Label("Elapsed: ", skin);
+
 		infoTable.add(healthLabel);
 		infoTable.row();
 		infoTable.add(scoreLabel);
@@ -217,6 +227,8 @@ public class GameScreen implements Screen {
 		infoTable.add(numTurretsLabel);
 		infoTable.row();
 		infoTable.add(numUnitsKilledLabel);
+		infoTable.row();
+		infoTable.add(timeLabel);
 
 		// turret upgrade user interface
 		upgradeTable = new Table();
@@ -468,6 +480,9 @@ public class GameScreen implements Screen {
 		healthLabel.setText("Health: " + player.getHealth());
 		numTurretsLabel.setText("Turrets Built: " + player.getNumTurretsCreated());
 		numUnitsKilledLabel.setText("Units killed: " + player.getNumUnitsKilled());
+
+		Date elapsed = new Date(new Date().getTime() - startDate.getTime());
+		timeLabel.setText("Elapsed: " + simpleDateFormat.format(elapsed));
 
 		// update upgrade ui
 		if (upgradeTable.isVisible()) {
