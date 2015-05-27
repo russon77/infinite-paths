@@ -36,11 +36,11 @@ public class Unit {
     public Point location;
     public float radius;
 
-    private Path path;
+    protected Path path;
     protected int currentDestinationIndex;
     private float xVelocity, yVelocity;
     private float percentSlowed, timeSlowed;
-    private float speed;
+    protected float speed;
 
     private int worth;
 
@@ -153,7 +153,10 @@ public class Unit {
 
         shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
+    }
 
+    public Unit getNextUnitToSpawn() {
+        return null;
     }
 
     public float getDamage() {

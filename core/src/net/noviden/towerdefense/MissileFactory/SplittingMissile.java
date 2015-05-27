@@ -50,7 +50,8 @@ public class SplittingMissile extends Missile {
         this.ignoredUnits = new LinkedList<Unit>();
     }
 
-    public void split(Unit unit) {
+    @Override
+    public void uniqueAction(Unit unit) {
         Point target = new Point(0, 0);
 
         for (int j = 0; j < numShrapnel; j++) {

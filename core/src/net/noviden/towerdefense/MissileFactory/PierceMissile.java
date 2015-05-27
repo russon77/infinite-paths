@@ -49,4 +49,11 @@ public class PierceMissile extends Missile {
     public boolean canAddIgnoredUnit() {
         return (this.ignoredUnits.size() < this.pierceAmount);
     }
+
+    @Override
+    public void uniqueAction(Unit unit) {
+        if (canAddIgnoredUnit()) {
+            addIgnoredUnit(unit);
+        }
+    }
 }

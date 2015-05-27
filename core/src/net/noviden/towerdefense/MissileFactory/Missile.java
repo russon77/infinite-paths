@@ -75,6 +75,10 @@ public class Missile {
         shapeRenderer.circle(location.x, location.y, BASE_RADIUS);
     }
 
+    public void uniqueAction(Unit unit) {
+        // no unique action for base missile
+    }
+
     public boolean ignoresUnit(Unit target) {
         for (Unit unit : ignoredUnits) {
             if (target.location.equals(unit.location)) {

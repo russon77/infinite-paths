@@ -146,4 +146,10 @@ public class HexagonUnit extends Unit {
 
         shapeRenderer.identity();
     }
+
+    @Override
+    public Unit getNextUnitToSpawn() {
+        return new PentagonUnit(this.maxHealth, this.getDamage(),
+                this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
 }

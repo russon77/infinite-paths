@@ -87,7 +87,6 @@ public class UnitManager {
             unit.act(deltaTime, player);
 
             if (unit.isDead()) {
-
                 // update player fields based on cause of death and remove unit
 
                 if (unit.reachedEndOfPath()) {
@@ -98,18 +97,10 @@ public class UnitManager {
                     player.increaseNumUnitsKilled();
                 }
 
-                if (unit.getClass() == HexagonUnit.class) {
-                    units.add(new PentagonUnit(unit.maxHealth, unit.getDamage(),
-                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
-                } else if (unit.getClass() == PentagonUnit.class) {
-                    units.add(new SquareUnit(unit.maxHealth, unit.getDamage(),
-                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
-                } else if (unit.getClass() == SquareUnit.class) {
-                    units.add(new TriangleUnit(unit.maxHealth, unit.getDamage(),
-                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
-                } else if (unit.getClass() == TriangleUnit.class) {
-                    units.add(new Unit(unit.maxHealth, unit.getDamage(),
-                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
+                // break down the unit into its follow up unit
+                Unit unitToSpawn = unit.getNextUnitToSpawn();
+                if (unitToSpawn != null) {
+                    units.add(unitToSpawn);
                 }
 
                 units.remove(i);

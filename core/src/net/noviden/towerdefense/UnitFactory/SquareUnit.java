@@ -91,4 +91,10 @@ public class SquareUnit extends Unit {
         // reset the shapeRenderer transformation matrix
         shapeRenderer.identity();
     }
+
+    @Override
+    public Unit getNextUnitToSpawn() {
+        return new TriangleUnit(this.maxHealth, this.getDamage(),
+                this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
 }

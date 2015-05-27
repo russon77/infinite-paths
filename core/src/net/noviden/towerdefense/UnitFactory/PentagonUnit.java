@@ -142,4 +142,10 @@ public class PentagonUnit extends Unit {
 
         shapeRenderer.identity();
     }
+
+    @Override
+    public Unit getNextUnitToSpawn() {
+        return new SquareUnit(this.maxHealth, this.getDamage(),
+                this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
 }

@@ -96,4 +96,10 @@ public class TriangleUnit extends Unit {
 
         shapeRenderer.identity();
     }
+
+    @Override
+    public Unit getNextUnitToSpawn() {
+        return new Unit(this.maxHealth, this.getDamage(),
+                this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
 }

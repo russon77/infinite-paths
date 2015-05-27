@@ -61,32 +61,8 @@ public class CollisionManager {
                     // UNIT TAKES DAMAGE
                     unit.takeDamage(tmpMissile.damage);
 
-                    // SUBCLASS SPECIFICS
-
-                    // IMPLEMENT PIERCE THROUGH
-                    if (tmpMissile.getClass() == net.noviden.towerdefense.MissileFactory.PierceMissile.class) {
-                        PierceMissile pierceMissile = (PierceMissile) tmpMissile;
-
-                        // if missile can pass through this unit, do so, otherwise become deleted
-                        if (pierceMissile.canAddIgnoredUnit()) {
-                            pierceMissile.addIgnoredUnit(unit);
-                            continue;
-                        }
-                    }
-
-                    // IMPLEMENT SPLIT FOR ROCKETS
-                    if(tmpMissile.getClass() == SplittingMissile.class) {
-                        SplittingMissile splittingMissile = (SplittingMissile) tmpMissile;
-
-                        splittingMissile.split(unit);
-                    }
-
-                    // IMPLEMENT SLOWING MISSILES
-                    if (tmpMissile.getClass() == SlowingMissile.class) {
-                        SlowingMissile slowingMissile = (SlowingMissile) tmpMissile;
-
-                        unit.slowDown(slowingMissile.getTimeSlowed(), slowingMissile.getPercentSlowed());
-                    }
+                    // Unique actions
+                    tmpMissile.uniqueAction(unit);
 
                     // FINALLY, DELETE THIS MISSILE
                     activeMissiles.remove(i);

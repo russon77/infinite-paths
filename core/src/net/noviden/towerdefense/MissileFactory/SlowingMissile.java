@@ -48,11 +48,7 @@ public class SlowingMissile extends Missile {
         this.ignoredUnits = new LinkedList<Unit>();
     }
 
-    public float getTimeSlowed() {
-        return BASE_TIME_SLOWED;
-    }
-
-    public float getPercentSlowed() {
-        return this.slowPercentage;
+    public void uniqueAction(Unit unit) {
+        unit.slowDown(BASE_TIME_SLOWED, this.slowPercentage);
     }
 }
