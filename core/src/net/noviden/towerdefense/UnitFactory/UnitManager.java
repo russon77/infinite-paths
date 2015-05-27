@@ -65,7 +65,7 @@ public class UnitManager {
             float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
                     unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f));
 //                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 15.0f));
-            units.add(new PentagonUnit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
+            units.add(new HexagonUnit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
             cooldownTimer = BASE_COOLDOWN;
         }
 
@@ -87,8 +87,10 @@ public class UnitManager {
                     player.increaseNumUnitsKilled();
                 }
 
-
-                if (unit.getClass() == PentagonUnit.class) {
+                if (unit.getClass() == HexagonUnit.class) {
+                    units.add(new PentagonUnit(unit.maxHealth, unit.getDamage(),
+                            BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
+                } else if (unit.getClass() == PentagonUnit.class) {
                     units.add(new SquareUnit(unit.maxHealth, unit.getDamage(),
                             BASE_UNIT_SPEED, path, unit.location, unit.currentDestinationIndex));
                 } else if (unit.getClass() == SquareUnit.class) {
