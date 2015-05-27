@@ -147,6 +147,10 @@ public class HomingTurret extends BaseTurret {
         this.damage += BASE_DAMAGE * 0.10f;
     }
 
+    public boolean canUpgradeUniqueModifier() {
+        return true;
+    }
+
     public float getUniqueModifierValue() {
         return this.extraMissilesPerShot;
     }

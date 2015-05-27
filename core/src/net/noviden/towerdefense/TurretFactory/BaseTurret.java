@@ -74,6 +74,8 @@ public abstract class BaseTurret {
 
     public abstract void upgradeUniqueModifier();
 
+    public abstract boolean canUpgradeUniqueModifier();
+
     protected void preUpgrade() {
         this.level++;
         this.worth += this.upgradeCost;

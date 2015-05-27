@@ -299,7 +299,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				BaseTurret turret = player.getTurretSelectedForUpgrade();
 				if (player.getResources() >=
-						turret.getUpgradeCost()) {
+						turret.getUpgradeCost() &&
+						turret.canUpgradeUniqueModifier()) {
 					player.decreaseResources(turret.getUpgradeCost());
 					turret.upgradeUniqueModifier();
 				}

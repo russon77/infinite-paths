@@ -31,11 +31,12 @@ import net.noviden.towerdefense.UnitFactory.UnitManager;
 public class ChaingunTurret extends BaseTurret {
 
     public static final int BASE_COST = 50;
-    public static final float BASE_RANGE = 125.0f;
+    public static final float BASE_RANGE = 75.0f;
     private static final float BASE_DAMAGE = 10.0f;
     private static final float BASE_COOLDOWN = 0.1f;
 
     private static final String UNIQUE_MODIFIER_NAME = "Slow %";
+    private static final float MAX_SLOW_PERCENTAGE = 0.8f;
 
     private float slowPercentage;
 
@@ -107,7 +108,7 @@ public class ChaingunTurret extends BaseTurret {
     }
 
     public void upgradeUniqueModifier() {
-        if (this.slowPercentage < 0.8f) {
+        if (this.slowPercentage < MAX_SLOW_PERCENTAGE) {
             preUpgrade();
             this.slowPercentage += 0.1f;
         }
@@ -121,6 +122,14 @@ public class ChaingunTurret extends BaseTurret {
     public void upgradeDamage() {
         preUpgrade();
         this.damage += BASE_DAMAGE * 0.10f;
+    }
+
+    public boolean canUpgradeUniqueModifier() {
+        if (this.slowPercentage < MAX_SLOW_PERCENTAGE) {
+            return true;
+        }
+
+        return false;
     }
 
     public float getUniqueModifierValue() {
