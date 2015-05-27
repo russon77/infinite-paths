@@ -181,6 +181,10 @@ public class Unit {
         return this.worth;
     }
 
+    public float getSpeed() {
+        return this.speed;
+    }
+
     public boolean reachedEndOfPath() {
         return (currentDestinationIndex >= path.set.size());
     }

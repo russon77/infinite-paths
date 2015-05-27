@@ -28,10 +28,25 @@ import java.util.ArrayList;
 
 public class UnitManager {
 
+    private static final int[][] SPAWN_PATTERN =
+            {
+                    {2,2,2,2,2,2,2,2},
+                    {2,3,2,3,2,3,2,3},
+                    {3,3,3,3,3,3,3,3},
+                    {3,4,3,4,3,4,3,4},
+                    {4,4,4,4,4,4,4,4},
+                    {4,5,4,5,4,5,4,5},
+                    {5,5,5,5,5,5,5,5},
+                    {5,6,5,6,5,6,5,6},
+                    {6,6,6,6,6,6,6,6}
+            };
+    private int spawnIndex;
+    private int waveIndex;
+
     private static final float PRE_WAVE_COOLDOWN_TIME = 3.0f;
     private static final float BASE_COOLDOWN = 2.0f;
     private static final float BASE_UNIT_HEALTH = 100.0f;
-    private static final float BASE_UNIT_SPEED = 100.0f;
+    private static final float BASE_UNIT_SPEED = 75.0f;
     private static final int BASE_UNIT_DAMAGE = 1;
 
     private Path path;
@@ -50,6 +65,7 @@ public class UnitManager {
         this.path = path;
         this.level = 0;
         this.gameTime = 0.0f;
+        this.spawnIndex = this.waveIndex = 0;
     }
 
     public void act(float deltaTime, Player player) {
@@ -60,12 +76,7 @@ public class UnitManager {
         cooldownTimer -= deltaTime;
         if (cooldownTimer < 0.0f) {
             // spawn a new unit and go on cooldown
-
-            // every 15 seconds units double in health/damage
-            float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
-                    unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f));
-//                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 15.0f));
-            units.add(new HexagonUnit(unitHealth, unitDamage, BASE_UNIT_SPEED, path));
+            spawnUnit();
             cooldownTimer = BASE_COOLDOWN;
         }
 
@@ -110,6 +121,44 @@ public class UnitManager {
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         for (Unit unit : units) {
             unit.draw(shapeRenderer);
+        }
+    }
+
+    private void spawnUnit() {
+        // every 15 seconds units double in health/damage
+        float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
+                unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f)),
+                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 120.0f));
+
+        Unit unitToSpawn = null;
+
+        if (spawnIndex >= SPAWN_PATTERN[waveIndex].length) {
+            // advance to next wave
+            waveIndex++;
+            spawnIndex = 0;
+        }
+
+        if (waveIndex >= SPAWN_PATTERN.length) {
+            // continuously spawn the last wave
+            waveIndex--;
+        }
+
+        switch (SPAWN_PATTERN[waveIndex][spawnIndex]) {
+            case 2: unitToSpawn = new Unit(unitHealth, unitDamage, unitSpeed, path);
+                break;
+            case 3: unitToSpawn = new TriangleUnit(unitHealth, unitDamage, unitSpeed, path);
+                break;
+            case 4: unitToSpawn = new SquareUnit(unitHealth, unitDamage, unitSpeed, path);
+                break;
+            case 5: unitToSpawn = new PentagonUnit(unitHealth, unitDamage, unitSpeed, path);
+                break;
+            case 6: unitToSpawn = new HexagonUnit(unitHealth, unitDamage, unitSpeed, path);
+                break;
+        }
+
+        if (unitToSpawn != null) {
+            units.add(unitToSpawn);
+            spawnIndex++;
         }
     }
 }
