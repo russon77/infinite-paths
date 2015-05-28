@@ -43,6 +43,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.BasicTurret;
+import net.noviden.towerdefense.TurretFactory.BuffTurret;
 import net.noviden.towerdefense.TurretFactory.ChaingunTurret;
 import net.noviden.towerdefense.TurretFactory.HomingTurret;
 import net.noviden.towerdefense.TurretFactory.RocketTurret;
@@ -161,6 +162,7 @@ public class GameScreen implements Screen {
 		TextButton buttonSelectShotgunTurret = new TextButton("Shotgun (R50)", skin);
 		TextButton buttonSelectRocketTurret = new TextButton("Rocket (R50)", skin);
 		TextButton buttonSelectHomingTurret = new TextButton("Homing (R50)", skin);
+		TextButton buttonSelectBuffTurret = new TextButton("Buff (R50)", skin);
 
 		selectTypeTable.add(buttonSelectBasicTurret).fillX();
 		selectTypeTable.add(buttonSelectChaingunTurret);
@@ -169,6 +171,7 @@ public class GameScreen implements Screen {
 		selectTypeTable.add(buttonSelectShotgunTurret).fillX();
 		selectTypeTable.row();
 		selectTypeTable.add(buttonSelectHomingTurret).fillX();
+		selectTypeTable.add(buttonSelectBuffTurret).fillX();
 
 		buttonSelectBasicTurret.addListener(new ClickListener() {
 			@Override
@@ -202,6 +205,13 @@ public class GameScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				player.setSelectedTurretType(BaseTurret.Type.HOMING);
+			}
+		});
+
+		buttonSelectBuffTurret.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				player.setSelectedTurretType(BaseTurret.Type.BUFF);
 			}
 		});
 
@@ -275,7 +285,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				BaseTurret turret = player.getTurretSelectedForUpgrade();
 				if (player.getResources() >=
-						turret.getUpgradeCost()) {
+						turret.getUpgradeCost() &&
+						turret.canUpgradeDamage()) {
 					player.decreaseResources(turret.getUpgradeCost());
 					turret.upgradeDamage();
 				}
@@ -469,6 +480,8 @@ public class GameScreen implements Screen {
 			case HOMING:
 				range = HomingTurret.BASE_RANGE;
 				break;
+			case BUFF:
+				range = BuffTurret.BASE_RANGE;
 		}
 
 		shapeRenderer.circle(mouseLocation.x, mouseLocation.y, range);

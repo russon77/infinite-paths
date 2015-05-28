@@ -59,12 +59,20 @@ public class BasicTurret extends BaseTurret {
             cooldownTimer -= deltaTime;
         }
 
+        if (_buffCooldownTimer > 0.0f) {
+            _buffCooldownTimer -= deltaTime;
+
+            if (_buffCooldownTimer <= 0.0f) {
+                cooldownLength = BASE_COOLDOWN;
+            }
+        }
+
         switch (this.state) {
             case SLEEPING:
                 Unit unit = findEnemyInRange(unitManager);
                 if (unit != null) {
                     target = unit;
-                    this.state = State.ATTACKING;
+                    state = State.ATTACKING;
                 }
 
                 break;
@@ -74,7 +82,7 @@ public class BasicTurret extends BaseTurret {
                     if (unit1 != null) {
                         target = unit1;
                     } else {
-                        this.state = State.SLEEPING;
+                        state = State.SLEEPING;
                     }
                 }
 

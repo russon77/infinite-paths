@@ -62,6 +62,14 @@ public class ChaingunTurret extends BaseTurret {
             cooldownTimer -= deltaTime;
         }
 
+        if (_buffCooldownTimer > 0.0f) {
+            _buffCooldownTimer -= deltaTime;
+
+            if (_buffCooldownTimer <= 0.0f) {
+                cooldownLength = BASE_COOLDOWN;
+            }
+        }
+
         switch (this.state) {
             case SLEEPING:
                 Unit unit = findEnemyInRange(unitManager);

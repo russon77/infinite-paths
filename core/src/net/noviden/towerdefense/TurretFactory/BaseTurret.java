@@ -37,7 +37,7 @@ public abstract class BaseTurret {
     };
 
     public enum Type {
-        NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING
+        NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING, BUFF
     }
 
     protected Point location;
@@ -52,6 +52,7 @@ public abstract class BaseTurret {
     protected float radius;
 
     protected float cooldownTimer;
+    protected float _buffCooldownTimer;
 
     protected Unit target;
 
@@ -70,11 +71,26 @@ public abstract class BaseTurret {
 
     public abstract void upgradeDamage();
 
+    public boolean canUpgradeDamage() {
+        return true;
+    }
+
     public abstract void upgradeRange();
 
     public abstract void upgradeUniqueModifier();
 
     public abstract boolean canUpgradeUniqueModifier();
+
+    protected void buffAttackSpeed(float pPercent, float pTime) {
+
+        if (_buffCooldownTimer > 0.0f) {
+            // don't stack buffs
+            return;
+        }
+
+        this.cooldownLength *= pPercent;
+        _buffCooldownTimer = pTime;
+    }
 
     protected void preUpgrade() {
         this.level++;

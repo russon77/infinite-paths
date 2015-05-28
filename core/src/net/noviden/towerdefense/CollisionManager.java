@@ -20,9 +20,6 @@ package net.noviden.towerdefense;
 
 import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
-import net.noviden.towerdefense.MissileFactory.PierceMissile;
-import net.noviden.towerdefense.MissileFactory.SlowingMissile;
-import net.noviden.towerdefense.MissileFactory.SplittingMissile;
 import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 

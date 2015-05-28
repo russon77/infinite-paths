@@ -21,6 +21,7 @@ package net.noviden.towerdefense;
 
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.BasicTurret;
+import net.noviden.towerdefense.TurretFactory.BuffTurret;
 import net.noviden.towerdefense.TurretFactory.ChaingunTurret;
 import net.noviden.towerdefense.TurretFactory.HomingTurret;
 import net.noviden.towerdefense.TurretFactory.RocketTurret;
@@ -101,6 +102,8 @@ public class Player {
                 return ShotgunTurret.BASE_COST;
             case HOMING:
                 return HomingTurret.BASE_COST;
+            case BUFF:
+                return BuffTurret.BASE_COST;
         }
 
         return 0;

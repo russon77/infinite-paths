@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class TurretManager {
 
-    private ArrayList<BaseTurret> turrets;
+    protected ArrayList<BaseTurret> turrets;
 
     public TurretManager() {
         this.turrets = new ArrayList<BaseTurret>();
@@ -65,6 +65,9 @@ public class TurretManager {
                 break;
             case HOMING:
                 turrets.add(new HomingTurret(location));
+                break;
+            case BUFF:
+                turrets.add(new BuffTurret(location, this));
                 break;
         }
     }
