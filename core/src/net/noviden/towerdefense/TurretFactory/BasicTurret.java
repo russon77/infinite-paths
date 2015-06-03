@@ -44,7 +44,6 @@ public class BasicTurret extends BaseTurret {
         this.level = 0;
         this.type = Type.NORMAL;
         this.cooldownTimer = 0.0f;
-        this.state = State.SLEEPING;
 
         this.range = BASE_RANGE;
         this.damage = BASE_DAMAGE;
@@ -53,47 +52,9 @@ public class BasicTurret extends BaseTurret {
         this.worth = BASE_COST;
     }
 
-    public void act(float deltaTime,  UnitManager unitManager) {
-
-        if (cooldownTimer >= 0.0f) {
-            cooldownTimer -= deltaTime;
-        }
-
-        if (_buffCooldownTimer > 0.0f) {
-            _buffCooldownTimer -= deltaTime;
-
-            if (_buffCooldownTimer <= 0.0f) {
-                cooldownLength = BASE_COOLDOWN;
-            }
-        }
-
-        switch (this.state) {
-            case SLEEPING:
-                Unit unit = findEnemyInRange(unitManager);
-                if (unit != null) {
-                    target = unit;
-                    state = State.ATTACKING;
-                }
-
-                break;
-            case ATTACKING:
-                if (target.isDead() || !enemyInRange(target)) {
-                    Unit unit1 = findEnemyInRange(unitManager);
-                    if (unit1 != null) {
-                        target = unit1;
-                    } else {
-                        state = State.SLEEPING;
-                    }
-                }
-
-                if (cooldownTimer < 0.0f) {
-                    MissileManager.addMissile(new PierceMissile(this.location,
-                            target.location, this.damage, pierceAmount));
-                    cooldownTimer = cooldownLength;
-                }
-
-                break;
-        }
+    public void attack(Unit target) {
+        MissileManager.addMissile(new PierceMissile(this.location,
+                target.location, this.damage, this.pierceAmount));
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

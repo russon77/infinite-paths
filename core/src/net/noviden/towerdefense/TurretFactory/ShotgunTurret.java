@@ -46,7 +46,6 @@ public class ShotgunTurret extends BaseTurret {
         this.level = 0;
         this.type = Type.CHAINGUN;
         this.cooldownTimer = 0.0f;
-        this.state = State.SLEEPING;
 
         this.range = BASE_RANGE;
         this.damage = BASE_DAMAGE;
@@ -57,55 +56,14 @@ public class ShotgunTurret extends BaseTurret {
         this.numPelletsPerShot = BASE_PELLETS_PER_SHOT;
     }
 
-    public void act(float deltaTime,  UnitManager unitManager) {
+    public void attack(Unit target) {
+        Point targetPoint = new Point(target.location.x, target.location.y);
+        for (int i = 0; i < this.numPelletsPerShot; i++) {
+            targetPoint.x = target.location.x - 20.0f + (float) Math.random() * 40.0f;
+            targetPoint.y = target.location.y - 20.0f + (float) Math.random() * 40.0f;
 
-        if (cooldownTimer >= 0.0f) {
-            cooldownTimer -= deltaTime;
-        }
-
-        if (_buffCooldownTimer > 0.0f) {
-            _buffCooldownTimer -= deltaTime;
-
-            if (_buffCooldownTimer <= 0.0f) {
-                cooldownLength = BASE_COOLDOWN;
-            }
-        }
-
-        switch (this.state) {
-            case SLEEPING:
-                Unit unit = findEnemyInRange(unitManager);
-                if (unit != null) {
-                    target = unit;
-                    this.state = State.ATTACKING;
-                }
-
-                break;
-            case ATTACKING:
-                if (target.isDead() || !enemyInRange(target)) {
-                    Unit unit1 = findEnemyInRange(unitManager);
-                    if (unit1 != null) {
-                        target = unit1;
-                    } else {
-                        this.state = State.SLEEPING;
-                    }
-                }
-
-                cooldownTimer -= deltaTime;
-                if (cooldownTimer < 0.0f) {
-                    // behavior: shoot randomly around the target, within certain radius
-                    Point targetPoint = new Point(target.location.x, target.location.y);
-                    for (int i = 0; i < this.numPelletsPerShot; i++) {
-                        targetPoint.x = target.location.x - 20.0f + (float) Math.random() * 40.0f;
-                        targetPoint.y = target.location.y - 20.0f + (float) Math.random() * 40.0f;
-
-                        MissileManager.addMissile(new Missile(this.location,
-                                targetPoint, this.damage));
-                    }
-
-                    cooldownTimer = cooldownLength;
-                }
-
-                break;
+            MissileManager.addMissile(new Missile(this.location,
+                    targetPoint, this.damage));
         }
     }
 

@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Point;
+import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class BuffTurret extends BaseTurret {
         this.level = 0;
         this.type = Type.NORMAL;
         this.cooldownTimer = 0.0f;
-        this.state = State.SLEEPING;
 
         this.range = BASE_RANGE;
         this.radius = BASE_SIZE_RADIUS;
@@ -59,6 +59,7 @@ public class BuffTurret extends BaseTurret {
         _buffedTurrets = new ArrayList<BaseTurret>();
     }
 
+    @Override
     public void act(float deltaTime, UnitManager unitManager) {
         // idea: every BASE_BUFF_DURATION seconds, upgrade all nearby turrets
 
@@ -81,6 +82,8 @@ public class BuffTurret extends BaseTurret {
             cooldownTimer = BASE_BUFF_DURATION;
         }
     }
+
+    public void attack(Unit target) {}
 
     public void draw(ShapeRenderer shapeRenderer) {
         // draw base turret

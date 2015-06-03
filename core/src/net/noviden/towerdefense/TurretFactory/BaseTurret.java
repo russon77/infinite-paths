@@ -22,6 +22,8 @@ package net.noviden.towerdefense.TurretFactory;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.MissileFactory.MissileManager;
+import net.noviden.towerdefense.MissileFactory.SlowingMissile;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
@@ -36,29 +38,23 @@ public abstract class BaseTurret {
     protected static final float BASE_SIZE_RADIUS = 10.0f;
     protected static final int BASE_UPGRADE_COST = 10;
 
-    protected enum State {
-        SLEEPING, ATTACKING
-    };
-
     public enum Type implements Serializable {
         NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING, BUFF
     }
 
     protected Point location;
-    protected State state;
     public Type type;
 
     // values updated by increasing level AKA stats
     protected float range;
     protected int level; // represents overall strength
-    protected float cooldownLength;
+    protected float cooldownLength; // affected by buff turrets
+    protected float baseCooldownLength; // never changed
     protected float damage;
     protected float radius;
 
     protected float cooldownTimer;
     protected float _buffCooldownTimer;
-
-    protected Unit target;
 
     protected String id;
     protected int worth;
@@ -69,7 +65,29 @@ public abstract class BaseTurret {
         this.upgradeCost = BASE_UPGRADE_COST;
     }
 
-    public abstract void act(float deltaTime, UnitManager unitManager);
+    public void act(float deltaTime, UnitManager unitManager) {
+        if (cooldownTimer >= 0.0f) {
+            cooldownTimer -= deltaTime;
+        }
+
+        if (_buffCooldownTimer > 0.0f) {
+            _buffCooldownTimer -= deltaTime;
+
+            if (_buffCooldownTimer <= 0.0f) {
+                cooldownLength = baseCooldownLength;
+            }
+        }
+
+        if (cooldownTimer <= 0.0f) {
+            Unit unit = findClosestEnemyInRange(unitManager);
+            if (unit != null) {
+                attack(unit);
+                cooldownTimer = cooldownLength;
+            }
+        }
+    }
+
+    public abstract void attack(Unit target);
 
     public abstract void draw(ShapeRenderer shapeRenderer);
 
@@ -115,22 +133,11 @@ public abstract class BaseTurret {
     }
 
     /*
-     * return NULL if no closer enemy is found
+     * return null if no closer enemy is found
      */
-    protected Unit findEnemyInRange(UnitManager unitManager) {
+    protected Unit findClosestEnemyInRange(UnitManager unitManager) {
         Unit closestUnit = null;
-        float closestDistance;
-        float distanceFromCurrentTarget;
-
-        if (target != null) {
-            distanceFromCurrentTarget = (float) Math.sqrt(
-                    Math.pow(location.x - target.location.x, 2) +
-                            Math.pow(location.y - target.location.y, 2));
-
-            closestDistance = distanceFromCurrentTarget;
-        } else {
-            closestDistance = range;
-        }
+        float closestDistance = range;
 
         for (Unit unit : unitManager.units) {
             float distanceBetween = (float) Math.sqrt(
@@ -143,25 +150,7 @@ public abstract class BaseTurret {
             }
         }
 
-        if (target == null) {
-            return closestUnit;
-        } else if (closestUnit == null) {
-            return null;
-        }
-
-        distanceFromCurrentTarget = (float) Math.sqrt(
-                Math.pow(location.x - target.location.x, 2) +
-                        Math.pow(location.y - target.location.y, 2));
-
-        float distanceFromNewTarget = (float) Math.sqrt(
-                Math.pow(location.x - closestUnit.location.x, 2) +
-                        Math.pow(location.y - closestUnit.location.y, 2));
-
-        if (distanceFromCurrentTarget > distanceFromNewTarget) {
-            return closestUnit;
-        } else {
-            return null;
-        }
+        return closestUnit;
     }
 
     public String getId() {

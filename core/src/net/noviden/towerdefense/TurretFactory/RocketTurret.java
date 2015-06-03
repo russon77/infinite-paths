@@ -46,7 +46,6 @@ public class RocketTurret extends BaseTurret {
         this.level = 0;
         this.type = Type.CHAINGUN;
         this.cooldownTimer = 0.0f;
-        this.state = State.SLEEPING;
 
         this.range = BASE_RANGE;
         this.damage = BASE_DAMAGE;
@@ -57,49 +56,9 @@ public class RocketTurret extends BaseTurret {
         this.numShrapnelPerRocket = BASE_SHRAPNEL_PER_ROCKET;
     }
 
-    public void act(float deltaTime,  UnitManager unitManager) {
-
-        if (cooldownTimer >= 0.0f) {
-            cooldownTimer -= deltaTime;
-        }
-
-        if (_buffCooldownTimer > 0.0f) {
-            _buffCooldownTimer -= deltaTime;
-
-            if (_buffCooldownTimer <= 0.0f) {
-                cooldownLength = BASE_COOLDOWN;
-            }
-        }
-
-        switch (this.state) {
-            case SLEEPING:
-                Unit unit = findEnemyInRange(unitManager);
-                if (unit != null) {
-                    target = unit;
-                    this.state = State.ATTACKING;
-                }
-
-                break;
-            case ATTACKING:
-                if (target.isDead() || !enemyInRange(target)) {
-                    Unit unit1 = findEnemyInRange(unitManager);
-                    if (unit1 != null) {
-                        target = unit1;
-                    } else {
-                        this.state = State.SLEEPING;
-                    }
-                }
-
-                cooldownTimer -= deltaTime;
-                if (cooldownTimer < 0.0f) {
-                    MissileManager.addMissile(new SplittingMissile(this.location, target.location,
-                            this.damage, this.numShrapnelPerRocket));
-                    cooldownTimer = cooldownLength;
-                }
-
-                break;
-        }
-
+    public void attack(Unit target) {
+        MissileManager.addMissile(new SplittingMissile(this.location, target.location,
+                this.damage, this.numShrapnelPerRocket));
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

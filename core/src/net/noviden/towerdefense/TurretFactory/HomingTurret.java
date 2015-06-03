@@ -44,7 +44,6 @@ public class HomingTurret extends BaseTurret {
         this.level = 0;
         this.type = Type.HOMING;
         this.cooldownTimer = 0.0f;
-        this.state = State.SLEEPING;
 
         this.range = BASE_RANGE;
         this.damage = BASE_DAMAGE;
@@ -53,6 +52,7 @@ public class HomingTurret extends BaseTurret {
         this.worth = BASE_COST;
     }
 
+    @Override
     public void act(float deltaTime,  UnitManager unitManager) {
 
         if (cooldownTimer >= 0.0f) {
@@ -67,42 +67,29 @@ public class HomingTurret extends BaseTurret {
             }
         }
 
-        switch (this.state) {
-            case SLEEPING:
-                Unit unit = findEnemyInRange(unitManager);
-                if (unit != null) {
-                    target = unit;
-                    this.state = State.ATTACKING;
-                }
-
-                break;
-            case ATTACKING:
-                if (target.isDead() || !enemyInRange(target)) {
-                    Unit unit1 = findEnemyInRange(unitManager);
-                    if (unit1 != null) {
-                        target = unit1;
-                    } else {
-                        this.state = State.SLEEPING;
-                    }
-                }
-
-                cooldownTimer -= deltaTime;
-                if (cooldownTimer < 0.0f) {
-                    // always shoot at least one missile
-                    MissileManager.addMissile(new HomingMissile(this.location,
-                            target, unitManager, this.damage, this.range));
-
-                    // shoot every extra missile
-                    for (int i = 0; i < this.extraMissilesPerShot; i++) {
-                        MissileManager.addMissile(new HomingMissile(this.location,
-                                target, unitManager, this.damage, this.range));
-                    }
-
-                    cooldownTimer = cooldownLength;
-                }
-
-                break;
+        if (cooldownTimer <= 0.0f) {
+            Unit unit = findClosestEnemyInRange(unitManager);
+            if (unit != null) {
+                attack(unit, unitManager);
+                cooldownTimer = cooldownLength;
+            }
         }
+    }
+
+    public void attack(Unit target) {}
+
+    public void attack(Unit target, UnitManager unitManager) {
+        // always shoot at least one missile
+        MissileManager.addMissile(new HomingMissile(this.location,
+                target, unitManager, this.damage, this.range));
+
+        // shoot every extra missile
+        for (int i = 0; i < this.extraMissilesPerShot; i++) {
+            MissileManager.addMissile(new HomingMissile(this.location,
+                    target, unitManager, this.damage, this.range));
+        }
+
+        cooldownTimer = cooldownLength;
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

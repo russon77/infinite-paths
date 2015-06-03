@@ -127,7 +127,7 @@ public class UnitManager {
 
     private void spawnUnit() {
         // every 15 seconds units double in health/damage
-        float unitHealth = _settings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY) *
+        float unitHealth = _settings.getValue(MapSettings.UNIT_INITIAL_HEALTH_KEY) *
                     (1.0f + (gameTime / 15.0f)),
                 unitDamage = _settings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY) *
                         (1.0f + (gameTime / 15.0f)),
