@@ -75,6 +75,12 @@ public class ChaingunTurret extends BaseTurret {
                 BASE_SIZE_RADIUS * 0.15f);
     }
 
+    public void drawOpaque(ShapeRenderer shapeRenderer) {
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
+        shapeRenderer.circle(location.x, location.y, BASE_RANGE);
+    }
+
     public void upgradeUniqueModifier() {
         if (this.slowPercentage < MAX_SLOW_PERCENTAGE) {
             preUpgrade();
@@ -106,5 +112,9 @@ public class ChaingunTurret extends BaseTurret {
 
     public String getUniqueModifierName() {
         return UNIQUE_MODIFIER_NAME;
+    }
+
+    public int getBaseCost() {
+        return BASE_COST;
     }
 }

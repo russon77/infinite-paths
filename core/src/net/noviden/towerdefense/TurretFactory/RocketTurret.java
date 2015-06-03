@@ -108,6 +108,12 @@ public class RocketTurret extends BaseTurret {
                 BASE_SIZE_RADIUS * 0.15f);
     }
 
+    public void drawOpaque(ShapeRenderer shapeRenderer) {
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
+        shapeRenderer.circle(location.x, location.y, BASE_RANGE);
+    }
+
     public void upgradeUniqueModifier() {
         preUpgrade();
         this.numShrapnelPerRocket++;
@@ -133,5 +139,9 @@ public class RocketTurret extends BaseTurret {
 
     public String getUniqueModifierName() {
         return UNIQUE_MODIFIER_NAME;
+    }
+
+    public int getBaseCost() {
+        return BASE_COST;
     }
 }

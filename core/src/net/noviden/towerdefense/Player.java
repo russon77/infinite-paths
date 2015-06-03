@@ -21,11 +21,6 @@ package net.noviden.towerdefense;
 
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.BasicTurret;
-import net.noviden.towerdefense.TurretFactory.BuffTurret;
-import net.noviden.towerdefense.TurretFactory.ChaingunTurret;
-import net.noviden.towerdefense.TurretFactory.HomingTurret;
-import net.noviden.towerdefense.TurretFactory.RocketTurret;
-import net.noviden.towerdefense.TurretFactory.ShotgunTurret;
 
 public class Player {
 
@@ -38,7 +33,7 @@ public class Player {
     private final MapSettings _settings;
 
     private State state;
-    private BaseTurret.Type selectedTurretType;
+    private BaseTurret turretSelectedForPurchase;
     private float placeTurretCooldown;
 
     private int resources;
@@ -57,10 +52,12 @@ public class Player {
                 (int) _settings.getValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY);
 
         this.state = State.TURRET_PLACE;
-        this.selectedTurretType = BaseTurret.Type.NORMAL;
+        this.turretSelectedForPurchase = new BasicTurret(new Point(0,0));
         this.placeTurretCooldown = BASE_TURRET_PLACE_COOLDOWN;
 
         this.score = this.numTurretsCreated = this.numUnitsKilled = 0;
+
+        this.turretSelectedForPurchase = null;
     }
 
     public void act(float deltaTime) {
@@ -73,6 +70,10 @@ public class Player {
         resetCooldown();
         this.resources -= getCostOfSelectedTurret();
         this.numTurretsCreated++;
+
+        this.turretSelectedForUpgrade = this.turretSelectedForPurchase;
+
+        this.turretSelectedForPurchase = null;
     }
 
     public State getState() {
@@ -81,10 +82,6 @@ public class Player {
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public BaseTurret.Type getSelectedTurretType() {
-        return this.selectedTurretType;
     }
 
     public boolean onCooldownForPlacingTurrets() {
@@ -96,25 +93,18 @@ public class Player {
     }
 
     private int getCostOfSelectedTurret() {
-        switch (selectedTurretType) {
-            case NORMAL:
-                return BasicTurret.BASE_COST;
-            case ROCKET:
-                return RocketTurret.BASE_COST;
-            case CHAINGUN:
-                return ChaingunTurret.BASE_COST;
-            case SHOTGUN:
-                return ShotgunTurret.BASE_COST;
-            case HOMING:
-                return HomingTurret.BASE_COST;
-            case BUFF:
-                return BuffTurret.BASE_COST;
+        if (turretSelectedForPurchase != null) {
+            return turretSelectedForPurchase.getBaseCost();
         }
 
         return 0;
     }
 
     public boolean canAffordSelectedTurret() {
+        if (turretSelectedForPurchase == null) {
+            return false;
+        }
+
         if (getCostOfSelectedTurret() <= this.resources) {
             return true;
         }
@@ -130,8 +120,12 @@ public class Player {
         this.placeTurretCooldown = BASE_TURRET_PLACE_COOLDOWN;
     }
 
-    public void setSelectedTurretType(BaseTurret.Type type) {
-        this.selectedTurretType = type;
+    public void setTurretSelectedForPurchase(BaseTurret turret) {
+        this.turretSelectedForPurchase = turret;
+    }
+
+    public BaseTurret getTurretSelectedForPurchase() {
+        return this.turretSelectedForPurchase;
     }
 
     public void addResources(int amount) {

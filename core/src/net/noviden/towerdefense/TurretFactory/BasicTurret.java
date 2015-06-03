@@ -30,8 +30,8 @@ import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 public class BasicTurret extends BaseTurret {
 
-    public static final int BASE_COST = 50;
-    public static final float BASE_RANGE = 250.0f;
+    private static final int BASE_COST = 50;
+    private static final float BASE_RANGE = 250.0f;
     private static final float BASE_DAMAGE = 25.0f;
     private static final float BASE_COOLDOWN = 0.5f;
 
@@ -70,6 +70,12 @@ public class BasicTurret extends BaseTurret {
         shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS * 0.15f);
     }
 
+    public void drawOpaque(ShapeRenderer shapeRenderer) {
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
+        shapeRenderer.circle(location.x, location.y, BASE_RANGE);
+    }
+
     public void upgradeUniqueModifier() {
         preUpgrade();
         this.pierceAmount++;
@@ -99,5 +105,9 @@ public class BasicTurret extends BaseTurret {
 
     public int getWorth() {
         return this.worth;
+    }
+
+    public int getBaseCost() {
+        return BASE_COST;
     }
 }

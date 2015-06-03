@@ -13,6 +13,15 @@ public class Point implements Serializable {
         return new Point(this.x, this.y);
     }
 
+    public void set(float x, float y) {
+        this.x = x; this.y = y;
+    }
+
+    public void set(Point target) {
+        Point clone = target.clone();
+        this.x = clone.x; this.y = clone.y;
+    }
+
     public boolean equals(Object o) {
         Point target = (Point) o;
 

@@ -49,27 +49,8 @@ public class TurretManager {
         }
     }
 
-    public void addTurret(Point location, BaseTurret.Type type) {
-        switch (type) {
-            case NORMAL:
-                turrets.add(new BasicTurret(location));
-                break;
-            case CHAINGUN:
-                turrets.add(new ChaingunTurret(location));
-                break;
-            case ROCKET:
-                turrets.add(new RocketTurret(location));
-                break;
-            case SHOTGUN:
-                turrets.add(new ShotgunTurret(location));
-                break;
-            case HOMING:
-                turrets.add(new HomingTurret(location));
-                break;
-            case BUFF:
-                turrets.add(new BuffTurret(location, this));
-                break;
-        }
+    public void addTurret(BaseTurret turret) {
+        turrets.add(turret);
     }
 
     public void removeTurret(BaseTurret turret) {

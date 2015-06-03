@@ -32,8 +32,8 @@ public class BuffTurret extends BaseTurret {
     private static final float BASE_BUFF_DURATION = 3.0f;
     private static final float BASE_BUFF_PERCENTAGE = 0.5f;
 
-    public static final float BASE_RANGE = 300.0f;
-    public static final int BASE_COST = 50;
+    private static final float BASE_RANGE = 300.0f;
+    private static final int BASE_COST = 50;
 
     private static final String UNIQUE_MODIFIER_NAME = "Attack Speed Buff";
 
@@ -98,6 +98,12 @@ public class BuffTurret extends BaseTurret {
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS * 0.25f);
         shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS * 0.75f);
+    }
+
+    public void drawOpaque(ShapeRenderer shapeRenderer) {
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
+        shapeRenderer.circle(location.x, location.y, BASE_RANGE);
 
         // draw a line to buffed turrets, displaying power bonus
         for (BaseTurret turret : _buffedTurrets) {
@@ -151,5 +157,9 @@ public class BuffTurret extends BaseTurret {
         float sumRadii = pTurret.getRadius() + this.range;
 
         return (sumRadii >= distanceBetween);
+    }
+
+    public int getBaseCost() {
+        return BASE_COST;
     }
 }

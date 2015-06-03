@@ -39,7 +39,7 @@ public abstract class BaseTurret {
     protected static final int BASE_UPGRADE_COST = 10;
 
     public enum Type implements Serializable {
-        NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING, BUFF
+        NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING, BUFF;
     }
 
     protected Point location;
@@ -90,6 +90,8 @@ public abstract class BaseTurret {
     public abstract void attack(Unit target);
 
     public abstract void draw(ShapeRenderer shapeRenderer);
+
+    public abstract void drawOpaque(ShapeRenderer shapeRenderer);
 
     public abstract void upgradeDamage();
 
@@ -184,6 +186,8 @@ public abstract class BaseTurret {
     public int getUpgradeCost() {
         return this.upgradeCost;
     }
+
+    public abstract int getBaseCost();
 
     public boolean containsPoint(Point point) {
         float distanceBetween = (float) Math.sqrt(

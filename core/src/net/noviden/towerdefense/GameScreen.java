@@ -177,42 +177,48 @@ public class GameScreen implements Screen {
 		buttonSelectBasicTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.NORMAL);
+				player.setTurretSelectedForPurchase(
+						new BasicTurret(mouseLocation.clone()));
 			}
 		});
 
 		buttonSelectChaingunTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.CHAINGUN);
+				player.setTurretSelectedForPurchase(
+						new ChaingunTurret(mouseLocation.clone()));
 			}
 		});
 
 		buttonSelectRocketTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.ROCKET);
+				player.setTurretSelectedForPurchase(
+						new RocketTurret(mouseLocation.clone()));
 			}
 		});
 
 		buttonSelectShotgunTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.SHOTGUN);
+				player.setTurretSelectedForPurchase(
+						new ShotgunTurret(mouseLocation.clone()));
 			}
 		});
 
 		buttonSelectHomingTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.HOMING);
+				player.setTurretSelectedForPurchase(
+						new HomingTurret(mouseLocation.clone()));
 			}
 		});
 
 		buttonSelectBuffTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				player.setSelectedTurretType(BaseTurret.Type.BUFF);
+				player.setTurretSelectedForPurchase(
+						new BuffTurret(mouseLocation.clone(), turretManager));
 			}
 		});
 
@@ -431,12 +437,9 @@ public class GameScreen implements Screen {
 		if (upgradeTable.isVisible()) {
 			BaseTurret turret = player.getTurretSelectedForUpgrade();
 
-			shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-			shapeRenderer.setColor(Color.RED);
-			shapeRenderer.circle(turret.getLocation().x, turret.getLocation().y,
-					turret.getRadius());
-			shapeRenderer.circle(turret.getLocation().x, turret.getLocation().y,
-					turret.getRange());
+			if (turret != null) {
+				turret.drawOpaque(shapeRenderer);
+			}
 		}
 
 		shapeRenderer.end();
@@ -461,31 +464,10 @@ public class GameScreen implements Screen {
 			shapeRenderer.setColor(Color.GREEN);
 		}
 
-		shapeRenderer.circle(mouseLocation.x, mouseLocation.y, 10.0f);
-
-		// TODO should be a better way to get values
-		float range = 0.0f;
-		switch (player.getSelectedTurretType()) {
-			case NORMAL:
-				range = BasicTurret.BASE_RANGE;
-				break;
-			case CHAINGUN:
-				range = ChaingunTurret.BASE_RANGE;
-				break;
-			case ROCKET:
-				range = RocketTurret.BASE_RANGE;
-				break;
-			case SHOTGUN:
-				range = ShotgunTurret.BASE_RANGE;
-				break;
-			case HOMING:
-				range = HomingTurret.BASE_RANGE;
-				break;
-			case BUFF:
-				range = BuffTurret.BASE_RANGE;
+		BaseTurret turret = player.getTurretSelectedForPurchase();
+		if (turret != null) {
+			turret.drawOpaque(shapeRenderer);
 		}
-
-		shapeRenderer.circle(mouseLocation.x, mouseLocation.y, range);
 	}
 
 	private void updateUi() {
@@ -500,8 +482,8 @@ public class GameScreen implements Screen {
 		timeLabel.setText("Elapsed: " + simpleDateFormat.format(elapsed));
 
 		// update upgrade ui
-		if (upgradeTable.isVisible()) {
-			BaseTurret turret = player.getTurretSelectedForUpgrade();
+		BaseTurret turret = player.getTurretSelectedForUpgrade();
+		if (upgradeTable.isVisible() && turret != null) {
 
 			selectedTurretLabel.setText("Upgrade Turret " +
 					turret.getId());
@@ -572,22 +554,31 @@ public class GameScreen implements Screen {
 							player.canAffordSelectedTurret() &&
 							turretManager.validPlacementForTurret(targetLocation, map)) {
 
-						turretManager.addTurret(targetLocation, player.getSelectedTurretType());
+						turretManager.addTurret(player.getTurretSelectedForPurchase());
 						player.purchaseTurret();
-						upgradeTable.setVisible(false);
+
+						upgradeTable.setVisible(true);
 
 						return true;
 					}
 
 					break;
 				case VIEW:
+				case TURRET_UPGRADE:
 					BaseTurret turret = turretManager.findTurretByLocation(targetLocation);
 					if (turret != null) {
-						player.setState(Player.State.TURRET_UPGRADE);
-						player.setTurretForUpgrade(turret);
-						upgradeTable.setVisible(true);
 
-						return true;
+						if (upgradeTable.isVisible()) {
+							player.setState(Player.State.VIEW);
+							player.setTurretForUpgrade(null);
+							upgradeTable.setVisible(false);
+						} else {
+							player.setState(Player.State.TURRET_UPGRADE);
+							player.setTurretForUpgrade(turret);
+							upgradeTable.setVisible(true);
+
+							return true;
+						}
 					}
 
 					break;
@@ -686,6 +677,12 @@ public class GameScreen implements Screen {
 
 			if (turretManager.validPlacementForTurret(mouseLocation, map)) {
 				player.setState(Player.State.TURRET_PLACE);
+
+				BaseTurret turret = player.getTurretSelectedForPurchase();
+				if (turret != null) {
+					turret.getLocation().set(mouseLocation);
+				}
+
 			} else {
 				player.setState(Player.State.VIEW);
 			}
