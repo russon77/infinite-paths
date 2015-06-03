@@ -41,6 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.MainMenuScreen;
 import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
@@ -61,6 +62,8 @@ public class MapCreatorScreen implements Screen {
     private Stack<Path> paths;
     private ArrayList<Point> pointSet;
     private String name;
+
+
 
     public MapCreatorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
@@ -85,12 +88,58 @@ public class MapCreatorScreen implements Screen {
         TextButton finishButton = new TextButton("Save Map", skin);
         TextButton exitButton = new TextButton("Exit", skin);
 
+        final TextButton displayOptionsButton = new TextButton("Options", skin);
+
+        // set up options table
+        final Table optionsTable = new Table();
+        optionsTable.setVisible(false);
+
+        Label initialPlayerHealthLabel = new Label("Initial Player Health:", skin);
+        final TextField initialPlayerHealthText =
+                new TextField("" + MapSettings.DEFAULT_INITIAL_PLAYER_HEALTH, skin);
+        Label initialPlayerResourcesLabel = new Label("Initial Player Resources:", skin);
+        final TextField initialPlayerResourcesText =
+                new TextField("" + MapSettings.DEFAULT_INITIAL_PLAYER_RESOURCES, skin);
+        Label initialUnitHealthLabel = new Label("Initial Unit Health:", skin);
+        final TextField initialUnitHealthText =
+                new TextField("" + MapSettings.DEFAULT_INITIAL_UNIT_HEALTH, skin);
+        Label initialUnitMovementSpeedLabel = new Label("Initial Unit Movement Speed:", skin);
+        final TextField initialUnitMovementSpeedText =
+                new TextField("" + MapSettings.DEFAULT_INITIAL_UNIT_SPEED, skin);
+        Label initialUnitDamageLabel = new Label("Initial Unit Damage:", skin);
+        final TextField initialUnitDamageText =
+                new TextField("" + MapSettings.DEFAULT_INITIAL_UNIT_DAMAGE, skin);
+        Label defaultUnitSpawnRateLabel = new Label("Unit Spawn Rate:", skin);
+        final TextField defaultUnitSpawnRateText =
+                new TextField("" + MapSettings.DEFAULT_UNIT_SPAWN_RATE, skin);
+
+        TextButton displayWavesCreatorButton = new TextButton("Waves Creator", skin);
+        TextButton displayTurretsButton = new TextButton("Disable Turrets", skin);
+
+        optionsTable.add(initialPlayerHealthLabel, initialPlayerHealthText);
+        optionsTable.row();
+        optionsTable.add(initialPlayerResourcesLabel, initialPlayerResourcesText);
+        optionsTable.row();
+        optionsTable.add(initialUnitHealthLabel, initialUnitHealthText);
+        optionsTable.row();
+        optionsTable.add(initialUnitMovementSpeedLabel, initialUnitMovementSpeedText);
+        optionsTable.row();
+        optionsTable.add(initialUnitDamageLabel, initialUnitDamageText);
+        optionsTable.row();
+        optionsTable.add(defaultUnitSpawnRateLabel, defaultUnitSpawnRateText);
+        optionsTable.row();
+
+
         table.add(addPathButton);
         table.add(undoButton);
         table.add(finishButton);
         table.add(exitButton);
         table.row();
         table.add(nameLabel, nameField);
+        table.add(displayOptionsButton);
+        table.row();
+
+        table.add(optionsTable);
 
         table.top(); table.right();
 
@@ -149,15 +198,65 @@ public class MapCreatorScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
 
                 if (paths.size() == 0 && pointSet.size() < 2) {
-                    // display error message
-                    // TODO
-                    Dialog errorDialog = new Dialog("Error!", skin);
-                    errorDialog.text("Error! Each path must have at least an entrance and exit");
-                    errorDialog.button("Ok");
-                    errorDialog.show(stage);
-
+                    displayErrorMessage(
+                            "Error! Each path must have at least an entrance and exit", skin);
                     return;
                 }
+
+                // create settings for map
+                int playerHealth = Integer.parseInt(initialPlayerHealthText.getText()),
+                        playerResources = Integer.parseInt(initialPlayerResourcesText.getText()),
+                        unitDamage = Integer.parseInt(initialUnitDamageText.getText());
+                float unitHealth = Float.parseFloat(initialUnitHealthText.getText()),
+                        unitSpeed = Float.parseFloat(initialUnitMovementSpeedText.getText()),
+                        unitSpawnRate = Float.parseFloat(defaultUnitSpawnRateText.getText());
+
+                // validation
+                if (playerHealth <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Player cannot start with 0.0 health", skin);
+                    return;
+                } else if (unitHealth <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 health", skin);
+                    return;
+                } else if (unitDamage <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 damage", skin);
+                    return;
+                } else if (unitSpeed <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 speed", skin);
+                    return;
+                } else if (unitSpawnRate <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Spawn rate cannot be 0.0", skin);
+                    return;
+                }
+
+                MapSettings mapSettings = new MapSettings();
+
+                String[] keys =
+                        {
+                                MapSettings.PLAYER_INITIAL_HEALTH_KEY,
+                                MapSettings.PLAYER_INITIAL_RESOURCES_KEY,
+                                MapSettings.UNIT_INITIAL_DAMAGE_KEY,
+                                MapSettings.UNIT_INITIAL_HEALTH_KEY,
+                                MapSettings.UNIT_INITIAL_SPEED_KEY,
+                                MapSettings.UNIT_SPAWN_RATE_KEY
+                        };
+
+                float[] values =
+                        {
+                                playerHealth,
+                                playerResources,
+                                unitDamage,
+                                unitHealth,
+                                unitSpeed,
+                                unitSpawnRate
+                        };
+
+                mapSettings.putValues(keys, values);
 
                 // make sure current pointSet is included in new map
                 if (pointSet.size() > 1) {
@@ -171,41 +270,29 @@ public class MapCreatorScreen implements Screen {
                     pathsForMap[i++] = paths.pop();
                 }
 
+                // finally create the map
                 Map map = new Map(
                         new Map.Dimensions(TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT),
                         pathsForMap,
-                        nameField.getText());
+                        nameField.getText(),
+                        mapSettings);
 
                 towerDefense.maps.add(map);
 
                 // return to main menu
                 towerDefense.setScreen(new MainMenuScreen(towerDefense));
                 dispose();
+            }
+        });
 
-                /*
-
-                // ask for name
-                Gdx.input.getTextInput(new Input.TextInputListener() {
-                    @Override
-                    public void input(String text) {
-                        // create a new map and add it to the list stored in `game`
-                        Map map = new Map(new Map.Dimensions(TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT),
-                                new Path(pointSet, 5.0f));
-
-                        towerDefense.maps.add(map);
-
-                        // return to main menu
-                        towerDefense.setScreen(new MainMenuScreen(towerDefense));
-                        dispose();
-                    }
-
-                    @Override
-                    public void canceled() {
-
-                    }
-                }, "Name Your Map", "", "e.g. super awesome fun map");
-
-                */
+        displayOptionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (optionsTable.isVisible()) {
+                    optionsTable.setVisible(false);
+                } else {
+                    optionsTable.setVisible(true);
+                }
             }
         });
 
@@ -265,6 +352,13 @@ public class MapCreatorScreen implements Screen {
 
         stage.act(deltaTime);
         stage.draw();
+    }
+
+    private void displayErrorMessage(String message, Skin skin) {
+        Dialog errorDialog = new Dialog("Error!", skin);
+        errorDialog.text(message);
+        errorDialog.button("Ok");
+        errorDialog.show(stage);
     }
 
     public void pause() {}

@@ -105,13 +105,14 @@ public class GameScreen implements Screen {
 		map = gameMap;
 
 		// create a unit manager for each path on this map
-		unitManagers = new UnitManager[map.paths.length];
-		for (int i = 0; i< map.paths.length; i++) {
-			unitManagers[i] = new UnitManager(map.paths[i]);
+		Path[] paths = map.getPaths();
+		unitManagers = new UnitManager[paths.length];
+		for (int i = 0; i< paths.length; i++) {
+			unitManagers[i] = new UnitManager(paths[i], map.getSettings());
 		}
 
 		turretManager = new TurretManager();
-		player = new Player();
+		player = new Player(gameMap.getSettings());
 		MissileManager.initialize();
 
 		// set up the camera

@@ -102,7 +102,7 @@ public class ChaingunTurret extends BaseTurret {
 
     public void draw(ShapeRenderer shapeRenderer) {
         // draw base turret
-        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.setColor(BASE_TURRET_COLOR);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
 

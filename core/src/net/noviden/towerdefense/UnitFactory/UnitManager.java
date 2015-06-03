@@ -21,6 +21,7 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Player;
 
@@ -28,7 +29,9 @@ import java.util.ArrayList;
 
 public class UnitManager {
 
-    private static final int[][] SPAWN_PATTERN =
+    final MapSettings _settings;
+
+    private static final int[][] DEFAULT_SPAWN_PATTERN =
             {
                     {2,2,2,2,2,2,2,2},
                     {2,3,2,3,2,3,2,3},
@@ -40,14 +43,14 @@ public class UnitManager {
                     {5,6,5,6,5,6,5,6},
                     {6,6,6,6,6,6,6,6}
             };
+
+
     private int spawnIndex;
     private int waveIndex;
+    private int[][] _spawnPattern;
 
     private static final float PRE_WAVE_COOLDOWN_TIME = 3.0f;
     private static final float BASE_COOLDOWN = 2.0f;
-    private static final float BASE_UNIT_HEALTH = 100.0f;
-    private static final float BASE_UNIT_SPEED = 75.0f;
-    private static final int BASE_UNIT_DAMAGE = 1;
 
     private Path path;
 
@@ -59,13 +62,20 @@ public class UnitManager {
     private float cooldownTimer;
     private float gameTime;
 
-    public UnitManager(Path path) {
+    public UnitManager(Path path, final MapSettings settings) {
         this.cooldownTimer = PRE_WAVE_COOLDOWN_TIME;
         this.units = new ArrayList<Unit>();
         this.path = path;
         this.level = 0;
         this.gameTime = 0.0f;
         this.spawnIndex = this.waveIndex = 0;
+
+        _settings = settings;
+
+        _spawnPattern = settings.getWaves();
+        if (_spawnPattern == null) {
+            _spawnPattern = DEFAULT_SPAWN_PATTERN;
+        }
     }
 
     public void act(float deltaTime, Player player) {
@@ -77,7 +87,7 @@ public class UnitManager {
         if (cooldownTimer < 0.0f) {
             // spawn a new unit and go on cooldown
             spawnUnit();
-            cooldownTimer = BASE_COOLDOWN;
+            cooldownTimer = _settings.getValue(MapSettings.UNIT_SPAWN_RATE_KEY);
         }
 
         // process all units, calling `act` on each
@@ -117,24 +127,27 @@ public class UnitManager {
 
     private void spawnUnit() {
         // every 15 seconds units double in health/damage
-        float unitHealth = BASE_UNIT_HEALTH * (1.0f + (gameTime / 15.0f)),
-                unitDamage = BASE_UNIT_DAMAGE * (1.0f + (gameTime / 15.0f)),
-                    unitSpeed = BASE_UNIT_SPEED * (1.0f + (gameTime / 120.0f));
+        float unitHealth = _settings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY) *
+                    (1.0f + (gameTime / 15.0f)),
+                unitDamage = _settings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY) *
+                        (1.0f + (gameTime / 15.0f)),
+                    unitSpeed = _settings.getValue(MapSettings.UNIT_INITIAL_SPEED_KEY) *
+                            (1.0f + (gameTime / 120.0f));
 
         Unit unitToSpawn = null;
 
-        if (spawnIndex >= SPAWN_PATTERN[waveIndex].length) {
+        if (spawnIndex >= _spawnPattern[waveIndex].length) {
             // advance to next wave
             waveIndex++;
             spawnIndex = 0;
         }
 
-        if (waveIndex >= SPAWN_PATTERN.length) {
+        if (waveIndex >= _spawnPattern.length) {
             // continuously spawn the last wave
             waveIndex--;
         }
 
-        switch (SPAWN_PATTERN[waveIndex][spawnIndex]) {
+        switch (_spawnPattern[waveIndex][spawnIndex]) {
             case 2: unitToSpawn = new Unit(unitHealth, unitDamage, unitSpeed, path);
                 break;
             case 3: unitToSpawn = new TriangleUnit(unitHealth, unitDamage, unitSpeed, path);

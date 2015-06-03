@@ -49,7 +49,7 @@ public class HexagonUnit extends Unit {
 
         // draw a hexagon centered at the current location
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.PURPLE);
+        shapeRenderer.setColor(BASE_UNIT_COLOR);
 
         shapeRenderer.identity();
 
@@ -95,7 +95,7 @@ public class HexagonUnit extends Unit {
         if (percentHealthMissing > 0.0f) {
 
             // draw in missing health
-            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
 
             // draw triangle MAB
             percentToDraw =

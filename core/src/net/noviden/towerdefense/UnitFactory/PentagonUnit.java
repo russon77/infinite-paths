@@ -54,7 +54,7 @@ public class PentagonUnit extends Unit {
 
         // draw a pentagon centered at the current location
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.PURPLE);
+        shapeRenderer.setColor(BASE_UNIT_COLOR);
 
         shapeRenderer.identity();
 
@@ -90,14 +90,13 @@ public class PentagonUnit extends Unit {
                 -s1, c1);
 
         // draw triangle MEA
-        shapeRenderer.triangle(0,0,
+        shapeRenderer.triangle(0, 0,
                 -s1, c1,
                 0, centerToVertex);
 
-        // draw missing health
-        shapeRenderer.setColor(Color.GREEN);
-
         if (percentHealthMissing > 0.0f) {
+            // draw missing health
+            shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
 
             // triangle MAB
             percentToDraw =

@@ -19,15 +19,19 @@
 
 package net.noviden.towerdefense.TurretFactory;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 public abstract class BaseTurret {
+
+    protected static final Color BASE_TURRET_COLOR = Color.GRAY;
 
     protected static final float BASE_SIZE_RADIUS = 10.0f;
     protected static final int BASE_UPGRADE_COST = 10;
@@ -36,7 +40,7 @@ public abstract class BaseTurret {
         SLEEPING, ATTACKING
     };
 
-    public enum Type {
+    public enum Type implements Serializable {
         NORMAL, CHAINGUN, SHOTGUN, ROCKET, HOMING, BUFF
     }
 
@@ -110,18 +114,54 @@ public abstract class BaseTurret {
         return false;
     }
 
+    /*
+     * return NULL if no closer enemy is found
+     */
     protected Unit findEnemyInRange(UnitManager unitManager) {
+        Unit closestUnit = null;
+        float closestDistance;
+        float distanceFromCurrentTarget;
+
+        if (target != null) {
+            distanceFromCurrentTarget = (float) Math.sqrt(
+                    Math.pow(location.x - target.location.x, 2) +
+                            Math.pow(location.y - target.location.y, 2));
+
+            closestDistance = distanceFromCurrentTarget;
+        } else {
+            closestDistance = range;
+        }
+
         for (Unit unit : unitManager.units) {
             float distanceBetween = (float) Math.sqrt(
                     Math.pow(location.x - unit.location.x, 2) +
                             Math.pow(location.y - unit.location.y, 2));
 
-            if (distanceBetween < range) {
-                return unit;
+            if (distanceBetween < closestDistance) {
+                closestUnit = unit;
+                closestDistance = distanceBetween;
             }
         }
 
-        return null;
+        if (target == null) {
+            return closestUnit;
+        } else if (closestUnit == null) {
+            return null;
+        }
+
+        distanceFromCurrentTarget = (float) Math.sqrt(
+                Math.pow(location.x - target.location.x, 2) +
+                        Math.pow(location.y - target.location.y, 2));
+
+        float distanceFromNewTarget = (float) Math.sqrt(
+                Math.pow(location.x - closestUnit.location.x, 2) +
+                        Math.pow(location.y - closestUnit.location.y, 2));
+
+        if (distanceFromCurrentTarget > distanceFromNewTarget) {
+            return closestUnit;
+        } else {
+            return null;
+        }
     }
 
     public String getId() {

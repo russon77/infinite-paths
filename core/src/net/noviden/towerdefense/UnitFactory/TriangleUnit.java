@@ -58,7 +58,7 @@ public class TriangleUnit extends Unit {
 
         // draw a square centered at the current location
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.PURPLE);
+        shapeRenderer.setColor(BASE_UNIT_COLOR);
 
         shapeRenderer.identity();
 
@@ -68,7 +68,7 @@ public class TriangleUnit extends Unit {
         shapeRenderer.triangle(ax, ay, bx, by, cx, cy);
 
         // draw in health missing, break down large triangle into three smaller ones
-        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
 
         if (percentHealthMissing > 0.0f) {
 

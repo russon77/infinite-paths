@@ -30,12 +30,12 @@ import net.noviden.towerdefense.TurretFactory.ShotgunTurret;
 public class Player {
 
     public static final float BASE_TURRET_PLACE_COOLDOWN = 0.25f;
-    private static final int BASE_RESOURCES = 50;
-    private static final int BASE_HEALTH = 100;
 
     public enum State {
         TURRET_PLACE, TURRET_UPGRADE, VIEW
     }
+
+    private final MapSettings _settings;
 
     private State state;
     private BaseTurret.Type selectedTurretType;
@@ -49,12 +49,17 @@ public class Player {
 
     private BaseTurret turretSelectedForUpgrade;
 
-    public Player() {
+    public Player(final MapSettings settings) {
+        _settings = settings;
+
+        this.health = _settings.getValue(MapSettings.PLAYER_INITIAL_HEALTH_KEY);
+        this.resources =
+                (int) _settings.getValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY);
+
         this.state = State.TURRET_PLACE;
         this.selectedTurretType = BaseTurret.Type.NORMAL;
         this.placeTurretCooldown = BASE_TURRET_PLACE_COOLDOWN;
-        this.resources = BASE_RESOURCES;
-        this.health = BASE_HEALTH;
+
         this.score = this.numTurretsCreated = this.numUnitsKilled = 0;
     }
 

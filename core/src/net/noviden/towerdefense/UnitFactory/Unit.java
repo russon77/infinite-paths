@@ -28,6 +28,10 @@ import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
 
 public class Unit {
+
+    protected static final Color BASE_UNIT_COLOR = Color.BLUE;
+    protected static final Color BASE_UNIT_DAMAGED_COLOR = Color.RED;
+
     private static final float BASE_RADIUS = 10.0f;
     private static final int BASE_WORTH = 20;
 
@@ -148,11 +152,13 @@ public class Unit {
         float percentHealthMissing = (1.0f - this.health / this.maxHealth);
         float degrees = percentHealthMissing * 360.0f;
 
-        shapeRenderer.setColor(Color.PURPLE);
+        shapeRenderer.setColor(BASE_UNIT_COLOR);
         shapeRenderer.circle(location.x, location.y, BASE_RADIUS);
 
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
+        if (percentHealthMissing > 0.0f) {
+            shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
+            shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
+        }
     }
 
     public Unit getNextUnitToSpawn() {

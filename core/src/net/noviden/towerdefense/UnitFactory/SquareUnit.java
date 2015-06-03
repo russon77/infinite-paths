@@ -46,7 +46,7 @@ public class SquareUnit extends Unit {
 
         // draw a square centered at the current location
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.PURPLE);
+        shapeRenderer.setColor(BASE_UNIT_COLOR);
 
         shapeRenderer.identity();
 
@@ -56,7 +56,7 @@ public class SquareUnit extends Unit {
 
         // draw missing health: break up square into 4 distinct triangles
         if (percentHealthMissing > 0.0f) {
-            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
             float percentToDraw;
 
             // draw 1 / 4

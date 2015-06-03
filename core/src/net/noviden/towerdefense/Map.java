@@ -39,13 +39,22 @@ public class Map implements Serializable {
     }
 
     public Dimensions dimensions;
-    public Path[] paths;
+    private Path[] paths;
     private String name;
+    private MapSettings _settings;
 
     public Map(Dimensions dimensions, Path[] paths, String name) {
         this.dimensions = dimensions;
         this.paths = paths;
         this.name = name;
+
+        _settings = new MapSettings();
+    }
+
+    public Map(Dimensions dimensions, Path[] paths, String name, MapSettings settings) {
+        this(dimensions, paths, name);
+
+        _settings = settings;
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
@@ -73,6 +82,14 @@ public class Map implements Serializable {
 
     public String getName() {
         return this.name;
+    }
+
+    public Path[] getPaths() {
+        return this.paths;
+    }
+
+    public MapSettings getSettings() {
+        return _settings;
     }
 
     public static Map createFromFile(String filename) {

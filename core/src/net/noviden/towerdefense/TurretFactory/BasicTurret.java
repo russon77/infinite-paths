@@ -98,9 +98,8 @@ public class BasicTurret extends BaseTurret {
 
     public void draw(ShapeRenderer shapeRenderer) {
         // draw base turret
-        shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.setColor(BASE_TURRET_COLOR);
         shapeRenderer.circle(location.x, location.y, radius);
 
         // draw identifying feature: one white dot in center

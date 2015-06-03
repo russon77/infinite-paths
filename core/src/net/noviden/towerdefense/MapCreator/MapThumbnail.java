@@ -32,6 +32,8 @@ public class MapThumbnail {
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
 
+        /*
+
         for (Path path : map.paths) {
 
             for (int j = 0; j < (path.set.size() - 1); j++) {
@@ -42,5 +44,7 @@ public class MapThumbnail {
                         scale * b.x, scale * b.y);
             }
         }
+
+        */
     }
 }
