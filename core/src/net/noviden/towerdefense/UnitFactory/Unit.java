@@ -22,6 +22,7 @@ package net.noviden.towerdefense.UnitFactory;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Player;
 import net.noviden.towerdefense.Point;
@@ -84,7 +85,12 @@ public class Unit {
         this.currentDestinationIndex = currentDestinationIndex;
 
         // set initial xVel and yVel based on destination
-        Point destination = path.set.get(currentDestinationIndex);
+        if (currentDestinationIndex >= path.set.size()) {
+            // set to last destination in path
+            this.currentDestinationIndex = path.set.size() - 1;
+        }
+
+        Point destination = path.set.get(this.currentDestinationIndex);
 
         float distanceBetween = (float) Math.sqrt(
                 Math.pow(location.x - destination.x, 2) + Math.pow(location.y - destination.y, 2));
@@ -106,8 +112,10 @@ public class Unit {
         // count down slow timer
         if (timeSlowed >= 0.0f) {
             timeSlowed -= deltaTime;
-        } else {
-            percentSlowed = 0.0f;
+
+            if (timeSlowed <= 0.0f) {
+                percentSlowed = 0.0f;
+            }
         }
 
         // check for boundaries
@@ -159,6 +167,18 @@ public class Unit {
             shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
             shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
         }
+    }
+
+    public boolean collidesWith(Missile missile) {
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(this.location.x - missile.location.x, 2) +
+                        Math.pow(this.location.y - missile.location.y, 2));
+
+        if (distanceBetween < (missile.radius + this.radius)) {
+            return true;
+        }
+
+        return false;
     }
 
     public Unit getNextUnitToSpawn() {

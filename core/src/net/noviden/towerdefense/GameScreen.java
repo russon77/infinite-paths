@@ -158,6 +158,7 @@ public class GameScreen implements Screen {
 		Table selectTypeTable = new Table();
 		selectTypeTable.setDebug(true);
 
+
 		TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
 		TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
 		TextButton buttonSelectShotgunTurret = new TextButton("Shotgun (R50)", skin);
@@ -165,14 +166,20 @@ public class GameScreen implements Screen {
 		TextButton buttonSelectHomingTurret = new TextButton("Homing (R50)", skin);
 		TextButton buttonSelectBuffTurret = new TextButton("Buff (R50)", skin);
 
-		selectTypeTable.add(buttonSelectBasicTurret).fillX();
-		selectTypeTable.add(buttonSelectChaingunTurret);
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL))
+			selectTypeTable.add(buttonSelectBasicTurret).fillX();
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.CHAINGUN))
+			selectTypeTable.add(buttonSelectChaingunTurret);
 		selectTypeTable.row();
-		selectTypeTable.add(buttonSelectRocketTurret).fillX();
-		selectTypeTable.add(buttonSelectShotgunTurret).fillX();
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.ROCKET))
+			selectTypeTable.add(buttonSelectRocketTurret).fillX();
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.SHOTGUN))
+			selectTypeTable.add(buttonSelectShotgunTurret).fillX();
 		selectTypeTable.row();
-		selectTypeTable.add(buttonSelectHomingTurret).fillX();
-		selectTypeTable.add(buttonSelectBuffTurret).fillX();
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.HOMING))
+			selectTypeTable.add(buttonSelectHomingTurret).fillX();
+		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.BUFF))
+			selectTypeTable.add(buttonSelectBuffTurret).fillX();
 
 		buttonSelectBasicTurret.addListener(new ClickListener() {
 			@Override

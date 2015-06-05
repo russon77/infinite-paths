@@ -48,13 +48,7 @@ public class CollisionManager {
                     continue;
                 }
 
-                float distanceBetween = (float) Math.sqrt(
-                        Math.pow(unit.location.x - tmpMissile.location.x, 2) +
-                                Math.pow(unit.location.y - tmpMissile.location.y, 2));
-
-                // COLLISION DETECTED
-                if (distanceBetween < (tmpMissile.radius + unit.radius)) {
-
+                if (unit.collidesWith(tmpMissile)) {
                     // UNIT TAKES DAMAGE
                     unit.takeDamage(tmpMissile.damage);
 

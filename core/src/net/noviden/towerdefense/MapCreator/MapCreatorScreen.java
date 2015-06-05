@@ -31,6 +31,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -45,7 +46,9 @@ import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
+import net.noviden.towerdefense.TurretFactory.BaseTurret;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.UUID;
@@ -62,8 +65,6 @@ public class MapCreatorScreen implements Screen {
     private Stack<Path> paths;
     private ArrayList<Point> pointSet;
     private String name;
-
-
 
     public MapCreatorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
@@ -128,7 +129,38 @@ public class MapCreatorScreen implements Screen {
         optionsTable.row();
         optionsTable.add(defaultUnitSpawnRateLabel, defaultUnitSpawnRateText);
         optionsTable.row();
+        optionsTable.add(displayTurretsButton);
 
+        final Table disableTurretsTable = new Table();
+        disableTurretsTable.setVisible(false);
+
+        final CheckBox disableChaingunTurretCheckbox =
+                new CheckBox("Disable Chaingun", skin);
+        final CheckBox disableBasicTurretCheckbox =
+                new CheckBox("Disable Basic", skin);
+        final CheckBox disableBuffTurretCheckbox =
+                new CheckBox("Disable Buff", skin);
+        final CheckBox disableHomingTurretCheckbox =
+                new CheckBox("Disable Homing", skin);
+        final CheckBox disableRocketTurretCheckbox =
+                new CheckBox("Disable Rocket", skin);
+        final CheckBox disableShotgunTurretCheckbox =
+                new CheckBox("Disable Shotgun", skin);
+
+        disableTurretsTable.add(disableChaingunTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableBasicTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableBuffTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableHomingTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableRocketTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableShotgunTurretCheckbox);
+
+        optionsTable.row();
+        optionsTable.add(disableTurretsTable);
 
         table.add(addPathButton);
         table.add(undoButton);
@@ -138,7 +170,6 @@ public class MapCreatorScreen implements Screen {
         table.add(nameLabel, nameField);
         table.add(displayOptionsButton);
         table.row();
-
         table.add(optionsTable);
 
         table.top(); table.right();
@@ -234,7 +265,41 @@ public class MapCreatorScreen implements Screen {
                     return;
                 }
 
+                ArrayList<BaseTurret.Type> disabledTypes =
+                        new ArrayList<BaseTurret.Type>();
+
+                if (disableBasicTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.NORMAL);
+                }
+                if (disableBuffTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.BUFF);
+                }
+                if (disableChaingunTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.CHAINGUN);
+                }
+                if (disableHomingTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.HOMING);
+                }
+                if (disableRocketTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.ROCKET);
+                }
+                if (disableShotgunTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.SHOTGUN);
+                }
+
+                // TODO remove magic number
+                if (disabledTypes.size() == 6) {
+                    displayErrorMessage(
+                            "Error! Cannot disable all turrets", skin);
+                    return;
+                }
+
                 MapSettings mapSettings = new MapSettings();
+
+                BaseTurret.Type[] disabledTypesArr = new BaseTurret.Type[disabledTypes.size()];
+                disabledTypesArr = disabledTypes.toArray(disabledTypesArr);
+
+                mapSettings.setDisabledTurretTypes(disabledTypesArr);
 
                 String[] keys =
                         {
@@ -290,8 +355,20 @@ public class MapCreatorScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 if (optionsTable.isVisible()) {
                     optionsTable.setVisible(false);
+//                    disableTurretsTable.setVisible(false);
                 } else {
                     optionsTable.setVisible(true);
+                }
+            }
+        });
+
+        displayTurretsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (disableTurretsTable.isVisible()) {
+                    disableTurretsTable.setVisible(false);
+                } else {
+                    disableTurretsTable.setVisible(true);
                 }
             }
         });
