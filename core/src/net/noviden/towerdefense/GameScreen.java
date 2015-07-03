@@ -575,7 +575,7 @@ public class GameScreen implements Screen {
 					BaseTurret turret = turretManager.findTurretByLocation(targetLocation);
 					if (turret != null) {
 
-						if (upgradeTable.isVisible()) {
+						if (turret.equals(player.getTurretSelectedForUpgrade())) {
 							player.setState(Player.State.VIEW);
 							player.setTurretForUpgrade(null);
 							upgradeTable.setVisible(false);
