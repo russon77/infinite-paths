@@ -19,32 +19,52 @@
 package net.noviden.towerdefense.MapCreator;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
+import net.noviden.towerdefense.TowerDefense;
 
 public class MapThumbnail {
 
-    public static void drawThumbnail(Map map, float scale, ShapeRenderer shapeRenderer) {
+    /*
+     * pixmap -> texture -> sprite -> spriteDrawable
+     */
+    public static SpriteDrawable createThumbnail(Map map, float scale) {
 
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
+        Pixmap pixmap = new Pixmap((int) (scale * TowerDefense.SCREEN_WIDTH),
+                (int) (scale * TowerDefense.SCREEN_HEIGHT), Pixmap.Format.RGB565);
 
-        /*
+        // draw border around pixmap
+        pixmap.setColor(Color.PURPLE);
+        pixmap.drawRectangle(0,0,pixmap.getWidth(), pixmap.getHeight());
 
-        for (Path path : map.paths) {
+        // draw paths
+        pixmap.setColor(Color.RED);
 
-            for (int j = 0; j < (path.set.size() - 1); j++) {
+        for (Path path : map.getPaths()) {
+            for (int j = 0; j < path.set.size() - 1; j++) {
                 Point a = path.set.get(j),
                         b = path.set.get(j + 1);
 
-                shapeRenderer.line(scale * a.x, scale * a.y,
-                        scale * b.x, scale * b.y);
+                int ax = (int) (a.x * scale), ay = (int) (a.y * scale),
+                    bx = (int) (b.x * scale), by = (int) (b.y * scale);
+
+                pixmap.drawLine(ax, ay, bx, by);
             }
         }
 
-        */
+        Texture texture = new Texture(pixmap);
+
+        Sprite sprite = new Sprite(texture);
+
+        SpriteDrawable spriteDrawable = new SpriteDrawable(sprite);
+
+        return spriteDrawable;
     }
 }

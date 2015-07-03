@@ -22,13 +22,17 @@ package net.noviden.towerdefense;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import net.noviden.towerdefense.MapCreator.MapThumbnail;
 
 public class MapSelectorScreen implements Screen {
 
@@ -46,6 +50,7 @@ public class MapSelectorScreen implements Screen {
         Table rootTable = new Table();
         rootTable.setFillParent(true);
 
+        Table containerTable = new Table();
         Table mapListTable = new Table();
 
         // add all maps to scrollpane
@@ -58,10 +63,15 @@ public class MapSelectorScreen implements Screen {
                 }
             });
 
+            ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
+
             mapListTable.add(textButton);
+            mapListTable.add(imageButton);
+            mapListTable.row();
         }
 
         ScrollPane scrollPane = new ScrollPane(mapListTable);
+        scrollPane.setFadeScrollBars(false);
 
         TextButton exitButton = new TextButton("Exit", skin);
         exitButton.addListener(new ClickListener() {
@@ -71,8 +81,10 @@ public class MapSelectorScreen implements Screen {
             }
         });
 
+        containerTable.add(scrollPane).width(500f).height(500f);
+
         rootTable.add(exitButton);
-        rootTable.add(scrollPane);
+        rootTable.add(containerTable);
         rootTable.center();
 
         stage.addActor(rootTable);
