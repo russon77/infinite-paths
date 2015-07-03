@@ -55,15 +55,17 @@ public class MapSelectorScreen implements Screen {
 
         // add all maps to scrollpane
         for (final Map map : towerDefense.maps) {
-            TextButton textButton = new TextButton(map.getName(), skin);
-            textButton.addListener(new ClickListener() {
+            ClickListener clickListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     towerDefense.setScreen(new GameScreen(towerDefense, map));
                 }
-            });
+            };
+            TextButton textButton = new TextButton(map.getName(), skin);
+            textButton.addListener(clickListener);
 
             ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
+            imageButton.addListener(clickListener);
 
             mapListTable.add(textButton);
             mapListTable.add(imageButton);
