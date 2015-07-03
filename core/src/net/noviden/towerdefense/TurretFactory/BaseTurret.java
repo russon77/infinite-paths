@@ -91,7 +91,12 @@ public abstract class BaseTurret {
 
     public abstract void draw(ShapeRenderer shapeRenderer);
 
-    public abstract void drawOpaque(ShapeRenderer shapeRenderer);
+    public void drawOpaque(ShapeRenderer shapeRenderer) {
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
+        shapeRenderer.circle(location.x, location.y, range);
+    }
 
     public abstract void upgradeDamage();
 

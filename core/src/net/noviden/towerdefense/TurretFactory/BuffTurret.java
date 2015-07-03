@@ -101,9 +101,7 @@ public class BuffTurret extends BaseTurret {
     }
 
     public void drawOpaque(ShapeRenderer shapeRenderer) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.circle(location.x, location.y, BASE_SIZE_RADIUS);
-        shapeRenderer.circle(location.x, location.y, BASE_RANGE);
+        super.drawOpaque(shapeRenderer);
 
         // draw a line to buffed turrets, displaying power bonus
         for (BaseTurret turret : _buffedTurrets) {
