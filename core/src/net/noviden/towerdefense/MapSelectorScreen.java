@@ -53,8 +53,13 @@ public class MapSelectorScreen implements Screen {
         Table containerTable = new Table();
         Table mapListTable = new Table();
 
-        // add all maps to scrollpane
-        for (final Map map : towerDefense.maps) {
+        for (int i = 0; i < towerDefense.maps.size(); i++) {
+            if (i > 0 && i % 3 == 0) {
+                mapListTable.row();
+            }
+
+            final Map map = towerDefense.maps.get(i);
+
             ClickListener clickListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -67,12 +72,11 @@ public class MapSelectorScreen implements Screen {
             ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
             imageButton.addListener(clickListener);
 
-            mapListTable.add(textButton);
-            mapListTable.add(imageButton);
-            mapListTable.row();
+            mapListTable.add(imageButton).pad(10.0f);
         }
 
         ScrollPane scrollPane = new ScrollPane(mapListTable);
+        scrollPane.layout();
         scrollPane.setFadeScrollBars(false);
 
         TextButton exitButton = new TextButton("Exit", skin);
@@ -83,7 +87,7 @@ public class MapSelectorScreen implements Screen {
             }
         });
 
-        containerTable.add(scrollPane).width(500f).height(500f);
+        containerTable.add(scrollPane).fillX().fillY();
 
         rootTable.add(exitButton);
         rootTable.add(containerTable);

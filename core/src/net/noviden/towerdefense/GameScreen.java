@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
@@ -126,7 +127,10 @@ public class GameScreen implements Screen {
 		// 	information table and other fun takes place
 		stage = new Stage();
 
-		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+//		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("assets/ui-red.atlas"));
+		Skin skin = new Skin(textureAtlas);
+		
 
 		Table table = new Table();
 		table.setDebug(false);
