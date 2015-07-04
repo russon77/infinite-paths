@@ -72,7 +72,8 @@ public class BuffTurret extends BaseTurret {
             _buffedTurrets.clear();
 
             for (BaseTurret turret : _turretManager.turrets) {
-                if (withinRange(turret)) {
+                if (withinRange(turret) && !turret.isAttackSpeedBuffed() &&
+                        !(turret instanceof BuffTurret)) {
                     turret.buffAttackSpeed(_buffPercentage, BASE_BUFF_DURATION);
                     _buffedTurrets.add(turret);
                 }

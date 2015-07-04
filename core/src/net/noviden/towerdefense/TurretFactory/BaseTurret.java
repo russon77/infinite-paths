@@ -121,6 +121,14 @@ public abstract class BaseTurret {
         _buffCooldownTimer = pTime;
     }
 
+    protected boolean isAttackSpeedBuffed() {
+        if (_buffCooldownTimer > 0.0f) {
+            return true;
+        }
+
+        return false;
+    }
+
     protected void preUpgrade() {
         this.level++;
         this.worth += this.upgradeCost;
