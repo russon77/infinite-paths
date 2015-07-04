@@ -31,6 +31,7 @@ public class BuffTurret extends BaseTurret {
 
     private static final float BASE_BUFF_DURATION = 3.0f;
     private static final float BASE_BUFF_PERCENTAGE = 0.5f;
+    private static final float MAX_BUFF_PERCENTAGE = 1.0f;
 
     private static final float BASE_RANGE = 300.0f;
     private static final int BASE_COST = 50;
@@ -132,7 +133,7 @@ public class BuffTurret extends BaseTurret {
     }
 
     public boolean canUpgradeUniqueModifier() {
-        return true;
+        return _buffPercentage < MAX_BUFF_PERCENTAGE;
     }
 
     public String getUniqueModifierName() {
