@@ -47,7 +47,7 @@ public class HomingTurret extends BaseTurret {
 
         this.range = BASE_RANGE;
         this.damage = BASE_DAMAGE;
-        this.cooldownLength = BASE_COOLDOWN;
+        this.cooldownLength = this.baseCooldownLength = BASE_COOLDOWN;
         this.radius = BASE_SIZE_RADIUS;
         this.worth = BASE_COST;
     }

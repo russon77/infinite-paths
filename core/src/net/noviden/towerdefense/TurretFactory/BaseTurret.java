@@ -130,6 +130,8 @@ public abstract class BaseTurret {
 
         this.cooldownLength *= pPercent;
         _buffCooldownTimer = pTime;
+
+        System.out.println("New attack speed: " + (1.0f / cooldownLength));
     }
 
     protected boolean isAttackSpeedBuffed() {
@@ -148,18 +150,6 @@ public abstract class BaseTurret {
         if (_upgradeSoundEffect != null) {
             _upgradeSoundEffect.play(1.0f);
         }
-    }
-
-    protected boolean enemyInRange(Unit unit) {
-        float distanceBetween = (float) Math.sqrt(
-                Math.pow(location.x - unit.location.x, 2) +
-                        Math.pow(location.y - unit.location.y, 2));
-
-        if (distanceBetween < range) {
-            return true;
-        }
-
-        return false;
     }
 
     /*
