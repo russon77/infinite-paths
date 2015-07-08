@@ -48,7 +48,6 @@ import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.UUID;

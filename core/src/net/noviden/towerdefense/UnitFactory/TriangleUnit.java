@@ -18,11 +18,9 @@
 
 package net.noviden.towerdefense.UnitFactory;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
-import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
@@ -103,4 +101,20 @@ public class TriangleUnit extends Unit {
         return new Unit(this.maxHealth, this.getDamage(),
                 this.speed, this.path, this.location, this.currentDestinationIndex);
     }
+
+    /*
+    @Override
+    public boolean collidesWith(Missile missile) {
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(this.location.x - missile.location.x, 2) +
+                        Math.pow(this.location.y - missile.location.y, 2));
+
+        if (distanceBetween < centerToVertex) {
+            // possibly a hit
+        }
+
+        return false;
+    }
+
+    */
 }

@@ -24,8 +24,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.noviden.towerdefense.MissileFactory.MissileManager;
-import net.noviden.towerdefense.MissileFactory.SlowingMissile;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;

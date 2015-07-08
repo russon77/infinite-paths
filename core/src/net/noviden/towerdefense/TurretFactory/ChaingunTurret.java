@@ -26,7 +26,6 @@ import net.noviden.towerdefense.MissileFactory.MissileManager;
 import net.noviden.towerdefense.MissileFactory.SlowingMissile;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.Unit;
-import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 public class ChaingunTurret extends BaseTurret {
 
