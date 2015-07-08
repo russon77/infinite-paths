@@ -600,6 +600,8 @@ public class GameScreen implements Screen {
 
 						upgradeTable.setVisible(true);
 
+						resetVisualTurretSelection();
+
 						return true;
 					}
 
