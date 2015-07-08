@@ -20,6 +20,7 @@
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -127,13 +128,10 @@ public class GameScreen implements Screen {
 		// 	information table and other fun takes place
 		stage = new Stage();
 
-//		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
-		TextureAtlas textureAtlas = new TextureAtlas(Gdx.files.internal("assets/ui-red.atlas"));
-		Skin skin = new Skin(textureAtlas);
-		
+		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
 		Table table = new Table();
-		table.setDebug(false);
+//		table.setDebug(false);
 		table.setFillParent(true);
 		stage.addActor(table);
 
@@ -160,8 +158,7 @@ public class GameScreen implements Screen {
 		});
 
 		Table selectTypeTable = new Table();
-		selectTypeTable.setDebug(true);
-
+//		selectTypeTable.setDebug(true);
 
 		TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
 		TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
@@ -174,12 +171,14 @@ public class GameScreen implements Screen {
 			selectTypeTable.add(buttonSelectBasicTurret).fillX();
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.CHAINGUN))
 			selectTypeTable.add(buttonSelectChaingunTurret);
-		selectTypeTable.row();
+
+
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.ROCKET))
 			selectTypeTable.add(buttonSelectRocketTurret).fillX();
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.SHOTGUN))
 			selectTypeTable.add(buttonSelectShotgunTurret).fillX();
-		selectTypeTable.row();
+
+
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.HOMING))
 			selectTypeTable.add(buttonSelectHomingTurret).fillX();
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.BUFF))
@@ -235,9 +234,9 @@ public class GameScreen implements Screen {
 
 		// add in information view
 		Table infoTable = new Table();
-		infoTable.setDebug(true);
+//		infoTable.setDebug(true);
 
-		resourcesLabel = new Label("Resources: " + player.getResources(), skin);
+		resourcesLabel = new Label("Resources: R" + player.getResources(), skin);
 		scoreLabel = new Label("Score: " + player.getScore(), skin);
 		healthLabel = new Label("Health: " + player.getHealth(), skin);
 		numTurretsLabel = new Label("Turrets Created: " + player.getNumTurretsCreated(), skin);
@@ -246,21 +245,16 @@ public class GameScreen implements Screen {
 		startDate = new Date();
 		timeLabel = new Label("Elapsed: ", skin);
 
-		infoTable.add(healthLabel);
-		infoTable.row();
-		infoTable.add(scoreLabel);
-		infoTable.row();
-		infoTable.add(resourcesLabel);
-		infoTable.row();
-		infoTable.add(numTurretsLabel);
-		infoTable.row();
-		infoTable.add(numUnitsKilledLabel);
-		infoTable.row();
-		infoTable.add(timeLabel);
+		infoTable.add(healthLabel).pad(5.0f);
+		infoTable.add(scoreLabel).pad(5.0f);
+		infoTable.add(resourcesLabel).pad(5.0f);
+		infoTable.add(numTurretsLabel).pad(5.0f);
+		infoTable.add(numUnitsKilledLabel).pad(5.0f);
+		infoTable.add(timeLabel).pad(10.0f);
 
 		// turret upgrade user interface
 		upgradeTable = new Table();
-		upgradeTable.setDebug(true);
+//		upgradeTable.setDebug(true);
 
 		selectedTurretLabel = new Label("Upgrade Turret", skin);
 		damageLabel = new Label("Damage (Current)", skin);
@@ -286,17 +280,18 @@ public class GameScreen implements Screen {
 
 		upgradeTable.setVisible(false);
 
-		table.add(exitButton);
-		table.row();
-		table.add(pauseButton);
-		table.row();
+		Table menuTable = new Table();
+		menuTable.add(exitButton, pauseButton);
+
 		table.add(infoTable);
 		table.row();
 		table.add(selectTypeTable);
 		table.row();
-		table.add(upgradeTable);
+		table.add(menuTable);
+		table.row();
+		table.add(upgradeTable).expandX().right();
 
-		table.right();
+		table.top();
 
 		upgradeDamageButton.addListener(new ClickListener() {
 			@Override
@@ -349,7 +344,7 @@ public class GameScreen implements Screen {
 		// set up gameOver menu, which includes its own stage for alignment purposes
 		gameOverTable = new Table();
 		gameOverTable.setFillParent(true);
-		gameOverTable.setDebug(true);
+//		gameOverTable.setDebug(true);
 		gameOverTable.setVisible(false);
 
 		highScoreLabel = new Label("High Score: ", skin);
@@ -403,6 +398,12 @@ public class GameScreen implements Screen {
 
 		// log the FPS to the console
 		fpsLogger.log();
+
+		// process keyboard input
+		// TODO
+		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+			isPaused = !isPaused;
+		}
 
 		// write all updates to the game state to the game user interface
 		updateUi();
@@ -483,7 +484,7 @@ public class GameScreen implements Screen {
 
 	private void updateUi() {
 		// update all labels/textviews
-		resourcesLabel.setText("Resources: " + player.getResources());
+		resourcesLabel.setText("Resources: R" + player.getResources());
 		scoreLabel.setText("Score: " + player.getScore());
 		healthLabel.setText("Health: " + player.getHealth());
 		numTurretsLabel.setText("Turrets Built: " + player.getNumTurretsCreated());
