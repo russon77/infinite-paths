@@ -90,6 +90,7 @@ public class GameScreen implements Screen {
 	private Table gameOverTable;
 	private Label highScoreLabel, lastScoreLabel;
 	private TextButton continueButton;
+	private final TextButton[] selectTurretButtons;
 
 	private boolean isPaused;
 
@@ -160,35 +161,46 @@ public class GameScreen implements Screen {
 		Table selectTypeTable = new Table();
 //		selectTypeTable.setDebug(true);
 
-		TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
-		TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
-		TextButton buttonSelectShotgunTurret = new TextButton("Shotgun (R50)", skin);
-		TextButton buttonSelectRocketTurret = new TextButton("Rocket (R50)", skin);
-		TextButton buttonSelectHomingTurret = new TextButton("Homing (R50)", skin);
-		TextButton buttonSelectBuffTurret = new TextButton("Buff (R50)", skin);
+		final TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
+		final TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
+		final TextButton buttonSelectShotgunTurret = new TextButton("Shotgun (R50)", skin);
+		final TextButton buttonSelectRocketTurret = new TextButton("Rocket (R50)", skin);
+		final TextButton buttonSelectHomingTurret = new TextButton("Homing (R50)", skin);
+		final TextButton buttonSelectBuffTurret = new TextButton("Buff (R50)", skin);
+
+		selectTurretButtons = new TextButton[]
+				{
+						buttonSelectBasicTurret, buttonSelectChaingunTurret,
+						buttonSelectShotgunTurret, buttonSelectRocketTurret,
+						buttonSelectHomingTurret, buttonSelectBuffTurret
+				};
+
+//		buttonSelectBasicTurret.setColor(Color.PURPLE);
 
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL))
-			selectTypeTable.add(buttonSelectBasicTurret).fillX();
+			selectTypeTable.add(buttonSelectBasicTurret);
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.CHAINGUN))
 			selectTypeTable.add(buttonSelectChaingunTurret);
 
 
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.ROCKET))
-			selectTypeTable.add(buttonSelectRocketTurret).fillX();
+			selectTypeTable.add(buttonSelectRocketTurret);
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.SHOTGUN))
-			selectTypeTable.add(buttonSelectShotgunTurret).fillX();
+			selectTypeTable.add(buttonSelectShotgunTurret);
 
 
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.HOMING))
-			selectTypeTable.add(buttonSelectHomingTurret).fillX();
+			selectTypeTable.add(buttonSelectHomingTurret);
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.BUFF))
-			selectTypeTable.add(buttonSelectBuffTurret).fillX();
+			selectTypeTable.add(buttonSelectBuffTurret);
 
 		buttonSelectBasicTurret.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new BasicTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+				buttonSelectBasicTurret.setColor(Color.NAVY);
 			}
 		});
 
@@ -197,6 +209,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new ChaingunTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+				buttonSelectChaingunTurret.setColor(Color.NAVY);
 			}
 		});
 
@@ -205,6 +219,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new RocketTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+				buttonSelectRocketTurret.setColor(Color.NAVY);
 			}
 		});
 
@@ -213,6 +229,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new ShotgunTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+				buttonSelectShotgunTurret.setColor(Color.NAVY);
 			}
 		});
 
@@ -221,6 +239,8 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new HomingTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+				buttonSelectHomingTurret.setColor(Color.NAVY);
 			}
 		});
 
@@ -229,8 +249,12 @@ public class GameScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				player.setTurretSelectedForPurchase(
 						new BuffTurret(mouseLocation.clone(), turretManager));
+				resetVisualTurretSelection();
+				buttonSelectBuffTurret.setColor(Color.NAVY);
 			}
 		});
+
+		resetVisualTurretSelection();
 
 		// add in information view
 		Table infoTable = new Table();
@@ -525,6 +549,12 @@ public class GameScreen implements Screen {
 		gameOverTable.setVisible(true);
 	}
 
+	private void resetVisualTurretSelection() {
+		for (TextButton textButton : selectTurretButtons) {
+			textButton.setColor(Color.GRAY);
+		}
+	}
+
 	public void dispose() {}
 
 	public void pause() {}
@@ -534,7 +564,6 @@ public class GameScreen implements Screen {
 	public void hide() {}
 
 	public void resize(int width, int height) {}
-
 
 	private class MyGestureListener implements GestureDetector.GestureListener {
 
