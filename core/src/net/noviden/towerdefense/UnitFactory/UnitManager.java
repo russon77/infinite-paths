@@ -19,6 +19,8 @@
 
 package net.noviden.towerdefense.UnitFactory;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.MapSettings;
@@ -62,6 +64,8 @@ public class UnitManager {
     private float cooldownTimer;
     private float gameTime;
 
+    private Sound _unitDeathSoundEffect;
+
     public UnitManager(Path path, final MapSettings settings) {
         this.cooldownTimer = PRE_WAVE_COOLDOWN_TIME;
         this.units = new ArrayList<Unit>();
@@ -76,6 +80,8 @@ public class UnitManager {
         if (_spawnPattern == null) {
             _spawnPattern = DEFAULT_SPAWN_PATTERN;
         }
+
+        _unitDeathSoundEffect = Gdx.audio.newSound(Gdx.files.internal("sounds/zapTwoTone.mp3"));
     }
 
     public void act(float deltaTime, Player player) {
@@ -111,6 +117,11 @@ public class UnitManager {
                 Unit unitToSpawn = unit.getNextUnitToSpawn();
                 if (unitToSpawn != null) {
                     units.add(unitToSpawn);
+                }
+
+                // play sound and delete unit
+                if (_unitDeathSoundEffect != null) {
+                    _unitDeathSoundEffect.play(1.0f);
                 }
 
                 units.remove(i);

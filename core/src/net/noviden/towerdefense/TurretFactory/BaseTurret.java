@@ -19,6 +19,8 @@
 
 package net.noviden.towerdefense.TurretFactory;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -60,9 +62,14 @@ public abstract class BaseTurret {
     protected int worth;
     protected int upgradeCost;
 
+    protected Sound _attackSoundEffect, _upgradeSoundEffect;
+
     protected BaseTurret() {
         this.id = UUID.randomUUID().toString().substring(0, 5);
         this.upgradeCost = BASE_UPGRADE_COST;
+
+        _attackSoundEffect = Gdx.audio.newSound(Gdx.files.internal("sounds/laser1.mp3"));
+        _upgradeSoundEffect = Gdx.audio.newSound(Gdx.files.internal("sounds/powerUp2.mp3"));
     }
 
     public void act(float deltaTime, UnitManager unitManager) {
@@ -81,6 +88,10 @@ public abstract class BaseTurret {
         if (cooldownTimer <= 0.0f) {
             Unit unit = findClosestEnemyInRange(unitManager);
             if (unit != null) {
+                if (_attackSoundEffect != null) {
+                    _attackSoundEffect.play(1.0f);
+                }
+
                 attack(unit);
                 cooldownTimer = cooldownLength;
             }
@@ -133,6 +144,10 @@ public abstract class BaseTurret {
         this.level++;
         this.worth += this.upgradeCost;
         this.upgradeCost += BASE_UPGRADE_COST;
+
+        if (_upgradeSoundEffect != null) {
+            _upgradeSoundEffect.play(1.0f);
+        }
     }
 
     protected boolean enemyInRange(Unit unit) {
