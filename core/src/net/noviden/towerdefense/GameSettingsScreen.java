@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,6 +23,8 @@ public class GameSettingsScreen implements Screen {
 
     private Stage _mainStage;
 
+    // these values maintain `state` of setting custom shortcuts
+    private Label _currentlySelectedActionLabel;
     private TextButton _currentlySelectedShortcut;
     private int _previouslySelectedKey;
 
@@ -29,6 +32,12 @@ public class GameSettingsScreen implements Screen {
 
     public GameSettingsScreen(final TowerDefense pTowerDefense) {
         _towerDefense = pTowerDefense;
+
+        _modifiedKeyboardShortcutsMap = new HashMap<Integer, GameSettings.Actions>();
+
+        _currentlySelectedActionLabel = null;
+        _currentlySelectedShortcut = null;
+        _previouslySelectedKey = -1;
 
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
@@ -46,12 +55,11 @@ public class GameSettingsScreen implements Screen {
         audioEnabledCheckBox.setChecked(false);
 
         Table keyboardShortcutsTable = new Table();
-        // TODO fill in this table with current settings
 
-        HashMap<Integer, GameSettings.Actions> myMap = GameSettings.getShortcutMap();
+        HashMap<Integer, GameSettings.Actions> currentShortcutMap = GameSettings.getShortcutMap();
 
-        for (int i : myMap.keySet()) {
-            Label actionLabel = new Label(myMap.get(i).toString(), skin);
+        for (int i : currentShortcutMap.keySet()) {
+            final Label actionLabel = new Label(currentShortcutMap.get(i).toString(), skin);
             final TextButton shortcutButton = new TextButton(Input.Keys.toString(i), skin);
 
             keyboardShortcutsTable.add(actionLabel).pad(10.0f);
@@ -61,11 +69,15 @@ public class GameSettingsScreen implements Screen {
             shortcutButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    _currentlySelectedShortcut = shortcutButton;
-                    _previouslySelectedKey =
-                            Input.Keys.valueOf(shortcutButton.getText().toString());
 
-                    shortcutButton.setText("Press any un-set key!");
+                    if (_currentlySelectedShortcut == null) {
+                        _currentlySelectedActionLabel = actionLabel;
+                        _currentlySelectedShortcut = shortcutButton;
+                        _previouslySelectedKey =
+                                Input.Keys.valueOf(shortcutButton.getText().toString());
+
+                        shortcutButton.setText("Press any un-set key!");
+                    }
                 }
             });
         }
@@ -111,9 +123,14 @@ public class GameSettingsScreen implements Screen {
                 GameSettings.setFullScreen(fullscreenCheckBox.isChecked());
 
                 // save keyboard shortcuts
+                GameSettings.putShortcuts(_modifiedKeyboardShortcutsMap);
+
+                System.out.println("Successfully saved settings!");
 
                 // return to main menu
                 _towerDefense.setScreen(new MainMenuScreen(_towerDefense));
+
+                dispose();
             }
         });
     }
@@ -148,12 +165,21 @@ public class GameSettingsScreen implements Screen {
             if (keycode == Input.Keys.ESCAPE) {
                 _currentlySelectedShortcut.setText(Input.Keys.toString(_previouslySelectedKey));
                 _currentlySelectedShortcut = null;
+                _currentlySelectedActionLabel = null;
                 _previouslySelectedKey = 0;
             }
 
             // attempt to set keyboard shortcut
             if (_currentlySelectedShortcut != null) {
                 _currentlySelectedShortcut.setText(Input.Keys.toString(keycode));
+
+                _modifiedKeyboardShortcutsMap.put(keycode,
+                        GameSettings.Actions.valueOf(
+                                _currentlySelectedActionLabel.getText().toString()));
+
+                System.out.println("Mapped " + Input.Keys.toString(keycode) + " to action " +
+                        GameSettings.Actions.valueOf(
+                                _currentlySelectedActionLabel.getText().toString()));
 
                 _currentlySelectedShortcut = null;
             }

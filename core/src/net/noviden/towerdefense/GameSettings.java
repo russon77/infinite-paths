@@ -7,7 +7,8 @@ import java.util.HashMap;
 public class GameSettings {
 
     public enum Actions {
-        PAUSE_GAME, QUICK_EXIT
+        PAUSE_GAME,
+        QUICK_EXIT
     }
 
     private static GameSettings _instance;
@@ -21,9 +22,11 @@ public class GameSettings {
     }
 
     public static void initialize() {
-        _instance = new GameSettings();
+        if (_instance == null) {
+            _instance = new GameSettings();
 
-        _instance.loadDefaultSettings();
+            _instance.loadDefaultSettings();
+        }
     }
 
     private void loadDefaultSettings() {
@@ -52,6 +55,11 @@ public class GameSettings {
 
     public static void putShortcut(int pMapKey, Actions pShorcutValue) {
         _instance._keyboardShortcutsMap.put(pMapKey, pShorcutValue);
+    }
+
+    public static void putShortcuts(HashMap<Integer, Actions> pMap) {
+        _instance._keyboardShortcutsMap.putAll(pMap);
+        System.out.println("Put all shortcuts into table");
     }
 
     public static HashMap<Integer, Actions> getShortcutMap() {
