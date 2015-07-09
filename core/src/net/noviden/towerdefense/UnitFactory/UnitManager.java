@@ -23,6 +23,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.GameSettings;
 import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Player;
@@ -121,7 +122,7 @@ public class UnitManager {
 
                 // play sound and delete unit
                 if (_unitDeathSoundEffect != null) {
-                    _unitDeathSoundEffect.play(1.0f);
+                    _unitDeathSoundEffect.play(GameSettings.getSoundVolume());
                 }
 
                 units.remove(i);

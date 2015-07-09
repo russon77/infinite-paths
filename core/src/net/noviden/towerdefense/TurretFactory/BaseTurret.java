@@ -24,6 +24,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.noviden.towerdefense.GameSettings;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.Unit;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
@@ -87,7 +88,7 @@ public abstract class BaseTurret {
             Unit unit = findClosestEnemyInRange(unitManager);
             if (unit != null) {
                 if (_attackSoundEffect != null) {
-                    _attackSoundEffect.play(1.0f);
+                    _attackSoundEffect.play(GameSettings.getSoundVolume());
                 }
 
                 attack(unit);

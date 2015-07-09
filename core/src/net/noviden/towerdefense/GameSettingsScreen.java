@@ -1,3 +1,21 @@
+/**
+ TowerDefense : Infinite Tower Defense Game With User Created Maps
+ Copyright (C) 2015 Tristan Kernan
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Gdx;
@@ -12,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -48,11 +67,24 @@ public class GameSettingsScreen implements Screen {
 
         _mainStage.addActor(rootTable);
 
-        final CheckBox audioEnabledCheckBox = new CheckBox(" Audio Enabled", skin);
-        audioEnabledCheckBox.setChecked(true);
+        // set up ui elements
+        Label musicVolumeLabel = new Label("Music Volume", skin);
+        final Slider musicVolumeSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        musicVolumeSlider.setValue(GameSettings.getMusicVolume());
+
+        Label sfxVolumeLabel = new Label("Sound Effects Volume", skin);
+        final Slider sfxVolumeSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        sfxVolumeSlider.setValue(GameSettings.getSoundVolume());
+
+        Table volumeTable = new Table();
+        volumeTable.add(musicVolumeLabel);
+        volumeTable.add(musicVolumeSlider);
+        volumeTable.row();
+        volumeTable.add(sfxVolumeLabel);
+        volumeTable.add(sfxVolumeSlider).pad(8.0f);
 
         final CheckBox fullscreenCheckBox = new CheckBox(" Fullscreen", skin);
-        audioEnabledCheckBox.setChecked(false);
+        fullscreenCheckBox.setChecked(GameSettings.isFullScreen());
 
         Table keyboardShortcutsTable = new Table();
 
@@ -92,7 +124,7 @@ public class GameSettingsScreen implements Screen {
         exitFunctionalityTable.add(exitWithoutSavingButton);
 
         // finally, construct display table
-        rootTable.add(audioEnabledCheckBox);
+        rootTable.add(volumeTable);
         rootTable.row();
         rootTable.add(fullscreenCheckBox);
         rootTable.row();
@@ -118,9 +150,13 @@ public class GameSettingsScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 // attempt to save settings
 
-                GameSettings.setAudio(audioEnabledCheckBox.isChecked());
-
                 GameSettings.setFullScreen(fullscreenCheckBox.isChecked());
+
+                GameSettings.setMusicVolume(musicVolumeSlider.getPercent());
+                System.out.println("Set music volume to " + musicVolumeSlider.getPercent());
+
+                GameSettings.setSoundVolume(sfxVolumeSlider.getPercent());
+                System.out.println("Set sfx volume to " + sfxVolumeSlider.getPercent());
 
                 // save keyboard shortcuts
                 GameSettings.putShortcuts(_modifiedKeyboardShortcutsMap);
