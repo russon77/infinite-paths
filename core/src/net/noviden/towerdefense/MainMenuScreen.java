@@ -43,6 +43,8 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
+        GameSettings.initialize();
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 400);
 
@@ -84,6 +86,14 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 towerDefense.setScreen(new MapCreatorScreen(towerDefense));
+                dispose();
+            }
+        });
+
+        settings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new GameSettingsScreen(towerDefense));
                 dispose();
             }
         });

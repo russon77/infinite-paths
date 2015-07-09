@@ -19,6 +19,7 @@
 
 package net.noviden.towerdefense;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -564,6 +565,20 @@ public class GameScreen implements Screen {
 
 	public void resize(int width, int height) {}
 
+	private void processKeyboardInput(int pKeycode) {
+		// unmap the given keycode to the default keycode
+		switch (GameSettings.getShortcutAction(pKeycode)) {
+			case PAUSE_GAME:
+				// TODO centralize pause game into a method
+
+				break;
+			case QUICK_EXIT:
+				towerDefense.setScreen(new MainMenuScreen(towerDefense));
+				dispose();
+				break;
+		}
+	}
+
 	private class MyGestureListener implements GestureDetector.GestureListener {
 
 		@Override
@@ -678,7 +693,9 @@ public class GameScreen implements Screen {
 
 		@Override
 		public boolean keyUp(int keycode) {
-			// TODO Auto-generated method stub
+
+			processKeyboardInput(keycode);
+
 			return false;
 		}
 
