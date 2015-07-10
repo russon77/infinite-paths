@@ -42,6 +42,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.MapTransformation.RandomTransformation;
+import net.noviden.towerdefense.MapTransformation.Transformation;
+import net.noviden.towerdefense.MapTransformation.TurretTransformation;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.BasicTurret;
@@ -91,8 +94,11 @@ public class GameScreen implements Screen {
 	private Label highScoreLabel, lastScoreLabel;
 	private TextButton continueButton;
 	private final TextButton[] selectTurretButtons;
+	final TextButton pauseButton;
 
 	private boolean isPaused;
+
+	private Transformation _transformation;
 
 	public GameScreen(final TowerDefense towerDefense, Map gameMap) {
 
@@ -132,7 +138,6 @@ public class GameScreen implements Screen {
 		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
 		Table table = new Table();
-//		table.setDebug(false);
 		table.setFillParent(true);
 		stage.addActor(table);
 
@@ -144,22 +149,15 @@ public class GameScreen implements Screen {
 			}
 		});
 
-		final TextButton pauseButton = new TextButton("Pause", skin);
+		pauseButton = new TextButton("Pause", skin);
 		pauseButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				isPaused = !isPaused;
-
-				if (isPaused) {
-					pauseButton.setText("Unpause");
-				} else {
-					pauseButton.setText("Pause");
-				}
+				pauseGame();
 			}
 		});
 
 		Table selectTypeTable = new Table();
-//		selectTypeTable.setDebug(true);
 
 		final TextButton buttonSelectBasicTurret = new TextButton("Basic (R50)", skin, "default");
 		final TextButton buttonSelectChaingunTurret = new TextButton("Chaingun (R50)", skin);
@@ -174,8 +172,6 @@ public class GameScreen implements Screen {
 						buttonSelectShotgunTurret, buttonSelectRocketTurret,
 						buttonSelectHomingTurret, buttonSelectBuffTurret
 				};
-
-//		buttonSelectBasicTurret.setColor(Color.PURPLE);
 
 		if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL))
 			selectTypeTable.add(buttonSelectBasicTurret);
@@ -258,7 +254,6 @@ public class GameScreen implements Screen {
 
 		// add in information view
 		Table infoTable = new Table();
-//		infoTable.setDebug(true);
 
 		resourcesLabel = new Label("Resources: R" + player.getResources(), skin);
 		scoreLabel = new Label("Score: " + player.getScore(), skin);
@@ -278,7 +273,6 @@ public class GameScreen implements Screen {
 
 		// turret upgrade user interface
 		upgradeTable = new Table();
-//		upgradeTable.setDebug(true);
 
 		selectedTurretLabel = new Label("Upgrade Turret", skin);
 		damageLabel = new Label("Damage (Current)", skin);
@@ -368,7 +362,6 @@ public class GameScreen implements Screen {
 		// set up gameOver menu, which includes its own stage for alignment purposes
 		gameOverTable = new Table();
 		gameOverTable.setFillParent(true);
-//		gameOverTable.setDebug(true);
 		gameOverTable.setVisible(false);
 
 		highScoreLabel = new Label("High Score: ", skin);
@@ -411,6 +404,9 @@ public class GameScreen implements Screen {
 		// game starts off going fast!
 		isPaused = false;
 
+		// instantiate transformation
+		_transformation = new TurretTransformation(turretManager);
+
 		// instantiate the fpsLogger
 		// TODO the fpsLogger should display in the corner of the screen if toggled `on`
 		fpsLogger = new FPSLogger();
@@ -422,12 +418,6 @@ public class GameScreen implements Screen {
 
 		// log the FPS to the console
 		fpsLogger.log();
-
-		// process keyboard input
-		// TODO
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			isPaused = !isPaused;
-		}
 
 		// write all updates to the game state to the game user interface
 		updateUi();
@@ -487,6 +477,9 @@ public class GameScreen implements Screen {
 
 		gameOverStage.act(deltaTime);
 		gameOverStage.draw();
+
+		// transform map
+//		_transformation.transform(map, deltaTime);
 	}
 
 	private void drawOpaqueSelectedTurret() {
@@ -555,6 +548,30 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	private void pauseGame() {
+		isPaused = !isPaused;
+
+		if (isPaused) {
+			pauseButton.setText("Unpause");
+		} else {
+			pauseButton.setText("Pause");
+		}
+	}
+
+	private void processKeyboardInput(int pKeycode) {
+		// unmap the given keycode to the default keycode
+		switch (GameSettings.getShortcutAction(pKeycode)) {
+			case PAUSE_GAME:
+				pauseGame();
+
+				break;
+			case QUICK_EXIT:
+				towerDefense.setScreen(new MainMenuScreen(towerDefense));
+				dispose();
+				break;
+		}
+	}
+
 	public void dispose() {}
 
 	public void pause() {}
@@ -564,20 +581,6 @@ public class GameScreen implements Screen {
 	public void hide() {}
 
 	public void resize(int width, int height) {}
-
-	private void processKeyboardInput(int pKeycode) {
-		// unmap the given keycode to the default keycode
-		switch (GameSettings.getShortcutAction(pKeycode)) {
-			case PAUSE_GAME:
-				// TODO centralize pause game into a method
-
-				break;
-			case QUICK_EXIT:
-				towerDefense.setScreen(new MainMenuScreen(towerDefense));
-				dispose();
-				break;
-		}
-	}
 
 	private class MyGestureListener implements GestureDetector.GestureListener {
 

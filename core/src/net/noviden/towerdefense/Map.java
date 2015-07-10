@@ -31,7 +31,7 @@ public class Map implements Serializable {
     }
 
     public static class Dimensions implements Serializable {
-        private float width,height;
+        public float width,height;
 
         public Dimensions(float width, float height) {
             this.width = width; this.height = height;

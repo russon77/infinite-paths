@@ -149,6 +149,18 @@ public class Unit {
                 this.xVelocity = (destination.x - location.x) / distanceBetween;
                 this.yVelocity = (destination.y - location.y) / distanceBetween;
             }
+        } else {
+            // recalculate velocities to current destination
+            // TODO this is only necessary if map transformations are turned ON
+
+            // recalculate xVel and yVel
+            destination = path.set.get(currentDestinationIndex);
+
+            float distanceBetween = (float) Math.sqrt(
+                    Math.pow(location.x - destination.x, 2) + Math.pow(location.y - destination.y, 2));
+
+            this.xVelocity = (destination.x - location.x) / distanceBetween;
+            this.yVelocity = (destination.y - location.y) / distanceBetween;
         }
 
         location.x += xVelocity * deltaTime * speed * (1.0f - percentSlowed);

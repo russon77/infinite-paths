@@ -77,4 +77,8 @@ public class TurretManager {
 
         return null;
     }
+
+    public ArrayList<BaseTurret> getTurrets() {
+        return turrets;
+    }
 }
