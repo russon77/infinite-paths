@@ -36,9 +36,6 @@ public class TowerDefense extends Game {
 
     public ArrayList<Map> maps;
 
-    public SpriteBatch batch;
-    public BitmapFont font;
-
     public int highScore;
 
     public void create() {
@@ -67,9 +64,6 @@ public class TowerDefense extends Game {
             maps.add(Map.createFromDefault(Map.DefaultMaps.STAR));
         }
 
-        batch = new SpriteBatch();
-        //Use LibGDX's default Arial font.
-        font = new BitmapFont();
         this.setScreen(new MainMenuScreen(this));
     }
 
@@ -78,8 +72,6 @@ public class TowerDefense extends Game {
     }
 
     public void dispose() {
-        batch.dispose();
-        font.dispose();
 
         // serialize/write to disk
         try {
