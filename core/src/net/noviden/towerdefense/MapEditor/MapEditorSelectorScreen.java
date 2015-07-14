@@ -116,23 +116,28 @@ public class MapEditorSelectorScreen implements Screen {
         selectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new MapEditorScreen(towerDefense, _selectedMap));
+                if (_selectedMap != null)
+                    towerDefense.setScreen(new MapEditorScreen(towerDefense, _selectedMap));
             }
         });
 
         cloneButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                towerDefense.maps.add(_selectedMap.clone());
-                updateMapList();
+                if (_selectedMap != null) {
+                    towerDefense.maps.add(_selectedMap.clone());
+                    updateMapList();
+                }
             }
         });
 
         deleteButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                towerDefense.maps.remove(_selectedMap);
-                updateMapList();
+                if (_selectedMap != null) {
+                    towerDefense.maps.remove(_selectedMap);
+                    updateMapList();
+                }
             }
         });
     }

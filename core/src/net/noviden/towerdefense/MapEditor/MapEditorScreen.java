@@ -21,23 +21,41 @@ package net.noviden.towerdefense.MapEditor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Screens.MainMenuScreen;
 import net.noviden.towerdefense.TowerDefense;
 
 public class MapEditorScreen implements Screen {
 
-    private final TowerDefense towerDefense;
+    private final TowerDefense _towerDefense;
 
     private Stage stage;
     private Map _map;
 
+    private OrthographicCamera _orthoCamera;
+    private SpriteBatch _spriteBatch;
+    private ShapeRenderer _shapeRenderer;
+
     public MapEditorScreen(final TowerDefense towerDefense, Map pMap) {
-        this.towerDefense = towerDefense;
+        _towerDefense = towerDefense;
         _map = pMap;
+
+        _orthoCamera = new OrthographicCamera();
+        _orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
+        _orthoCamera.update();
+
+        _spriteBatch = new SpriteBatch();
+        _shapeRenderer = new ShapeRenderer();
 
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
@@ -46,7 +64,18 @@ public class MapEditorScreen implements Screen {
         Table rootTable = new Table();
         rootTable.setFillParent(true);
 
+        TextButton exitButton = new TextButton("Exit Without Saving", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                _towerDefense.setScreen(new MapEditorSelectorScreen(_towerDefense));
+                dispose();
+            }
+        });
 
+        // TODO everything
+
+        rootTable.add(exitButton).top().right();
 
         stage.addActor(rootTable);
 
@@ -56,6 +85,12 @@ public class MapEditorScreen implements Screen {
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        _spriteBatch.begin();
+        _shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        _shapeRenderer.end();
+        _spriteBatch.end();
 
         stage.act(deltaTime);
         stage.draw();
