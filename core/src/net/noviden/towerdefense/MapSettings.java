@@ -61,6 +61,16 @@ public class MapSettings implements Serializable {
         _waves = null;
     }
 
+    public MapSettings clone() {
+        MapSettings mapSettings = new MapSettings();
+
+        mapSettings.setDisabledTurretTypes(_disabledTurretTypes);
+        mapSettings.putValues(_valuesMap);
+        mapSettings.setWaves(_waves);
+
+        return mapSettings;
+    }
+
     public void setDisabledTurretTypes(BaseTurret.Type[] types) {
         _disabledTurretTypes = types;
     }
@@ -97,6 +107,10 @@ public class MapSettings implements Serializable {
         for (int i = 0; i < keys.length; i++) {
             _valuesMap.put(keys[i], values[i]);
         }
+    }
+
+    public void putValues(HashMap<String, Float> pValuesMap) {
+        _valuesMap.putAll(pValuesMap);
     }
 
     public void setWaves(int[][] waves) {

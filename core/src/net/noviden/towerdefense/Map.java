@@ -81,7 +81,7 @@ public class Map implements Serializable {
     }
 
     public Map clone() {
-        return new Map(this.dimensions, this.paths, this.name, _settings);
+        return new Map(this.dimensions, this.paths.clone(), new String(name), _settings.clone());
     }
 
     public String getName() {
