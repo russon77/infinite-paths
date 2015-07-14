@@ -1,5 +1,5 @@
 /**
- TowerDefense : Infinite Tower Defense Game With User Created Maps
+ Infinite Paths : Infinite Tower Defense Game With User Created Maps
  Copyright (C) 2015 Tristan Kernan
 
  This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,7 @@
 
 package net.noviden.towerdefense;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -42,7 +40,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import net.noviden.towerdefense.MapTransformation.RandomTransformation;
 import net.noviden.towerdefense.MapTransformation.Transformation;
 import net.noviden.towerdefense.MapTransformation.TurretTransformation;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
@@ -560,7 +557,13 @@ public class GameScreen implements Screen {
 
 	private void processKeyboardInput(int pKeycode) {
 		// unmap the given keycode to the default keycode
-		switch (GameSettings.getShortcutAction(pKeycode)) {
+		GameSettings.Actions action = GameSettings.getShortcutAction(pKeycode);
+
+		if (action == null) {
+			return;
+		}
+
+		switch (action) {
 			case PAUSE_GAME:
 				pauseGame();
 
@@ -568,6 +571,43 @@ public class GameScreen implements Screen {
 			case QUICK_EXIT:
 				towerDefense.setScreen(new MainMenuScreen(towerDefense));
 				dispose();
+
+				break;
+			case SELECT_BASIC_TURRET:
+				player.setTurretSelectedForPurchase(
+						new BasicTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+
+				break;
+			case SELECT_BUFF_TURRET:
+				player.setTurretSelectedForPurchase(
+						new BuffTurret(mouseLocation.clone(), turretManager));
+				resetVisualTurretSelection();
+
+				break;
+			case SELECT_CHAINGUN_TURRET:
+				player.setTurretSelectedForPurchase(
+						new ChaingunTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+
+				break;
+			case SELECT_HOMING_TURRET:
+				player.setTurretSelectedForPurchase(
+						new HomingTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+
+				break;
+			case SELECT_ROCKET_TURRET:
+				player.setTurretSelectedForPurchase(
+						new RocketTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+
+				break;
+			case SELECT_SHOTGUN_TURRET:
+				player.setTurretSelectedForPurchase(
+						new ShotgunTurret(mouseLocation.clone()));
+				resetVisualTurretSelection();
+
 				break;
 		}
 	}

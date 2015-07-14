@@ -1,5 +1,5 @@
 /**
- TowerDefense : Infinite Tower Defense Game With User Created Maps
+ Infinite Paths : Infinite Tower Defense Game With User Created Maps
  Copyright (C) 2015 Tristan Kernan
 
  This program is free software: you can redistribute it and/or modify

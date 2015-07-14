@@ -16,8 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.MapEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,15 +30,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.MainMenuScreen;
+import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapCreator.MapThumbnail;
+import net.noviden.towerdefense.TowerDefense;
 
-public class MapSelectorScreen implements Screen {
-
+public class MapEditorSelectorScreen implements Screen {
     private final TowerDefense towerDefense;
 
     private Stage stage;
 
-    public MapSelectorScreen(final TowerDefense towerDefense) {
+    public MapEditorSelectorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
@@ -62,7 +63,7 @@ public class MapSelectorScreen implements Screen {
             ClickListener clickListener = new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    towerDefense.setScreen(new GameScreen(towerDefense, map));
+                    towerDefense.setScreen(new MapEditorScreen(towerDefense, map));
                 }
             };
             TextButton textButton = new TextButton(map.getName(), skin);

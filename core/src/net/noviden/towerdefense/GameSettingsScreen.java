@@ -1,5 +1,5 @@
 /**
- TowerDefense : Infinite Tower Defense Game With User Created Maps
+ Infinite Paths : Infinite Tower Defense Game With User Created Maps
  Copyright (C) 2015 Tristan Kernan
 
  This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;

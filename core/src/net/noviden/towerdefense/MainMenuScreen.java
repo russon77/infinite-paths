@@ -1,5 +1,5 @@
 /**
- TowerDefense : Infinite Tower Defense Game With User Created Maps
+ Infinite Paths : Infinite Tower Defense Game With User Created Maps
  Copyright (C) 2015 Tristan Kernan
 
  This program is free software: you can redistribute it and/or modify
@@ -25,29 +25,28 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.MapCreator.MapCreatorScreen;
+import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
 
 public class MainMenuScreen implements Screen {
 
     private final TowerDefense towerDefense;
-
-    private OrthographicCamera camera;
 
     private Stage stage;
 
     public MainMenuScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
+        // initialize singletons
         GameSettings.initialize();
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 400);
-
+        // set up ui
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
         stage = new Stage();
@@ -55,14 +54,21 @@ public class MainMenuScreen implements Screen {
         Table menuTable = new Table();
         menuTable.setFillParent(true);
 
+        Label welcomeLabel = new Label("Welcome to TowerDefense!", skin);
+
         TextButton startGame = new TextButton("Start Game", skin);
         TextButton mapCreator = new TextButton("Map Creator", skin);
+        TextButton mapEditor = new TextButton("Map Editor", skin);
         TextButton settings = new TextButton("Settings", skin);
         TextButton exitGame = new TextButton("Exit", skin);
 
+        menuTable.add(welcomeLabel);
+        menuTable.row();
         menuTable.add(startGame);
         menuTable.row();
         menuTable.add(mapCreator);
+        menuTable.row();
+        menuTable.add(mapEditor);
         menuTable.row();
         menuTable.add(settings);
         menuTable.row();
@@ -90,6 +96,14 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        mapEditor.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new MapEditorSelectorScreen(towerDefense));
+                dispose();
+            }
+        });
+
         settings.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -111,12 +125,6 @@ public class MainMenuScreen implements Screen {
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-
-        towerDefense.batch.begin();
-        towerDefense.font.draw(towerDefense.batch, "Welcome to TowerDefense!", 100, 150);
-        towerDefense.batch.end();
 
         stage.act(deltaTime);
         stage.draw();
