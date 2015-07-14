@@ -88,7 +88,7 @@ public class GameScreen implements Screen {
 	private Date startDate;
 	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
 
-	private Table upgradeTable;
+	private Table rootTable, upgradeTable;
 	private Label selectedTurretLabel, damageLabel, rangeLabel, uniqueModifierLabel;
 	private TextButton upgradeDamageButton, upgradeRangeButton, upgradeUniqueModifierButton,
 		sellButton;
@@ -141,9 +141,9 @@ public class GameScreen implements Screen {
 
 		Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
-		Table table = new Table();
-		table.setFillParent(true);
-		stage.addActor(table);
+		rootTable = new Table();
+		rootTable.setFillParent(true);
+		stage.addActor(rootTable);
 
 		TextButton exitButton = new TextButton("Exit", skin);
 		exitButton.addListener(new ClickListener() {
@@ -305,15 +305,15 @@ public class GameScreen implements Screen {
 		Table menuTable = new Table();
 		menuTable.add(exitButton, pauseButton);
 
-		table.add(infoTable);
-		table.row();
-		table.add(selectTypeTable);
-		table.row();
-		table.add(menuTable);
-		table.row();
-		table.add(upgradeTable).expandX().right();
+		rootTable.add(infoTable);
+		rootTable.row();
+		rootTable.add(selectTypeTable);
+		rootTable.row();
+		rootTable.add(menuTable);
+		rootTable.row();
+		rootTable.add(upgradeTable).expandX().right();
 
-		table.top();
+		rootTable.top();
 
 		upgradeDamageButton.addListener(new ClickListener() {
 			@Override
@@ -437,7 +437,7 @@ public class GameScreen implements Screen {
 
 			for (UnitManager unitManager : unitManagers) {
 				unitManager.act(deltaTime, player);
-				turretManager.act(deltaTime / (float) unitManagers.length, unitManager);
+				turretManager.act(deltaTime, unitManager);
 				CollisionManager.processCollisions(unitManager);
 			}
 		} else if (!isPaused) {
@@ -457,13 +457,6 @@ public class GameScreen implements Screen {
 			drawOpaqueSelectedTurret();
 		}
 
-		map.draw(shapeRenderer);
-		for (UnitManager unitManager : unitManagers) {
-			unitManager.draw(shapeRenderer);
-		}
-		net.noviden.towerdefense.MissileFactory.MissileManager.draw(shapeRenderer);
-		turretManager.draw(shapeRenderer);
-
 		if (upgradeTable.isVisible()) {
 			BaseTurret turret = player.getTurretSelectedForUpgrade();
 
@@ -471,6 +464,13 @@ public class GameScreen implements Screen {
 				turret.drawOpaque(shapeRenderer);
 			}
 		}
+
+		map.draw(shapeRenderer);
+		for (UnitManager unitManager : unitManagers) {
+			unitManager.draw(shapeRenderer);
+		}
+		net.noviden.towerdefense.MissileFactory.MissileManager.draw(shapeRenderer);
+		turretManager.draw(shapeRenderer);
 
 		shapeRenderer.end();
 		batch.end();
@@ -571,6 +571,12 @@ public class GameScreen implements Screen {
 		}
 
 		switch (action) {
+			case TOGGLE_SHOW_INTERFACE:
+				rootTable.setVisible(
+						!rootTable.isVisible());
+				upgradeTable.setVisible(false);
+
+				break;
 			case PAUSE_GAME:
 				pauseGame();
 

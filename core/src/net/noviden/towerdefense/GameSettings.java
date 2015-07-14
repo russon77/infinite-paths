@@ -40,7 +40,9 @@ public class GameSettings {
         UPGRADE_TURRET_RANGE,
         UPGRADE_TURRET_UNIQUE_MODIFIER,
 
-        QUICK_SELL
+        QUICK_SELL,
+
+        TOGGLE_SHOW_INTERFACE
     }
 
     private static GameSettings _instance;
@@ -82,6 +84,8 @@ public class GameSettings {
         _keyboardShortcutsMap.put(Input.Keys.NUM_2, Actions.SELECT_SHOTGUN_TURRET);
 
         _keyboardShortcutsMap.put(Input.Keys.T, Actions.QUICK_SELL);
+
+        _keyboardShortcutsMap.put(Input.Keys.ESCAPE, Actions.TOGGLE_SHOW_INTERFACE);
     }
 
     private void loadSettingsFromFile() {
