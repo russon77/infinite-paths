@@ -581,38 +581,44 @@ public class GameScreen implements Screen {
 
 				break;
 			case SELECT_BASIC_TURRET:
-				player.setTurretSelectedForPurchase(
-						new BasicTurret(mouseLocation.clone()));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL)) 
+					player.setTurretSelectedForPurchase(
+							new BasicTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
 
 				break;
 			case SELECT_BUFF_TURRET:
-				player.setTurretSelectedForPurchase(
-						new BuffTurret(mouseLocation.clone(), turretManager));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.BUFF))
+					player.setTurretSelectedForPurchase(
+							new BuffTurret(mouseLocation.clone(), turretManager));
 				resetVisualTurretSelection();
 
 				break;
 			case SELECT_CHAINGUN_TURRET:
-				player.setTurretSelectedForPurchase(
-						new ChaingunTurret(mouseLocation.clone()));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.CHAINGUN))
+					player.setTurretSelectedForPurchase(
+							new ChaingunTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
 
 				break;
 			case SELECT_HOMING_TURRET:
-				player.setTurretSelectedForPurchase(
-						new HomingTurret(mouseLocation.clone()));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.HOMING))
+					player.setTurretSelectedForPurchase(
+							new HomingTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
 
 				break;
 			case SELECT_ROCKET_TURRET:
-				player.setTurretSelectedForPurchase(
-						new RocketTurret(mouseLocation.clone()));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.ROCKET))
+					player.setTurretSelectedForPurchase(
+							new RocketTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
 
 				break;
 			case SELECT_SHOTGUN_TURRET:
-				player.setTurretSelectedForPurchase(
-						new ShotgunTurret(mouseLocation.clone()));
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.SHOTGUN))
+					player.setTurretSelectedForPurchase(
+							new ShotgunTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
 
 				break;
