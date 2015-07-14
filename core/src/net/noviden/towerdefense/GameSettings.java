@@ -38,7 +38,9 @@ public class GameSettings {
 
         UPGRADE_TURRET_DAMAGE,
         UPGRADE_TURRET_RANGE,
-        UPGRADE_TURRET_UNIQUE_MODIFIER
+        UPGRADE_TURRET_UNIQUE_MODIFIER,
+
+        QUICK_SELL
     }
 
     private static GameSettings _instance;
@@ -78,6 +80,8 @@ public class GameSettings {
         _keyboardShortcutsMap.put(Input.Keys.R, Actions.SELECT_BUFF_TURRET);
         _keyboardShortcutsMap.put(Input.Keys.NUM_1, Actions.SELECT_CHAINGUN_TURRET);
         _keyboardShortcutsMap.put(Input.Keys.NUM_2, Actions.SELECT_SHOTGUN_TURRET);
+
+        _keyboardShortcutsMap.put(Input.Keys.T, Actions.QUICK_SELL);
     }
 
     private void loadSettingsFromFile() {

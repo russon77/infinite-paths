@@ -155,15 +155,11 @@ public class GameSettingsScreen implements Screen {
                 GameSettings.setFullScreen(fullscreenCheckBox.isChecked());
 
                 GameSettings.setMusicVolume(musicVolumeSlider.getPercent());
-                System.out.println("Set music volume to " + musicVolumeSlider.getPercent());
 
                 GameSettings.setSoundVolume(sfxVolumeSlider.getPercent());
-                System.out.println("Set sfx volume to " + sfxVolumeSlider.getPercent());
 
                 // save keyboard shortcuts
                 GameSettings.putShortcuts(_modifiedKeyboardShortcutsMap);
-
-                System.out.println("Successfully saved settings!");
 
                 // return to main menu
                 _towerDefense.setScreen(new net.noviden.towerdefense.Screens.MainMenuScreen(_towerDefense));
@@ -212,10 +208,6 @@ public class GameSettingsScreen implements Screen {
                 _currentlySelectedShortcut.setText(Input.Keys.toString(keycode));
 
                 _modifiedKeyboardShortcutsMap.put(keycode,
-                        GameSettings.Actions.valueOf(
-                                _currentlySelectedActionLabel.getText().toString()));
-
-                System.out.println("Mapped " + Input.Keys.toString(keycode) + " to action " +
                         GameSettings.Actions.valueOf(
                                 _currentlySelectedActionLabel.getText().toString()));
 

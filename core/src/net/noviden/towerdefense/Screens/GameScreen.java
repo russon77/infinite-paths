@@ -581,7 +581,7 @@ public class GameScreen implements Screen {
 
 				break;
 			case SELECT_BASIC_TURRET:
-				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL)) 
+				if (!map.getSettings().isTurretTypeDisabled(BaseTurret.Type.NORMAL))
 					player.setTurretSelectedForPurchase(
 							new BasicTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
@@ -620,6 +620,13 @@ public class GameScreen implements Screen {
 					player.setTurretSelectedForPurchase(
 							new ShotgunTurret(mouseLocation.clone()));
 				resetVisualTurretSelection();
+
+				break;
+			case QUICK_SELL:
+				player.addResources(player.getTurretSelectedForUpgrade().getWorth());
+				turretManager.removeTurret(player.getTurretSelectedForUpgrade());
+				player.setState(Player.State.TURRET_PLACE);
+				upgradeTable.setVisible(false);
 
 				break;
 		}
