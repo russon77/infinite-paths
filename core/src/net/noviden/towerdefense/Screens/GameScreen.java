@@ -17,7 +17,7 @@
  */
 
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -40,9 +40,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.CollisionManager;
+import net.noviden.towerdefense.GameSettings;
+import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapTransformation.Transformation;
 import net.noviden.towerdefense.MapTransformation.TurretTransformation;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Player;
+import net.noviden.towerdefense.Point;
+import net.noviden.towerdefense.TowerDefense;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.BasicTurret;
 import net.noviden.towerdefense.TurretFactory.BuffTurret;

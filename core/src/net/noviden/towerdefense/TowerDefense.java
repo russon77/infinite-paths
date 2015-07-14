@@ -20,8 +20,6 @@
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -64,7 +62,7 @@ public class TowerDefense extends Game {
             maps.add(Map.createFromDefault(Map.DefaultMaps.STAR));
         }
 
-        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new net.noviden.towerdefense.Screens.MainMenuScreen(this));
     }
 
     public void render() {

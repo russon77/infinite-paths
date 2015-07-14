@@ -17,12 +17,11 @@
  */
 
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,8 +30,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.GameSettings;
 import net.noviden.towerdefense.MapCreator.MapCreatorScreen;
 import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
+import net.noviden.towerdefense.TowerDefense;
 
 public class MainMenuScreen implements Screen {
 
@@ -83,7 +84,7 @@ public class MainMenuScreen implements Screen {
         startGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new MapSelectorScreen(towerDefense));
+                towerDefense.setScreen(new net.noviden.towerdefense.Screens.MapSelectorScreen(towerDefense));
                 dispose();
             }
         });

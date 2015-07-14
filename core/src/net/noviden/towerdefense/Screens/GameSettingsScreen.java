@@ -16,7 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,6 +33,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import net.noviden.towerdefense.GameSettings;
+import net.noviden.towerdefense.TowerDefense;
 
 import java.util.HashMap;
 
@@ -140,7 +143,7 @@ public class GameSettingsScreen implements Screen {
         exitWithoutSavingButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                _towerDefense.setScreen(new MainMenuScreen(_towerDefense));
+                _towerDefense.setScreen(new net.noviden.towerdefense.Screens.MainMenuScreen(_towerDefense));
             }
         });
 
@@ -163,7 +166,7 @@ public class GameSettingsScreen implements Screen {
                 System.out.println("Successfully saved settings!");
 
                 // return to main menu
-                _towerDefense.setScreen(new MainMenuScreen(_towerDefense));
+                _towerDefense.setScreen(new net.noviden.towerdefense.Screens.MainMenuScreen(_towerDefense));
 
                 dispose();
             }
