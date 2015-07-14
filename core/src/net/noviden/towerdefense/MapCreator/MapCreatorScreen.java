@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
 import net.noviden.towerdefense.Screens.MainMenuScreen;
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapSettings;
@@ -218,7 +219,7 @@ public class MapCreatorScreen implements Screen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new MainMenuScreen(towerDefense));
+                towerDefense.setScreen(new MapEditorSelectorScreen(towerDefense));
                 dispose();
             }
         });

@@ -58,7 +58,6 @@ public class MainMenuScreen implements Screen {
         Label welcomeLabel = new Label("Welcome to TowerDefense!", skin);
 
         TextButton startGame = new TextButton("Start Game", skin);
-        TextButton mapCreator = new TextButton("Map Creator", skin);
         TextButton mapEditor = new TextButton("Map Editor", skin);
         TextButton settings = new TextButton("Settings", skin);
         TextButton exitGame = new TextButton("Exit", skin);
@@ -66,8 +65,6 @@ public class MainMenuScreen implements Screen {
         menuTable.add(welcomeLabel);
         menuTable.row();
         menuTable.add(startGame);
-        menuTable.row();
-        menuTable.add(mapCreator);
         menuTable.row();
         menuTable.add(mapEditor);
         menuTable.row();
@@ -85,14 +82,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 towerDefense.setScreen(new net.noviden.towerdefense.Screens.MapSelectorScreen(towerDefense));
-                dispose();
-            }
-        });
-
-        mapCreator.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new MapCreatorScreen(towerDefense));
                 dispose();
             }
         });

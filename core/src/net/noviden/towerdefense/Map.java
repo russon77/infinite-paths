@@ -80,6 +80,10 @@ public class Map implements Serializable {
         }
     }
 
+    public Map clone() {
+        return new Map(this.dimensions, this.paths, this.name, _settings);
+    }
+
     public String getName() {
         return this.name;
     }

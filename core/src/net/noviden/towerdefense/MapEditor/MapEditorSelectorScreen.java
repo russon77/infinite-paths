@@ -20,16 +20,21 @@ package net.noviden.towerdefense.MapEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import net.noviden.towerdefense.MapCreator.MapCreatorScreen;
 import net.noviden.towerdefense.Screens.MainMenuScreen;
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapCreator.MapThumbnail;
@@ -40,10 +45,19 @@ public class MapEditorSelectorScreen implements Screen {
 
     private Stage stage;
 
+    private Map _selectedMap;
+    private ImageButton _selectedMapButton;
+    private Image _selectedMapIdentifierImage;
+
+    private Table _mapListTable;
+
     public MapEditorSelectorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
         Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+
+        Texture texture = new Texture(Gdx.files.internal("selectedMap.png"));
+        _selectedMapIdentifierImage = new Image(texture);
 
         stage = new Stage();
 
@@ -51,35 +65,40 @@ public class MapEditorSelectorScreen implements Screen {
         rootTable.setFillParent(true);
 
         Table containerTable = new Table();
-        Table mapListTable = new Table();
+        _mapListTable = new Table();
 
-        for (int i = 0; i < towerDefense.maps.size(); i++) {
-            if (i > 0 && i % 3 == 0) {
-                mapListTable.row();
-            }
+        updateMapList();
 
-            final Map map = towerDefense.maps.get(i);
-
-            ClickListener clickListener = new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    towerDefense.setScreen(new MapEditorScreen(towerDefense, map));
-                }
-            };
-            TextButton textButton = new TextButton(map.getName(), skin);
-            textButton.addListener(clickListener);
-
-            ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
-            imageButton.addListener(clickListener);
-
-            mapListTable.add(imageButton).pad(10.0f);
-        }
-
-        ScrollPane scrollPane = new ScrollPane(mapListTable);
+        ScrollPane scrollPane = new ScrollPane(_mapListTable);
         scrollPane.layout();
         scrollPane.setFadeScrollBars(false);
 
+        Table operationsTable = new Table();
+        TextButton createButton = new TextButton("Create", skin);
+        TextButton selectButton = new TextButton("Edit", skin);
+        TextButton cloneButton = new TextButton("Clone", skin);
+        TextButton deleteButton = new TextButton("Delete", skin);
+
         TextButton exitButton = new TextButton("Exit", skin);
+
+        containerTable.add(scrollPane).fillX().fillY();
+
+        operationsTable.add(createButton).pad(5.0f);
+        operationsTable.add(selectButton).pad(5.0f);
+        operationsTable.add(cloneButton).pad(5.0f);
+        operationsTable.add(deleteButton).pad(5.0f);
+        operationsTable.add(exitButton).pad(5.0f);
+
+        rootTable.add(operationsTable).expandY().top().expandX().right();
+        rootTable.row();
+        rootTable.add(containerTable).top();
+        rootTable.center();
+
+        stage.addActor(rootTable);
+
+        Gdx.input.setInputProcessor(stage);
+
+        // set up input listeners
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -87,15 +106,35 @@ public class MapEditorSelectorScreen implements Screen {
             }
         });
 
-        containerTable.add(scrollPane).fillX().fillY();
+        createButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new MapCreatorScreen(towerDefense));
+            }
+        });
 
-        rootTable.add(exitButton);
-        rootTable.add(containerTable);
-        rootTable.center();
+        selectButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new MapEditorScreen(towerDefense, _selectedMap));
+            }
+        });
 
-        stage.addActor(rootTable);
+        cloneButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.maps.add(_selectedMap.clone());
+                updateMapList();
+            }
+        });
 
-        Gdx.input.setInputProcessor(stage);
+        deleteButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.maps.remove(_selectedMap);
+                updateMapList();
+            }
+        });
     }
 
     public void render(float deltaTime) {
@@ -104,6 +143,54 @@ public class MapEditorSelectorScreen implements Screen {
 
         stage.act(deltaTime);
         stage.draw();
+    }
+
+    private void updateMapList() {
+        _mapListTable.clearChildren();
+
+        for (int i = 0; i < towerDefense.maps.size(); i++) {
+            if (i > 0 && i % 3 == 0) {
+                _mapListTable.row();
+            }
+
+            final Map map = towerDefense.maps.get(i);
+            final ImageButton imageButton =
+                    new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
+
+            ClickListener clickListener = new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // if user double clicks on this image, go directly to map editor screen
+                    if (getTapCount() > 1) {
+                        towerDefense.setScreen(new MapEditorScreen(towerDefense, map));
+                        dispose();
+
+                        return;
+                    }
+
+                    // otherwise do other fun stuff
+                    if (_selectedMapButton != null) {
+                        _selectedMapButton.clearChildren();
+
+                        Image image = new Image(
+                                MapThumbnail.createThumbnail(_selectedMap, 0.25f));
+
+                        _selectedMapButton.add(image);
+                        _selectedMapButton.row();
+                    }
+
+                    _selectedMap = map;
+
+                    _selectedMapButton = imageButton;
+
+                    _selectedMapButton.add(_selectedMapIdentifierImage);
+                }
+            };
+
+            imageButton.addListener(clickListener);
+
+            _mapListTable.add(imageButton).pad(10.0f);
+        }
     }
 
     public void pause() {}
