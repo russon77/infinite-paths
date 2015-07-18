@@ -13,4 +13,13 @@ public class Path implements Serializable {
     public Path(ArrayList<Point> set, float width) {
         this.set = set; this.width = width;
     }
+
+    public Path clone() {
+        ArrayList<Point> clonedSet = new ArrayList<Point>(this.set.size());
+        for (Point point : this.set) {
+            clonedSet.add(point.clone());
+        }
+
+        return new Path(clonedSet, this.width);
+    }
 }

@@ -99,7 +99,7 @@ public class Unit {
         this.yVelocity = (destination.y - location.y) / distanceBetween;
     }
 
-    public void act(float deltaTime, Player player) {
+    public void act(float deltaTime) {
         // move along line from by currentLocation -> currentDestination until arrive at
         // destination, then set new destination
 

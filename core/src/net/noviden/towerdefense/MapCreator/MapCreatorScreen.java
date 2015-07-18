@@ -345,7 +345,7 @@ public class MapCreatorScreen implements Screen {
                 towerDefense.maps.add(map);
 
                 // return to main menu
-                towerDefense.setScreen(new MainMenuScreen(towerDefense));
+                towerDefense.setScreen(new MapEditorSelectorScreen(towerDefense));
                 dispose();
             }
         });

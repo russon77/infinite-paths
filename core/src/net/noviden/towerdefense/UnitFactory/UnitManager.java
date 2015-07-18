@@ -101,17 +101,19 @@ public class UnitManager {
         for (int i = 0; i < units.size(); i++) {
             Unit unit = units.get(i);
 
-            unit.act(deltaTime, player);
+            unit.act(deltaTime);
 
             if (unit.isDead()) {
                 // update player fields based on cause of death and remove unit
 
-                if (unit.reachedEndOfPath()) {
-                    player.decreaseHealth(unit.getDamage());
-                } else {
-                    player.addResources(unit.getWorth());
-                    player.increaseScore(unit.getWorth());
-                    player.increaseNumUnitsKilled();
+                if (player != null) {
+                    if (unit.reachedEndOfPath()) {
+                        player.decreaseHealth(unit.getDamage());
+                    } else {
+                        player.addResources(unit.getWorth());
+                        player.increaseScore(unit.getWorth());
+                        player.increaseNumUnitsKilled();
+                    }
                 }
 
                 // break down the unit into its follow up unit

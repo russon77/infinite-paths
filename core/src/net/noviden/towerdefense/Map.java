@@ -81,15 +81,27 @@ public class Map implements Serializable {
     }
 
     public Map clone() {
-        return new Map(this.dimensions, this.paths.clone(), new String(name), _settings.clone());
+        Path[] clonedPaths = new Path[this.paths.length];
+        for (int i = 0; i < clonedPaths.length; i++) {
+            clonedPaths[i] = this.paths[i].clone();
+        }
+        return new Map(this.dimensions, clonedPaths, new String(name), _settings.clone());
     }
 
     public String getName() {
         return this.name;
     }
 
+    public void setPaths(Path[] paths) {
+        this.paths = paths;
+    }
+
     public Path[] getPaths() {
         return this.paths;
+    }
+
+    public Path getPath(int pIndex) {
+        return this.paths[pIndex];
     }
 
     public MapSettings getSettings() {
