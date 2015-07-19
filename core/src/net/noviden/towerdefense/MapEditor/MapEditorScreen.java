@@ -32,6 +32,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -39,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
@@ -85,9 +87,11 @@ public class MapEditorScreen implements Screen {
         _shapeRenderer = new ShapeRenderer();
         _shapeRenderer.setAutoShapeType(true);
 
+        // make use of map settings to have units travel slightly faster, for display niceties
         _mapSettings = new MapSettings();
         _mapSettings.putValue(MapSettings.UNIT_INITIAL_SPEED_KEY, 150.0f);
 
+        // instantiate/create unit managers for paths
         resetUnitManagers();
 
         // there must exist at least one path if we are EDITING an existing map
@@ -109,6 +113,7 @@ public class MapEditorScreen implements Screen {
         TextButton deletePathButton = new TextButton("Delete Current Path", skin);
         TextButton deleteLastNodeOnPathButton =
                 new TextButton("Delete End Node", skin);
+        TextButton displayOptionsButton = new TextButton("Options", skin);
 
         pathAddDeleteTable.add(deletePathButton);
         pathAddDeleteTable.add(addPathButton);
@@ -116,6 +121,7 @@ public class MapEditorScreen implements Screen {
         pathAddDeleteTable.add(exitButton);
         pathAddDeleteTable.row();
         pathAddDeleteTable.add(deleteLastNodeOnPathButton).expandX().left();
+        pathAddDeleteTable.add(displayOptionsButton);
 
         Table pathSelectorTable = new Table();
 
@@ -130,9 +136,97 @@ public class MapEditorScreen implements Screen {
         pathSelectorTable.add(selectedPathLabel).pad(8.0f);
         pathSelectorTable.add(rightArrowImage).pad(8.0f);
 
+        // options table
+
+        // set up options table
+        final Table optionsTable = new Table();
+        optionsTable.setVisible(false);
+
+        MapSettings currentSettings = _map.getSettings();
+
+        Label initialPlayerHealthLabel = new Label("Initial Player Health:", skin);
+        final TextField initialPlayerHealthText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.PLAYER_INITIAL_HEALTH_KEY), skin);
+        Label initialPlayerResourcesLabel = new Label("Initial Player Resources:", skin);
+        final TextField initialPlayerResourcesText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY), skin);
+        Label initialUnitHealthLabel = new Label("Initial Unit Health:", skin);
+        final TextField initialUnitHealthText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.UNIT_INITIAL_HEALTH_KEY), skin);
+        Label initialUnitMovementSpeedLabel = new Label("Initial Unit Movement Speed:", skin);
+        final TextField initialUnitMovementSpeedText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.UNIT_INITIAL_SPEED_KEY), skin);
+        Label initialUnitDamageLabel = new Label("Initial Unit Damage:", skin);
+        final TextField initialUnitDamageText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY), skin);
+        Label defaultUnitSpawnRateLabel = new Label("Unit Spawn Rate:", skin);
+        final TextField defaultUnitSpawnRateText =
+                new TextField("" +
+                        currentSettings.getValue(MapSettings.UNIT_SPAWN_RATE_KEY), skin);
+
+        // TODO Implement this button
+        TextButton displayWavesCreatorButton = new TextButton("Waves Creator", skin);
+        TextButton displayTurretsButton = new TextButton("Disable Turrets", skin);
+
+        optionsTable.add(initialPlayerHealthLabel, initialPlayerHealthText);
+        optionsTable.row();
+        optionsTable.add(initialPlayerResourcesLabel, initialPlayerResourcesText);
+        optionsTable.row();
+        optionsTable.add(initialUnitHealthLabel, initialUnitHealthText);
+        optionsTable.row();
+        optionsTable.add(initialUnitMovementSpeedLabel, initialUnitMovementSpeedText);
+        optionsTable.row();
+        optionsTable.add(initialUnitDamageLabel, initialUnitDamageText);
+        optionsTable.row();
+        optionsTable.add(defaultUnitSpawnRateLabel, defaultUnitSpawnRateText);
+        optionsTable.row();
+        optionsTable.add(displayTurretsButton);
+
+        final Table disableTurretsTable = new Table();
+        disableTurretsTable.setVisible(false);
+
+        final CheckBox disableChaingunTurretCheckbox =
+                new CheckBox("Disable Chaingun", skin);
+        final CheckBox disableBasicTurretCheckbox =
+                new CheckBox("Disable Basic", skin);
+        final CheckBox disableBuffTurretCheckbox =
+                new CheckBox("Disable Buff", skin);
+        final CheckBox disableHomingTurretCheckbox =
+                new CheckBox("Disable Homing", skin);
+        final CheckBox disableRocketTurretCheckbox =
+                new CheckBox("Disable Rocket", skin);
+        final CheckBox disableShotgunTurretCheckbox =
+                new CheckBox("Disable Shotgun", skin);
+
+        disableTurretsTable.add(disableChaingunTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableBasicTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableBuffTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableHomingTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableRocketTurretCheckbox);
+        disableTurretsTable.row();
+        disableTurretsTable.add(disableShotgunTurretCheckbox);
+
+        optionsTable.row();
+        optionsTable.add(disableTurretsTable);
+
+        // finally, add tables to root table and set input processing
+
         rootTable.add(pathSelectorTable).expandX().left().expandY().top();
 
         rootTable.add(pathAddDeleteTable).expandX().right().expandY().top();
+
+        rootTable.row();
+
+        rootTable.add(optionsTable).expandX().right().expandY().top();
 
         stage.addActor(rootTable);
 
@@ -145,23 +239,26 @@ public class MapEditorScreen implements Screen {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO come up with a better algorithm for this
+                // TODO implement saving settings
 
-                for (int i = 0; i < _towerDefense.maps.size(); i++) {
-                    if (_originalMapReference.equals(_towerDefense.maps.get(i))) {
-                        _towerDefense.maps.set(i, _map);
+                int index = _towerDefense.maps.indexOf(_originalMapReference);
+                String message = "";
 
-                        Dialog saveSucceeded = new Dialog("Success!", skin);
-                        saveSucceeded.text("Save succeeded.");
-                        saveSucceeded.button("Continue");
-
-                        return;
-                    }
+                if (index >= 0) {
+                    _towerDefense.maps.set(index, _map);
+                    message = "Saved over old map.";
+                } else {
+                    _towerDefense.maps.add(_map);
+                    message = "Something weird happened, saved new copy of map.";
                 }
 
-                Dialog saveFailed = new Dialog("Error!", skin);
-                saveFailed.text("Failed to save map.");
-                saveFailed.button("Continue.");
+                _originalMapReference = _map;
+                _map = _map.clone();
+
+                Dialog saveSucceeded = new Dialog("Success!", skin);
+                saveSucceeded.text(message);
+                saveSucceeded.button("Continue");
+                saveSucceeded.show(stage);
             }
         });
 
@@ -176,7 +273,6 @@ public class MapEditorScreen implements Screen {
         addPathButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO
                 Path[] paths = _map.getPaths();
 
                 // make a copy of old paths array, and add a new path to the end
@@ -259,6 +355,20 @@ public class MapEditorScreen implements Screen {
                 }
             }
         });
+
+        displayOptionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                optionsTable.setVisible(!optionsTable.isVisible());
+            }
+        });
+
+        displayTurretsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                disableTurretsTable.setVisible(!disableTurretsTable.isVisible());
+            }
+        });
     }
 
     public void render(float deltaTime) {
@@ -318,13 +428,6 @@ public class MapEditorScreen implements Screen {
                 _unitManagers[i] = null;
             }
         }
-    }
-
-    private void displayErrorMessage(String message, Skin skin) {
-        Dialog errorDialog = new Dialog("Error!", skin);
-        errorDialog.text(message);
-        errorDialog.button("Ok");
-        errorDialog.show(stage);
     }
 
     public void pause() {}
