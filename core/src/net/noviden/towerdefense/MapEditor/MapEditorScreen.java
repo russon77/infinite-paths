@@ -52,6 +52,8 @@ import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.ArrayList;
 
+import javax.xml.soap.Text;
+
 public class MapEditorScreen implements Screen {
 
     private final TowerDefense _towerDefense;
@@ -105,11 +107,15 @@ public class MapEditorScreen implements Screen {
         TextButton exitButton = new TextButton("Exit Without Saving", skin);
         TextButton addPathButton = new TextButton("Add Path", skin);
         TextButton deletePathButton = new TextButton("Delete Current Path", skin);
+        TextButton deleteLastNodeOnPathButton =
+                new TextButton("Delete End Node", skin);
 
         pathAddDeleteTable.add(deletePathButton);
         pathAddDeleteTable.add(addPathButton);
         pathAddDeleteTable.add(saveButton);
         pathAddDeleteTable.add(exitButton);
+        pathAddDeleteTable.row();
+        pathAddDeleteTable.add(deleteLastNodeOnPathButton).expandX().left();
 
         Table pathSelectorTable = new Table();
 
@@ -171,21 +177,24 @@ public class MapEditorScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO
-
-                if (true)
-                    return;
-
                 Path[] paths = _map.getPaths();
 
                 // make a copy of old paths array, and add a new path to the end
                 Path[] updatedPaths = new Path[paths.length + 1];
 
                 for (int i = 0; i < paths.length; i++) {
-                    updatedPaths[i] = updatedPaths[i];
+                    updatedPaths[i] = paths[i];
                 }
 
                 updatedPaths[updatedPaths.length - 1] = new Path(
-                        new ArrayList<Point>(), paths[0].width);
+                        new ArrayList<Point>(), 5.0f); // TODO remove magic number
+
+                _map.setPaths(updatedPaths);
+
+                _selectedPathIndex = updatedPaths.length - 1;
+                resetUnitManagers();
+
+                selectedPathLabel.setText("" + _selectedPathIndex);
             }
         });
 
@@ -212,6 +221,21 @@ public class MapEditorScreen implements Screen {
                 resetUnitManagers();
                 if (_selectedPathIndex > 0) {
                     _selectedPathIndex--;
+                }
+
+                selectedPathLabel.setText("" + _selectedPathIndex);
+            }
+        });
+
+        deleteLastNodeOnPathButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Path selectedPath = _map.getPath(_selectedPathIndex);
+                if (selectedPath.set.size() > 0) {
+                    selectedPath.set.remove(
+                            selectedPath.set.size() - 1);
+
+                    resetUnitManagers();
                 }
             }
         });
@@ -271,8 +295,10 @@ public class MapEditorScreen implements Screen {
         }
 
         for (UnitManager unitManager : _unitManagers) {
-            unitManager.act(deltaTime, null);
-            unitManager.draw(_shapeRenderer);
+            if (unitManager != null) {
+                unitManager.act(deltaTime, null);
+                unitManager.draw(_shapeRenderer);
+            }
         }
 
         _shapeRenderer.end();
@@ -286,7 +312,11 @@ public class MapEditorScreen implements Screen {
         Path[] paths = _map.getPaths();
         _unitManagers = new UnitManager[paths.length];
         for (int i = 0; i < _unitManagers.length; i++) {
-            _unitManagers[i] = new UnitManager(paths[i], _mapSettings);
+            if (paths[i].set.size() > 1) {
+                _unitManagers[i] = new UnitManager(paths[i], _mapSettings);
+            } else {
+                _unitManagers[i] = null;
+            }
         }
     }
 
@@ -319,6 +349,7 @@ public class MapEditorScreen implements Screen {
 
             // add latest `click` to path set
             _map.getPath(_selectedPathIndex).set.add(new Point(screenX, screenY));
+            resetUnitManagers();
 
             return true;
         }
