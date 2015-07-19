@@ -46,6 +46,7 @@ import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
+import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.ArrayList;
@@ -141,11 +142,11 @@ public class MapEditorScreen implements Screen {
         Label initialPlayerHealthLabel = new Label("Initial Player Health:", skin);
         final TextField initialPlayerHealthText =
                 new TextField("" +
-                        currentSettings.getValue(MapSettings.PLAYER_INITIAL_HEALTH_KEY), skin);
+                        (int) currentSettings.getValue(MapSettings.PLAYER_INITIAL_HEALTH_KEY), skin);
         Label initialPlayerResourcesLabel = new Label("Initial Player Resources:", skin);
         final TextField initialPlayerResourcesText =
                 new TextField("" +
-                        currentSettings.getValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY), skin);
+                        (int) currentSettings.getValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY), skin);
         Label initialUnitHealthLabel = new Label("Initial Unit Health:", skin);
         final TextField initialUnitHealthText =
                 new TextField("" +
@@ -157,7 +158,7 @@ public class MapEditorScreen implements Screen {
         Label initialUnitDamageLabel = new Label("Initial Unit Damage:", skin);
         final TextField initialUnitDamageText =
                 new TextField("" +
-                        currentSettings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY), skin);
+                        (int) currentSettings.getValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY), skin);
         Label defaultUnitSpawnRateLabel = new Label("Unit Spawn Rate:", skin);
         final TextField defaultUnitSpawnRateText =
                 new TextField("" +
@@ -233,11 +234,100 @@ public class MapEditorScreen implements Screen {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO implement saving settings
-
                 int index = _towerDefense.maps.indexOf(_originalMapReference);
                 String message = "";
 
+                int playerHealth = Integer.parseInt(initialPlayerHealthText.getText()),
+                        playerResources = Integer.parseInt(initialPlayerResourcesText.getText()),
+                        unitDamage = Integer.parseInt(initialUnitDamageText.getText());
+                float unitHealth = Float.parseFloat(initialUnitHealthText.getText()),
+                        unitSpeed = Float.parseFloat(initialUnitMovementSpeedText.getText()),
+                        unitSpawnRate = Float.parseFloat(defaultUnitSpawnRateText.getText());
+
+                // validation
+                if (playerHealth <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Player cannot start with 0.0 health", skin);
+                    return;
+                } else if (unitHealth <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 health", skin);
+                    return;
+                } else if (unitDamage <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 damage", skin);
+                    return;
+                } else if (unitSpeed <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Units cannot start with 0.0 speed", skin);
+                    return;
+                } else if (unitSpawnRate <= 0.0f) {
+                    displayErrorMessage(
+                            "Error! Spawn rate cannot be 0.0", skin);
+                    return;
+                }
+
+                ArrayList<BaseTurret.Type> disabledTypes =
+                        new ArrayList<BaseTurret.Type>();
+
+                if (disableBasicTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.NORMAL);
+                }
+                if (disableBuffTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.BUFF);
+                }
+                if (disableChaingunTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.CHAINGUN);
+                }
+                if (disableHomingTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.HOMING);
+                }
+                if (disableRocketTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.ROCKET);
+                }
+                if (disableShotgunTurretCheckbox.isChecked()) {
+                    disabledTypes.add(BaseTurret.Type.SHOTGUN);
+                }
+
+                if (disabledTypes.size() == BaseTurret.Type.values().length) {
+                    displayErrorMessage(
+                            "Error! Cannot disable all turrets", skin);
+                    return;
+                }
+
+                MapSettings mapSettings = new MapSettings();
+
+                BaseTurret.Type[] disabledTypesArr = new BaseTurret.Type[disabledTypes.size()];
+                disabledTypesArr = disabledTypes.toArray(disabledTypesArr);
+
+                mapSettings.setDisabledTurretTypes(disabledTypesArr);
+
+                String[] keys =
+                        {
+                                MapSettings.PLAYER_INITIAL_HEALTH_KEY,
+                                MapSettings.PLAYER_INITIAL_RESOURCES_KEY,
+                                MapSettings.UNIT_INITIAL_DAMAGE_KEY,
+                                MapSettings.UNIT_INITIAL_HEALTH_KEY,
+                                MapSettings.UNIT_INITIAL_SPEED_KEY,
+                                MapSettings.UNIT_SPAWN_RATE_KEY
+                        };
+
+                float[] values =
+                        {
+                                playerHealth,
+                                playerResources,
+                                unitDamage,
+                                unitHealth,
+                                unitSpeed,
+                                unitSpawnRate
+                        };
+
+                mapSettings.putValues(keys, values);
+
+                // save settings to map
+                _map.setSettings(mapSettings);
+
+                // finally, save map
                 if (index >= 0) {
                     _towerDefense.maps.set(index, _map);
                     message = "Saved over old map.";
@@ -394,7 +484,16 @@ public class MapEditorScreen implements Screen {
 
             if (paths[i].set.size() > 0) {
                 Point lastPoint = paths[i].set.get(paths[i].set.size() - 1);
-                _shapeRenderer.circle(lastPoint.x, lastPoint.y, 8.0f);
+
+//                _shapeRenderer.circle(lastPoint.x, lastPoint.y, 8.0f);
+
+                float length = 12.0f;
+                _shapeRenderer.triangle(lastPoint.x, lastPoint.y,
+                        lastPoint.x - length, lastPoint.y - length,
+                        lastPoint.x, lastPoint.y - length);
+                _shapeRenderer.triangle(lastPoint.x, lastPoint.y,
+                        lastPoint.x + length, lastPoint.y + length,
+                        lastPoint.x, lastPoint.y + length);
             }
         }
 
@@ -422,6 +521,13 @@ public class MapEditorScreen implements Screen {
                 _unitManagers[i] = null;
             }
         }
+    }
+
+    private void displayErrorMessage(String message, Skin skin) {
+        Dialog errorDialog = new Dialog("Error!", skin);
+        errorDialog.text(message);
+        errorDialog.button("Ok");
+        errorDialog.show(stage);
     }
 
     public void pause() {}

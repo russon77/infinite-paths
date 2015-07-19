@@ -108,6 +108,10 @@ public class Map implements Serializable {
         return _settings;
     }
 
+    public void setSettings(MapSettings pSettings) {
+        _settings = pSettings;
+    }
+
     public static Map createFromFile(String filename) {
         return null;
     }

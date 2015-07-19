@@ -286,8 +286,7 @@ public class MapCreatorScreen implements Screen {
                     disabledTypes.add(BaseTurret.Type.SHOTGUN);
                 }
 
-                // TODO remove magic number
-                if (disabledTypes.size() == 6) {
+                if (disabledTypes.size() == BaseTurret.Type.values().length) {
                     displayErrorMessage(
                             "Error! Cannot disable all turrets", skin);
                     return;
