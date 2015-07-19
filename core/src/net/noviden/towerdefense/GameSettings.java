@@ -42,7 +42,9 @@ public class GameSettings {
 
         QUICK_SELL,
 
-        TOGGLE_SHOW_INTERFACE
+        TOGGLE_SHOW_INTERFACE,
+
+        TOGGLE_SHOW_FPS
     }
 
     private static GameSettings _instance;
@@ -86,6 +88,8 @@ public class GameSettings {
         _keyboardShortcutsMap.put(Input.Keys.T, Actions.QUICK_SELL);
 
         _keyboardShortcutsMap.put(Input.Keys.ESCAPE, Actions.TOGGLE_SHOW_INTERFACE);
+
+        _keyboardShortcutsMap.put(Input.Keys.F, Actions.TOGGLE_SHOW_FPS);
     }
 
     private void loadSettingsFromFile() {

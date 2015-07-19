@@ -100,6 +100,8 @@ public class GameScreen implements Screen {
 	private final TextButton[] selectTurretButtons;
 	final TextButton pauseButton;
 
+	private Label fpsLabel;
+
 	private boolean isPaused;
 
 	private Transformation _transformation;
@@ -305,6 +307,8 @@ public class GameScreen implements Screen {
 		Table menuTable = new Table();
 		menuTable.add(exitButton, pauseButton);
 
+		fpsLabel = new Label("0fps", skin);
+
 		rootTable.add(infoTable);
 		rootTable.row();
 		rootTable.add(selectTypeTable);
@@ -312,6 +316,8 @@ public class GameScreen implements Screen {
 		rootTable.add(menuTable);
 		rootTable.row();
 		rootTable.add(upgradeTable).expandX().right();
+		rootTable.row();
+		rootTable.add(fpsLabel).expandX().left().expandY().bottom();
 
 		rootTable.top();
 
@@ -514,6 +520,9 @@ public class GameScreen implements Screen {
 		Date elapsed = new Date(new Date().getTime() - startDate.getTime());
 		timeLabel.setText("Elapsed: " + simpleDateFormat.format(elapsed));
 
+		// update fps
+		fpsLabel.setText("" + Gdx.graphics.getFramesPerSecond() + "fps");
+
 		// update upgrade ui
 		BaseTurret turret = player.getTurretSelectedForUpgrade();
 		if (upgradeTable.isVisible() && turret != null) {
@@ -575,6 +584,10 @@ public class GameScreen implements Screen {
 				rootTable.setVisible(
 						!rootTable.isVisible());
 				upgradeTable.setVisible(false);
+
+				break;
+			case TOGGLE_SHOW_FPS:
+				fpsLabel.setVisible( !fpsLabel.isVisible() );
 
 				break;
 			case PAUSE_GAME:
