@@ -31,30 +31,24 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.Screens.MainMenuScreen;
 import net.noviden.towerdefense.TowerDefense;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 import java.util.ArrayList;
-
-import javax.xml.soap.Text;
 
 public class MapEditorScreen implements Screen {
 

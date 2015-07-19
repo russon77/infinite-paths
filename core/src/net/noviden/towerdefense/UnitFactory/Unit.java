@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
-import net.noviden.towerdefense.Player;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TowerDefense;
 

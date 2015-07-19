@@ -40,9 +40,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
-import net.noviden.towerdefense.Screens.MainMenuScreen;
 import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
 import net.noviden.towerdefense.MapSettings;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;

@@ -31,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.GameSettings;
-import net.noviden.towerdefense.MapCreator.MapCreatorScreen;
 import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
 import net.noviden.towerdefense.TowerDefense;
 
