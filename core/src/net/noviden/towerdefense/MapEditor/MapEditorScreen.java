@@ -64,7 +64,6 @@ public class MapEditorScreen implements Screen {
     private ShapeRenderer _shapeRenderer;
 
     private int _selectedPathIndex;
-    private int _selectedVertexOnPath;
 
     private UnitManager[] _unitManagers;
     private MapSettings _mapSettings;
@@ -91,7 +90,6 @@ public class MapEditorScreen implements Screen {
 
         // there must exist at least one path if we are EDITING an existing map
         _selectedPathIndex = 0;
-        _selectedVertexOnPath = 0;
 
         final Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
@@ -383,6 +381,10 @@ public class MapEditorScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Path[] paths = _map.getPaths();
 
+                if (paths.length < 1) {
+                    return;
+                }
+
                 // make a new array and set it to the map
                 Path[] updatedPaths = new Path[paths.length - 1];
                 int offset = 0;
@@ -410,7 +412,13 @@ public class MapEditorScreen implements Screen {
         deleteLastNodeOnPathButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Path selectedPath = _map.getPath(_selectedPathIndex);
+                Path[] paths = _map.getPaths();
+
+                if (_selectedPathIndex >= paths.length) {
+                    return;
+                }
+
+                Path selectedPath = paths[_selectedPathIndex];
                 if (selectedPath.set.size() > 0) {
                     selectedPath.set.remove(
                             selectedPath.set.size() - 1);
