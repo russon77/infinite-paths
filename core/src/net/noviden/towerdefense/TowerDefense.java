@@ -48,6 +48,18 @@ public class TowerDefense extends Game {
             maps = (ArrayList<Map>) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
+
+            System.out.println("Successfully loaded maps!");
+
+            fileInputStream = new FileInputStream("settings.ser");
+            objectInputStream = new ObjectInputStream(fileInputStream);
+            GameSettings gameSettings = (GameSettings) objectInputStream.readObject();
+            GameSettings.initialize(gameSettings);
+            objectInputStream.close();
+            fileInputStream.close();
+
+            System.out.println("Successfully loaded settings!");
+
         } catch (IOException i) {
             i.printStackTrace();
         } catch (ClassNotFoundException c) {
@@ -78,7 +90,17 @@ public class TowerDefense extends Game {
             objectOutputStream.writeObject(maps);
             objectOutputStream.close();
             fileOutputStream.close();
+
             System.out.println("Serialized maps to disk!");
+
+            fileOutputStream = new FileOutputStream("settings.ser");
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(GameSettings.getInstance());
+            objectOutputStream.close();
+            fileOutputStream.close();
+
+            System.out.println("Serialized settings to disk!");
+
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
             e.printStackTrace();

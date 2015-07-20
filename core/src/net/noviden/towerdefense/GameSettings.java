@@ -20,9 +20,10 @@ package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Input;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class GameSettings {
+public class GameSettings implements Serializable {
 
     public enum Actions {
         PAUSE_GAME,
@@ -64,6 +65,14 @@ public class GameSettings {
 
             _instance.loadDefaultSettings();
         }
+    }
+
+    public static void initialize(GameSettings pInstance) {
+        _instance = pInstance;
+    }
+
+    public static GameSettings getInstance() {
+        return _instance;
     }
 
     private void loadDefaultSettings() {
@@ -125,6 +134,7 @@ public class GameSettings {
     }
 
     public static void putShortcut(int pMapKey, Actions pShorcutValue) {
+        // first remove current mapkey for shortcut
         _instance._keyboardShortcutsMap.put(pMapKey, pShorcutValue);
     }
 

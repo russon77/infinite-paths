@@ -305,7 +305,7 @@ public class GameScreen implements Screen {
 		upgradeTable.setVisible(false);
 
 		Table menuTable = new Table();
-		menuTable.add(exitButton, pauseButton);
+		menuTable.add(pauseButton, exitButton);
 
 		fpsLabel = new Label("0fps", skin);
 
@@ -313,11 +313,11 @@ public class GameScreen implements Screen {
 		rootTable.row();
 		rootTable.add(selectTypeTable);
 		rootTable.row();
-		rootTable.add(menuTable);
-		rootTable.row();
 		rootTable.add(upgradeTable).expandX().right();
 		rootTable.row();
 		rootTable.add(fpsLabel).expandX().left().expandY().bottom();
+		rootTable.add(menuTable).expandX().right().expandY().bottom();
+
 
 		rootTable.top();
 

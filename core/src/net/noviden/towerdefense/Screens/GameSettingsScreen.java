@@ -196,6 +196,11 @@ public class GameSettingsScreen implements Screen {
         @Override
         public boolean keyUp(int keycode) {
 
+            if (keycode < 0) {
+                // keycode cannot be negative for Keys.toString()
+                return false;
+            }
+
             if (keycode == Input.Keys.ESCAPE) {
                 _currentlySelectedShortcut.setText(Input.Keys.toString(_previouslySelectedKey));
                 _currentlySelectedShortcut = null;
