@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -116,6 +117,9 @@ public class GameSettingsScreen implements Screen {
             });
         }
 
+        ScrollPane keyboardShortcutsScrollPane = new ScrollPane(keyboardShortcutsTable);
+        keyboardShortcutsScrollPane.layout();
+
         // add in save and exit buttons
         Table exitFunctionalityTable = new Table();
 
@@ -130,7 +134,7 @@ public class GameSettingsScreen implements Screen {
         rootTable.row();
         rootTable.add(fullscreenCheckBox);
         rootTable.row();
-        rootTable.add(keyboardShortcutsTable);
+        rootTable.add(keyboardShortcutsScrollPane);
         rootTable.row();
         rootTable.add(exitFunctionalityTable);
 
