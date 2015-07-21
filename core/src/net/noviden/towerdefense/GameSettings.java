@@ -21,7 +21,8 @@ package net.noviden.towerdefense;
 import com.badlogic.gdx.Input;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map;
 
 public class GameSettings implements Serializable {
 
@@ -135,16 +136,36 @@ public class GameSettings implements Serializable {
 
     public static void putShortcut(int pMapKey, Actions pShorcutValue) {
         // first remove current mapkey for shortcut
+        if (_instance._keyboardShortcutsMap.containsValue(pShorcutValue)) {
+            int key = getReverse(pShorcutValue);
+            _instance._keyboardShortcutsMap.remove(key);
+        }
+
         _instance._keyboardShortcutsMap.put(pMapKey, pShorcutValue);
     }
 
     public static void putShortcuts(HashMap<Integer, Actions> pMap) {
-        _instance._keyboardShortcutsMap.putAll(pMap);
+        for (int key : pMap.keySet()) {
+            putShortcut(key, pMap.get(key));
+        }
+
+//        _instance._keyboardShortcutsMap.putAll(pMap);
         System.out.println("Put all shortcuts into table");
     }
 
     public static HashMap<Integer, Actions> getShortcutMap() {
         return _instance._keyboardShortcutsMap;
+    }
+
+    private static int getReverse(Actions pAction) {
+        // return the key for given action in shortcuts table
+        for (int key : _instance._keyboardShortcutsMap.keySet()) {
+            if (_instance._keyboardShortcutsMap.get(key).equals(pAction)) {
+                return key;
+            }
+        }
+
+        return -1;
     }
 
     // screen sizes TODO
