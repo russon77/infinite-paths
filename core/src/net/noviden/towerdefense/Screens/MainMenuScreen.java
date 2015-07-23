@@ -22,6 +22,9 @@ package net.noviden.towerdefense.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -31,14 +34,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.GameSettings;
+import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.MapEditor.MapEditorSelectorScreen;
+import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.TowerDefense;
+import net.noviden.towerdefense.UnitFactory.UnitManager;
 
 public class MainMenuScreen implements Screen {
 
     private final TowerDefense towerDefense;
 
     private Stage stage;
+
+    // for dynamic background
+    private Map _map;
+    private UnitManager[] _unitManagers;
+
+    private SpriteBatch _spriteBatch;
+    private ShapeRenderer _shapeRenderer;
+    private OrthographicCamera _orthoCamera;
 
     public MainMenuScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
@@ -61,13 +75,13 @@ public class MainMenuScreen implements Screen {
         TextButton settings = new TextButton("Settings", skin);
         TextButton exitGame = new TextButton("Exit", skin);
 
-        menuTable.add(welcomeLabel);
+        menuTable.add(welcomeLabel).padBottom(50.0f);
         menuTable.row();
-        menuTable.add(startGame);
+        menuTable.add(startGame).padBottom(5.0f);
         menuTable.row();
-        menuTable.add(mapEditor);
+        menuTable.add(mapEditor).padBottom(5.0f);
         menuTable.row();
-        menuTable.add(settings);
+        menuTable.add(settings).padBottom(5.0f);
         menuTable.row();
         menuTable.add(exitGame);
 
@@ -108,6 +122,28 @@ public class MainMenuScreen implements Screen {
                 dispose();
             }
         });
+
+        // set up dynamic background
+
+        _spriteBatch = new SpriteBatch();
+        _shapeRenderer = new ShapeRenderer();
+        _shapeRenderer.setAutoShapeType(true);
+
+        _orthoCamera = new OrthographicCamera();
+        _orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
+        _orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
+        _orthoCamera.update();
+
+        int randomMapNo = (int) (Math.random() * (towerDefense.maps.size()));
+        _map = towerDefense.maps.get(randomMapNo);
+
+        Path[] paths = _map.getPaths();
+
+        _unitManagers = new UnitManager[paths.length];
+
+        for (int i = 0; i < paths.length; i++) {
+            _unitManagers[i] = new UnitManager(paths[i], _map.getSettings());
+        }
     }
 
     @Override
@@ -115,6 +151,28 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // update the camera, update the project matrices for our drawing routines
+        _orthoCamera.update();
+        _spriteBatch.setProjectionMatrix(_orthoCamera.combined);
+        _shapeRenderer.setProjectionMatrix(_orthoCamera.combined);
+
+        _spriteBatch.begin();
+        _shapeRenderer.begin();
+
+        // draw the map
+        _map.draw(_shapeRenderer);
+
+        for (UnitManager unitManager : _unitManagers) {
+            // act, and draw
+            unitManager.act(deltaTime, null);
+
+            unitManager.draw(_shapeRenderer);
+        }
+
+        _shapeRenderer.end();
+        _spriteBatch.end();
+
+        // draw the stage, containing all important ui elements, last and `on top`
         stage.act(deltaTime);
         stage.draw();
     }
