@@ -157,7 +157,7 @@ public class GameSettings implements Serializable {
         return _instance._keyboardShortcutsMap;
     }
 
-    private static int getReverse(Actions pAction) {
+    public static int getReverse(Actions pAction) {
         // return the key for given action in shortcuts table
         for (int key : _instance._keyboardShortcutsMap.keySet()) {
             if (_instance._keyboardShortcutsMap.get(key).equals(pAction)) {

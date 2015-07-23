@@ -38,7 +38,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import net.noviden.towerdefense.GameSettings;
 import net.noviden.towerdefense.TowerDefense;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
+
+import javax.xml.soap.Text;
 
 public class GameSettingsScreen implements Screen {
     final TowerDefense _towerDefense;
@@ -93,9 +99,21 @@ public class GameSettingsScreen implements Screen {
 
         HashMap<Integer, GameSettings.Actions> currentShortcutMap = GameSettings.getShortcutMap();
 
-        for (int i : currentShortcutMap.keySet()) {
-            final Label actionLabel = new Label(currentShortcutMap.get(i).toString(), skin);
-            final TextButton shortcutButton = new TextButton(Input.Keys.toString(i), skin);
+        // for sorting the settings on screen
+        Collection<GameSettings.Actions> values = currentShortcutMap.values();
+        ArrayList<String> valueNames = new ArrayList<String>();
+        for (GameSettings.Actions action : values) {
+            valueNames.add(action.toString());
+        }
+
+        Collections.sort(valueNames);
+
+        for (String s : valueNames) {
+            final Label actionLabel = new Label(s, skin);
+            final TextButton shortcutButton = new TextButton(
+                    Input.Keys.toString(GameSettings.getReverse(
+                            GameSettings.Actions.valueOf(s)
+                    )), skin);
 
             keyboardShortcutsTable.add(actionLabel).pad(10.0f);
             keyboardShortcutsTable.add(shortcutButton);
@@ -214,6 +232,15 @@ public class GameSettingsScreen implements Screen {
 
             // attempt to set keyboard shortcut
             if (_currentlySelectedShortcut != null) {
+
+                if (keycode != _previouslySelectedKey &&
+                        (_modifiedKeyboardShortcutsMap.containsKey(keycode) ||
+                        GameSettings.getShortcutAction(keycode) != null)) {
+                    // don't set anything, map already contains this keycode
+
+                    return false;
+                }
+
                 _currentlySelectedShortcut.setText(Input.Keys.toString(keycode));
 
                 _modifiedKeyboardShortcutsMap.put(keycode,
