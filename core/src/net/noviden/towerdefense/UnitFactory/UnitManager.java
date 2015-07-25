@@ -36,9 +36,6 @@ public class UnitManager {
 
     private static final int[][] DEFAULT_SPAWN_PATTERN =
             {
-                    {6}
-            }; /*
-            {
                     {2,2,2,2,2,2,2,2},
                     {2,3,2,3,2,3,2,3},
                     {3,3,3,3,3,3,3,3},
@@ -48,7 +45,7 @@ public class UnitManager {
                     {5,5,5,5,5,5,5,5},
                     {5,6,5,6,5,6,5,6},
                     {6,6,6,6,6,6,6,6}
-            };*/
+            };
 
     private int spawnIndex;
     private int waveIndex;
