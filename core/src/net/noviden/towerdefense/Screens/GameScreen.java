@@ -309,16 +309,23 @@ public class GameScreen implements Screen {
 
 		fpsLabel = new Label("0fps", skin);
 
-		rootTable.add(infoTable);
-		rootTable.row();
-		rootTable.add(selectTypeTable);
-		rootTable.row();
-		rootTable.add(upgradeTable).expandX().right();
-		rootTable.row();
-		rootTable.add(fpsLabel).expandX().left().expandY().bottom();
-		rootTable.add(menuTable).expandX().right().expandY().bottom();
+		Table topHalfTable = new Table(), botHalfTable = new Table();
+//		topHalfTable.setDebug(true); botHalfTable.setDebug(true);
 
-		rootTable.top();
+		topHalfTable.add(infoTable);
+		topHalfTable.row();
+		topHalfTable.add(selectTypeTable);
+		topHalfTable.row();
+		topHalfTable.add(upgradeTable).expandX().right();
+
+		botHalfTable.add(fpsLabel).expandX().left().expandY().bottom();
+		botHalfTable.add(menuTable).expandX().right().expandY().bottom();
+
+		rootTable.add(topHalfTable).fill().top();
+		rootTable.row();
+		rootTable.add(botHalfTable).fill().expand();
+
+		/*** END OF TABLES AND ALIGNMENT ***/
 
 		upgradeDamageButton.addListener(new ClickListener() {
 			@Override
