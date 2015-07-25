@@ -80,7 +80,7 @@ public class MapSelectorScreen implements Screen {
         scrollPane.layout();
         scrollPane.setFadeScrollBars(false);
 
-        TextButton exitButton = new TextButton("Exit", skin);
+        TextButton exitButton = new TextButton("Main Menu", skin);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -90,9 +90,9 @@ public class MapSelectorScreen implements Screen {
 
         containerTable.add(scrollPane).fillX().fillY();
 
-        rootTable.add(exitButton);
-        rootTable.add(containerTable);
-        rootTable.center();
+        rootTable.add(containerTable).expandY().pad(10.0f);
+        rootTable.row();
+        rootTable.add(exitButton).bottom().expandX().right().pad(8.0f);
 
         stage.addActor(rootTable);
 

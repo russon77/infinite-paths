@@ -78,7 +78,7 @@ public class MapEditorSelectorScreen implements Screen {
         TextButton cloneButton = new TextButton("Clone", skin);
         TextButton deleteButton = new TextButton("Delete", skin);
 
-        TextButton exitButton = new TextButton("Exit", skin);
+        TextButton exitButton = new TextButton("Main Menu", skin);
 
         Label screenTitleLabel = new Label("Map Editor Browser", skin);
 

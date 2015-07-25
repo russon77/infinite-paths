@@ -147,7 +147,7 @@ public class GameScreen implements Screen {
 		rootTable.setFillParent(true);
 		stage.addActor(rootTable);
 
-		TextButton exitButton = new TextButton("Exit", skin);
+		TextButton exitButton = new TextButton("Main Menu", skin);
 		exitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
