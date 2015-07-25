@@ -21,6 +21,7 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 import net.noviden.towerdefense.CollisionManager;
 import net.noviden.towerdefense.MissileFactory.Missile;
@@ -167,15 +168,25 @@ public class HexagonUnit extends Unit {
             float s = centerToVertex / 2,
                     c = (float) Math.sqrt(3) * centerToVertex / 2;
 
-            Point[] points = new Point[6];
-            points[0] = new Point(location.x + centerToVertex, location.y);
-            points[1] = new Point(location.x + s, location.y - c);
-            points[2] = new Point(location.x - s, location.y - c);
-            points[3] = new Point(location.x - centerToVertex, location.y);
-            points[4] = new Point(location.x - s, location.y + c);
-            points[5] = new Point(location.x + s, location.y + c);
+            Point[] points = new Point[6], rotatedPoints = new Point[6];
+            Vector2 rotationVector = new Vector2();
 
-            return CollisionManager.lineCollision(points, missile);
+            points[0] = new Point( + centerToVertex, 0);
+            points[1] = new Point( + s,  - c);
+            points[2] = new Point( - s,  - c);
+            points[3] = new Point( - centerToVertex, 0);
+            points[4] = new Point( - s, + c);
+            points[5] = new Point( + s, + c);
+
+            for (int i = 0; i < rotatedPoints.length; i++) {
+                rotationVector.set(points[i].x, points[i].y);
+                rotationVector.rotate(rotation);
+
+                rotatedPoints[i] = new Point(
+                        location.x + rotationVector.x, location.y + rotationVector.y);
+            }
+
+            return CollisionManager.lineCollision(rotatedPoints, missile);
         }
 
         return false;

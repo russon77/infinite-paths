@@ -30,7 +30,7 @@ import net.noviden.towerdefense.Point;
 
 public class SquareUnit extends Unit {
 
-    private static final float sideLength = 15.0f;
+    private static final float sideLength = 20.0f;
 
     public SquareUnit(float health, float damage, float speed, Path path) {
         super(health, damage, speed, path);

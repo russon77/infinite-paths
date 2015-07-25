@@ -20,6 +20,7 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 import net.noviden.towerdefense.CollisionManager;
 import net.noviden.towerdefense.MissileFactory.Missile;
@@ -163,14 +164,24 @@ public class PentagonUnit extends Unit {
                     s1 = MathUtils.sin(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
                     s2 = MathUtils.sin(MathUtils.PI * 4.0f / 5.0f) * centerToVertex;
 
-            Point[] points = new Point[5];
-            points[0] = new Point(location.x, location.y + centerToVertex);
-            points[1] = new Point(location.x + s1, location.y + c1);
-            points[2] = new Point(location.x + s2, location.y - c2);
-            points[3] = new Point(location.x - s2, location.y - c2);
-            points[4] = new Point(location.x - s1, location.y + c1);
+            Point[] points = new Point[5], rotatedPoints = new Point[5];
+            Vector2 rotationVector = new Vector2();
 
-            return CollisionManager.lineCollision(points, missile);
+            points[0] = new Point(0, centerToVertex);
+            points[1] = new Point( + s1, + c1);
+            points[2] = new Point( + s2, - c2);
+            points[3] = new Point( - s2, - c2);
+            points[4] = new Point( - s1, + c1);
+
+            for (int i = 0; i < rotatedPoints.length; i++) {
+                rotationVector.set(points[i].x, points[i].y);
+                rotationVector.rotate(rotation);
+
+                rotatedPoints[i] = new Point(
+                        location.x + rotationVector.x, location.y + rotationVector.y);
+            }
+
+            return CollisionManager.lineCollision(rotatedPoints, missile);
         }
 
         return false;

@@ -67,6 +67,11 @@ public class CollisionManager {
     }
 
     private static int[] _collisionCountersPerSide = new int[8];
+    private static float lengthProjV;
+    private static Vector2 pt_v = new Vector2(),
+                        seg_v_unit = new Vector2(),
+                        proj_v = new Vector2();
+    private static Point closest = new Point(0,0);
 
     /***
      * thanks to
@@ -84,32 +89,25 @@ public class CollisionManager {
             sides[i] = new Vector2(pointA.x - pointB.x, pointA.y - pointB.y);
         }
 
-//        sides[0] = new Vector2(points[1].x - points[0].x, points[1].y - points[0].y);
-//        sides[1] = new Vector2(points[2].x - points[1].x, points[2].y - points[1].y);
-//        sides[2] = new Vector2(points[2].x - points[0].x, points[2].y - points[0].y);
-
         for (int i = 0; i < sides.length; i++) {
 
-            Vector2 pt_v = new Vector2(missile.location.x - points[i].x,
+            pt_v.set(missile.location.x - points[i].x,
                     missile.location.y - points[i].y);
 
-            Vector2 seg_v_unit = new Vector2(
+            seg_v_unit.set(
                     sides[i].cpy().scl(
                             (1.0f / sides[i].len())));
 
-            Vector2 proj_v;
-
-            float lengthProjV = Math.abs(pt_v.dot(seg_v_unit));
-            Point closest;
+            lengthProjV = Math.abs(pt_v.dot(seg_v_unit));
 
             if (lengthProjV < 0) {
-                closest = new Point(points[i].x, points[i].y);
+                closest.set(points[i].x, points[i].y);
             } else if (lengthProjV > sides[i].len()) {
-                closest = new Point(points[(i+1) % 3].x, points[(i+1)%3].y);
+                closest.set(points[(i+1) % 3].x, points[(i+1)%3].y);
             } else {
-                proj_v = new Vector2(
+                proj_v.set(
                         seg_v_unit.scl(lengthProjV));
-                closest = new Point(points[i].x + proj_v.x,
+                closest.set(points[i].x + proj_v.x,
                         points[i].y + proj_v.y);
             }
 
@@ -118,15 +116,7 @@ public class CollisionManager {
                             Math.pow(closest.y - missile.location.y, 2));
 
             if (distanceBetweenClosest < missile.radius) {
-                    /*
-                    System.out.println("*****Collision******");
-
-                    System.out.println("DistanceBetweenCenters: " + distanceBetween);
-                    System.out.println("DistanceBetweenClosest: " + distanceBetweenClosest);
-                    System.out.println("MaxCollisionDistance: " + (missile.radius + centerToVertex));
-                    System.out.println();
-                    */
-
+                // increment counter
                 _collisionCountersPerSide[i]++;
 
                 return true;

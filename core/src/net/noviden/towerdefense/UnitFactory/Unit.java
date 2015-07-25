@@ -21,6 +21,7 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
@@ -49,6 +50,10 @@ public class Unit {
     private int worth;
 
     protected float rotation;
+
+    protected Point[] points;
+    protected Point[] rotatedPoints;
+    protected Vector2 rotationVector;
 
     public Unit() {}
 
