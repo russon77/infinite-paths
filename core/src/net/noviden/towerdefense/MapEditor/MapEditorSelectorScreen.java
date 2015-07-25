@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -79,8 +80,11 @@ public class MapEditorSelectorScreen implements Screen {
 
         TextButton exitButton = new TextButton("Exit", skin);
 
+        Label screenTitleLabel = new Label("Map Editor Browser", skin);
+
         containerTable.add(scrollPane).fillX().fillY();
 
+        operationsTable.add(screenTitleLabel).pad(5.0f);
         operationsTable.add(createButton).pad(5.0f);
         operationsTable.add(selectButton).pad(5.0f);
         operationsTable.add(cloneButton).pad(5.0f);

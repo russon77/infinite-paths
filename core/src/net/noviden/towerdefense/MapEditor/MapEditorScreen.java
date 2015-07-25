@@ -208,8 +208,30 @@ public class MapEditorScreen implements Screen {
         disableTurretsTable.row();
         disableTurretsTable.add(disableShotgunTurretCheckbox);
 
+        // transformations table
+        TextButton displayTransformationsTableButton =
+                new TextButton("Enable Transformations", skin);
+
+        CheckBox enableRandomTransformationCheckbox =
+                new CheckBox("Random", skin);
+        CheckBox enableTurretTransformationCheckbox =
+                new CheckBox("Turret", skin);
+        CheckBox enableUnitTransformationCheckbox =
+                new CheckBox("Unit", skin);
+
+        final Table transformationsTable = new Table();
+        transformationsTable.setVisible(false);
+
+        transformationsTable.add(enableRandomTransformationCheckbox).row();
+        transformationsTable.add(enableTurretTransformationCheckbox).row();
+        transformationsTable.add(enableUnitTransformationCheckbox).row();
+
         optionsTable.row();
         optionsTable.add(disableTurretsTable);
+        optionsTable.row();
+        optionsTable.add(displayTransformationsTableButton);
+        optionsTable.row();
+        optionsTable.add(transformationsTable);
 
         // finally, add tables to root table and set input processing
 
@@ -459,6 +481,13 @@ public class MapEditorScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 disableTurretsTable.setVisible(!disableTurretsTable.isVisible());
+            }
+        });
+
+        displayTransformationsTableButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                transformationsTable.setVisible(!transformationsTable.isVisible());
             }
         });
     }

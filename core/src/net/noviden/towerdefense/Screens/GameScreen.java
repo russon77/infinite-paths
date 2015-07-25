@@ -318,7 +318,6 @@ public class GameScreen implements Screen {
 		rootTable.add(fpsLabel).expandX().left().expandY().bottom();
 		rootTable.add(menuTable).expandX().right().expandY().bottom();
 
-
 		rootTable.top();
 
 		upgradeDamageButton.addListener(new ClickListener() {

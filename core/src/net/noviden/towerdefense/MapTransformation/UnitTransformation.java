@@ -20,7 +20,7 @@ package net.noviden.towerdefense.MapTransformation;
 
 import net.noviden.towerdefense.Map;
 
-public class UnitTransformation extends Transformation {
+public class UnitTransformation implements Transformation {
 
     /***
      * Transformation that will move all points in all paths towards point of unit death,

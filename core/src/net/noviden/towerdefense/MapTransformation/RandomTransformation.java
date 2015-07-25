@@ -22,7 +22,7 @@ import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
-public class RandomTransformation extends Transformation {
+public class RandomTransformation implements Transformation {
 
     public void transform(Map pMap, float pDelta) {
         float tmpX, tmpY;

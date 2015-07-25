@@ -24,7 +24,7 @@ import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 import net.noviden.towerdefense.TurretFactory.TurretManager;
 
-public class TurretTransformation extends Transformation {
+public class TurretTransformation implements Transformation {
 
     /***
      * Transformation that slowly moves all points in set towards nearest turret,

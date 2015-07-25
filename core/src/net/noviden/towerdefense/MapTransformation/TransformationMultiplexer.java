@@ -22,7 +22,7 @@ import net.noviden.towerdefense.Map;
 
 import java.util.ArrayList;
 
-public class TransformationMultiplexer extends Transformation {
+public class TransformationMultiplexer implements Transformation {
 
     private ArrayList<Transformation> _transformations;
 

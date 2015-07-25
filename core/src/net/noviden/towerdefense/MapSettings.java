@@ -18,6 +18,7 @@
 
 package net.noviden.towerdefense;
 
+import net.noviden.towerdefense.MapTransformation.Transformation;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 
 import java.io.Serializable;
@@ -45,6 +46,8 @@ public class MapSettings implements Serializable {
     private BaseTurret.Type[] _disabledTurretTypes;
 
     private int[][] _waves;
+
+    private Transformation _transformation;
 
     public MapSettings() {
 
