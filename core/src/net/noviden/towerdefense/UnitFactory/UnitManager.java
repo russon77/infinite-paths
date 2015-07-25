@@ -36,7 +36,7 @@ public class UnitManager {
 
     private static final int[][] DEFAULT_SPAWN_PATTERN =
             {
-                    {3}
+                    {6}
             }; /*
             {
                     {2,2,2,2,2,2,2,2},

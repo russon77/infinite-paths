@@ -71,6 +71,8 @@ public class Unit {
 
         this.rotation = 0.0f;
 
+        setUpBoundaries();
+
         // set initial xVel and yVel based on destination
         Point destination = path.set.get(currentDestinationIndex);
 
@@ -183,6 +185,10 @@ public class Unit {
             shapeRenderer.setColor(BASE_UNIT_DAMAGED_COLOR);
             shapeRenderer.arc(location.x, location.y, BASE_RADIUS, rotation, degrees);
         }
+    }
+
+    protected void setUpBoundaries() {
+        // circle unit has circle boundaries
     }
 
     public boolean collidesWith(Missile missile) {

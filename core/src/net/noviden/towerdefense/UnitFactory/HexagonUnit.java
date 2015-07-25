@@ -41,6 +41,28 @@ public class HexagonUnit extends Unit {
         super(health, damage, speed, path, initialLocation, currentDestinationIndex);
     }
 
+    @Override
+    protected void setUpBoundaries() {
+
+        float s = centerToVertex / 2,
+                c = (float) Math.sqrt(3) * centerToVertex / 2;
+
+        points = new Point[6];
+        rotatedPoints = new Point[6];
+
+        for (int i = 0; i < rotatedPoints.length; i++)
+            rotatedPoints[i] = new Point(0,0);
+
+        rotationVector = new Vector2();
+
+        points[0] = new Point( + centerToVertex, 0);
+        points[1] = new Point( + s,  - c);
+        points[2] = new Point( - s,  - c);
+        points[3] = new Point( - centerToVertex, 0);
+        points[4] = new Point( - s, + c);
+        points[5] = new Point( + s, + c);
+    }
+
     public void draw(ShapeRenderer shapeRenderer) {
         // draw each unit's health as a percent of its shape
         float percentHealthMissing = 1.0f - (this.health / this.maxHealth);
@@ -165,24 +187,11 @@ public class HexagonUnit extends Unit {
         if (distanceBetween < centerToVertex) {
             // possibly a hit, need to investigate further
 
-            float s = centerToVertex / 2,
-                    c = (float) Math.sqrt(3) * centerToVertex / 2;
-
-            Point[] points = new Point[6], rotatedPoints = new Point[6];
-            Vector2 rotationVector = new Vector2();
-
-            points[0] = new Point( + centerToVertex, 0);
-            points[1] = new Point( + s,  - c);
-            points[2] = new Point( - s,  - c);
-            points[3] = new Point( - centerToVertex, 0);
-            points[4] = new Point( - s, + c);
-            points[5] = new Point( + s, + c);
-
             for (int i = 0; i < rotatedPoints.length; i++) {
                 rotationVector.set(points[i].x, points[i].y);
                 rotationVector.rotate(rotation);
 
-                rotatedPoints[i] = new Point(
+                rotatedPoints[i].set(
                         location.x + rotationVector.x, location.y + rotationVector.y);
             }
 

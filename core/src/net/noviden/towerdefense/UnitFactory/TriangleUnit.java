@@ -33,18 +33,15 @@ public class TriangleUnit extends Unit {
 
     public TriangleUnit(float health, float damage, float speed, Path path) {
         super(health, damage, speed, path);
-
-        setUpBoundaries();
     }
 
     public TriangleUnit(float health, float damage, float speed, Path path, Point initialLocation,
                         int currentDestinationIndex) {
         super(health, damage, speed, path, initialLocation, currentDestinationIndex);
-
-        setUpBoundaries();
     }
 
-    private void setUpBoundaries() {
+    @Override
+    protected void setUpBoundaries() {
 
         //      A
         //    *   *
@@ -61,8 +58,8 @@ public class TriangleUnit extends Unit {
         points = new Point[3];
         rotatedPoints = new Point[3];
 
-        rotatedPoints[0] = new Point(0,0); rotatedPoints[1] = new Point(0,0);
-        rotatedPoints[2] = new Point(0,0);
+        for (int i = 0; i < rotatedPoints.length; i++)
+            rotatedPoints[i] = new Point(0,0);
 
         rotationVector = new Vector2();
 

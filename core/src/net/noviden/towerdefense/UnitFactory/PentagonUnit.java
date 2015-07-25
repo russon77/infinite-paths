@@ -41,6 +41,28 @@ public class PentagonUnit extends Unit {
     }
 
     @Override
+    protected void setUpBoundaries() {
+        float c1 = MathUtils.cos(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
+                c2 = MathUtils.cos(MathUtils.PI / 5.0f) * centerToVertex,
+                s1 = MathUtils.sin(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
+                s2 = MathUtils.sin(MathUtils.PI * 4.0f / 5.0f) * centerToVertex;
+
+        points = new Point[5];
+        rotatedPoints = new Point[5];
+
+        for (int i = 0; i < rotatedPoints.length; i++)
+            rotatedPoints[i] = new Point(0,0);
+
+        rotationVector = new Vector2();
+
+        points[0] = new Point(0, centerToVertex);
+        points[1] = new Point( + s1, + c1);
+        points[2] = new Point( + s2, - c2);
+        points[3] = new Point( - s2, - c2);
+        points[4] = new Point( - s1, + c1);
+    }
+
+    @Override
     public void draw(ShapeRenderer shapeRenderer) {
         // draw each unit's health as a percent of its shape
         float percentHealthMissing = 1.0f - (this.health / this.maxHealth);
@@ -159,25 +181,10 @@ public class PentagonUnit extends Unit {
         if (distanceBetween < centerToVertex) {
             // possibly a hit, need to investigate further
 
-            float c1 = MathUtils.cos(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
-                    c2 = MathUtils.cos(MathUtils.PI / 5.0f) * centerToVertex,
-                    s1 = MathUtils.sin(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
-                    s2 = MathUtils.sin(MathUtils.PI * 4.0f / 5.0f) * centerToVertex;
-
-            Point[] points = new Point[5], rotatedPoints = new Point[5];
-            Vector2 rotationVector = new Vector2();
-
-            points[0] = new Point(0, centerToVertex);
-            points[1] = new Point( + s1, + c1);
-            points[2] = new Point( + s2, - c2);
-            points[3] = new Point( - s2, - c2);
-            points[4] = new Point( - s1, + c1);
-
             for (int i = 0; i < rotatedPoints.length; i++) {
                 rotationVector.set(points[i].x, points[i].y);
                 rotationVector.rotate(rotation);
-
-                rotatedPoints[i] = new Point(
+                rotatedPoints[i].set(
                         location.x + rotationVector.x, location.y + rotationVector.y);
             }
 

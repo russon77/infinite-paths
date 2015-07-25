@@ -42,6 +42,22 @@ public class SquareUnit extends Unit {
     }
 
     @Override
+    protected void setUpBoundaries() {
+        points = new Point[4];
+        rotatedPoints = new Point[4];
+
+        for (int i = 0; i < rotatedPoints.length; i++)
+            rotatedPoints[i] = new Point(0,0);
+
+        rotationVector = new Vector2();
+
+        points[0] = new Point(sideLength / 2, sideLength / 2);
+        points[1] = new Point(sideLength / 2, - sideLength / 2);
+        points[2] = new Point( - sideLength / 2, - sideLength / 2);
+        points[3] = new Point( - sideLength / 2, sideLength / 2);
+    }
+
+    @Override
     public void draw(ShapeRenderer shapeRenderer) {
         // draw each unit's health as a percent of its shape
         float percentHealthMissing = 1.0f - (this.health / this.maxHealth);
@@ -109,28 +125,14 @@ public class SquareUnit extends Unit {
         if (distanceBetween < sideLength) {
             // possibly a hit, need to investigate further
 
-            Point[] points = new Point[4];
+            for (int i = 0; i < rotatedPoints.length; i++) {
+                rotationVector.set(points[i].x, points[i].y);
+                rotationVector.rotate(rotation);
+                rotatedPoints[i].set(
+                        location.x + rotationVector.x, location.y + rotationVector.y);
+            }
 
-            Vector2 rotationVector = new Vector2();
-
-            rotationVector.set(sideLength / 2, sideLength / 2); rotationVector.rotate(rotation);
-            points[0] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
-
-            rotationVector.set(sideLength / 2, -sideLength / 2); rotationVector.rotate(rotation);
-            points[1] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
-
-            rotationVector.set(-sideLength / 2, -sideLength / 2); rotationVector.rotate(rotation);
-            points[2] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
-
-            rotationVector.set(-sideLength / 2, sideLength / 2); rotationVector.rotate(rotation);
-            points[3] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
-
-//            points[0] = new Point(location.x + sideLength / 2, location.y + sideLength / 2);
-//            points[1] = new Point(location.x + sideLength / 2, location.y - sideLength / 2);
-//            points[2] = new Point(location.x - sideLength / 2, location.y - sideLength / 2);
-//            points[3] = new Point(location.x - sideLength / 2, location.y + sideLength / 2);
-
-            return CollisionManager.lineCollision(points, missile);
+            return CollisionManager.lineCollision(rotatedPoints, missile);
         }
 
         return false;
