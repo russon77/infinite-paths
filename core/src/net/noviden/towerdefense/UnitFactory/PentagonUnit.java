@@ -21,6 +21,8 @@ package net.noviden.towerdefense.UnitFactory;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
+import net.noviden.towerdefense.CollisionManager;
+import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
@@ -145,5 +147,32 @@ public class PentagonUnit extends Unit {
     public Unit getNextUnitToSpawn() {
         return new SquareUnit(this.maxHealth, this.getDamage(),
                 this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
+
+    @Override
+    public boolean collidesWith(Missile missile) {
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(this.location.x - missile.location.x, 2) +
+                        Math.pow(this.location.y - missile.location.y, 2));
+
+        if (distanceBetween < centerToVertex) {
+            // possibly a hit, need to investigate further
+
+            float c1 = MathUtils.cos(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
+                    c2 = MathUtils.cos(MathUtils.PI / 5.0f) * centerToVertex,
+                    s1 = MathUtils.sin(MathUtils.PI * 2.0f / 5.0f) * centerToVertex,
+                    s2 = MathUtils.sin(MathUtils.PI * 4.0f / 5.0f) * centerToVertex;
+
+            Point[] points = new Point[5];
+            points[0] = new Point(location.x, location.y + centerToVertex);
+            points[1] = new Point(location.x + s1, location.y + c1);
+            points[2] = new Point(location.x + s2, location.y - c2);
+            points[3] = new Point(location.x - s2, location.y - c2);
+            points[4] = new Point(location.x - s1, location.y + c1);
+
+            return CollisionManager.lineCollision(points, missile);
+        }
+
+        return false;
     }
 }

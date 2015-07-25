@@ -22,6 +22,8 @@ package net.noviden.towerdefense.UnitFactory;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
+import net.noviden.towerdefense.CollisionManager;
+import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
@@ -150,5 +152,32 @@ public class HexagonUnit extends Unit {
     public Unit getNextUnitToSpawn() {
         return new PentagonUnit(this.maxHealth, this.getDamage(),
                 this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
+
+
+    @Override
+    public boolean collidesWith(Missile missile) {
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(this.location.x - missile.location.x, 2) +
+                        Math.pow(this.location.y - missile.location.y, 2));
+
+        if (distanceBetween < centerToVertex) {
+            // possibly a hit, need to investigate further
+
+            float s = centerToVertex / 2,
+                    c = (float) Math.sqrt(3) * centerToVertex / 2;
+
+            Point[] points = new Point[6];
+            points[0] = new Point(location.x + centerToVertex, location.y);
+            points[1] = new Point(location.x + s, location.y - c);
+            points[2] = new Point(location.x - s, location.y - c);
+            points[3] = new Point(location.x - centerToVertex, location.y);
+            points[4] = new Point(location.x - s, location.y + c);
+            points[5] = new Point(location.x + s, location.y + c);
+
+            return CollisionManager.lineCollision(points, missile);
+        }
+
+        return false;
     }
 }

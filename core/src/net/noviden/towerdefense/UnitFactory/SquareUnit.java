@@ -21,7 +21,10 @@ package net.noviden.towerdefense.UnitFactory;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
+import net.noviden.towerdefense.CollisionManager;
+import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
@@ -95,5 +98,41 @@ public class SquareUnit extends Unit {
     public Unit getNextUnitToSpawn() {
         return new TriangleUnit(this.maxHealth, this.getDamage(),
                 this.speed, this.path, this.location, this.currentDestinationIndex);
+    }
+
+    @Override
+    public boolean collidesWith(Missile missile) {
+        float distanceBetween = (float) Math.sqrt(
+                Math.pow(this.location.x - missile.location.x, 2) +
+                        Math.pow(this.location.y - missile.location.y, 2));
+
+        if (distanceBetween < sideLength) {
+            // possibly a hit, need to investigate further
+
+            Point[] points = new Point[4];
+
+            Vector2 rotationVector = new Vector2();
+
+            rotationVector.set(sideLength / 2, sideLength / 2); rotationVector.rotate(rotation);
+            points[0] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
+
+            rotationVector.set(sideLength / 2, -sideLength / 2); rotationVector.rotate(rotation);
+            points[1] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
+
+            rotationVector.set(-sideLength / 2, -sideLength / 2); rotationVector.rotate(rotation);
+            points[2] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
+
+            rotationVector.set(-sideLength / 2, sideLength / 2); rotationVector.rotate(rotation);
+            points[3] = new Point(location.x + rotationVector.x, location.y + rotationVector.y);
+
+//            points[0] = new Point(location.x + sideLength / 2, location.y + sideLength / 2);
+//            points[1] = new Point(location.x + sideLength / 2, location.y - sideLength / 2);
+//            points[2] = new Point(location.x - sideLength / 2, location.y - sideLength / 2);
+//            points[3] = new Point(location.x - sideLength / 2, location.y + sideLength / 2);
+
+            return CollisionManager.lineCollision(points, missile);
+        }
+
+        return false;
     }
 }

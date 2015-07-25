@@ -18,6 +18,8 @@
 
 package net.noviden.towerdefense;
 
+import com.badlogic.gdx.math.Vector2;
+
 import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.MissileFactory.MissileManager;
 import net.noviden.towerdefense.UnitFactory.Unit;
@@ -62,5 +64,75 @@ public class CollisionManager {
                 }
             }
         }
+    }
+
+    private static int[] _collisionCountersPerSide = new int[8];
+
+    /***
+     * thanks to
+     * http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html
+     **/
+    public static boolean lineCollision(Point[] points, Missile missile) {
+        // number of sides is equal to number of points given
+        Vector2[] sides = new Vector2[points.length];
+
+        Point pointA, pointB;
+        for (int i = 0; i < sides.length; i++) {
+            pointA = points[ (i+1) % sides.length ];
+            pointB = points[ i ];
+
+            sides[i] = new Vector2(pointA.x - pointB.x, pointA.y - pointB.y);
+        }
+
+//        sides[0] = new Vector2(points[1].x - points[0].x, points[1].y - points[0].y);
+//        sides[1] = new Vector2(points[2].x - points[1].x, points[2].y - points[1].y);
+//        sides[2] = new Vector2(points[2].x - points[0].x, points[2].y - points[0].y);
+
+        for (int i = 0; i < sides.length; i++) {
+
+            Vector2 pt_v = new Vector2(missile.location.x - points[i].x,
+                    missile.location.y - points[i].y);
+
+            Vector2 seg_v_unit = new Vector2(
+                    sides[i].cpy().scl(
+                            (1.0f / sides[i].len())));
+
+            Vector2 proj_v;
+
+            float lengthProjV = Math.abs(pt_v.dot(seg_v_unit));
+            Point closest;
+
+            if (lengthProjV < 0) {
+                closest = new Point(points[i].x, points[i].y);
+            } else if (lengthProjV > sides[i].len()) {
+                closest = new Point(points[(i+1) % 3].x, points[(i+1)%3].y);
+            } else {
+                proj_v = new Vector2(
+                        seg_v_unit.scl(lengthProjV));
+                closest = new Point(points[i].x + proj_v.x,
+                        points[i].y + proj_v.y);
+            }
+
+            float distanceBetweenClosest = (float) Math.sqrt(
+                    Math.pow(closest.x - missile.location.x, 2) +
+                            Math.pow(closest.y - missile.location.y, 2));
+
+            if (distanceBetweenClosest < missile.radius) {
+                    /*
+                    System.out.println("*****Collision******");
+
+                    System.out.println("DistanceBetweenCenters: " + distanceBetween);
+                    System.out.println("DistanceBetweenClosest: " + distanceBetweenClosest);
+                    System.out.println("MaxCollisionDistance: " + (missile.radius + centerToVertex));
+                    System.out.println();
+                    */
+
+                _collisionCountersPerSide[i]++;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

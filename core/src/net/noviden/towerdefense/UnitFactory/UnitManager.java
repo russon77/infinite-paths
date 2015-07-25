@@ -36,6 +36,9 @@ public class UnitManager {
 
     private static final int[][] DEFAULT_SPAWN_PATTERN =
             {
+                    {4}
+            };
+            /*{
                     {2,2,2,2,2,2,2,2},
                     {2,3,2,3,2,3,2,3},
                     {3,3,3,3,3,3,3,3},
@@ -45,7 +48,7 @@ public class UnitManager {
                     {5,5,5,5,5,5,5,5},
                     {5,6,5,6,5,6,5,6},
                     {6,6,6,6,6,6,6,6}
-            };
+            };*/
 
 
     private int spawnIndex;
@@ -65,6 +68,7 @@ public class UnitManager {
     private float cooldownTimer;
     private float gameTime;
 
+    // TODO each type of unit has its own sound effects?
     private Sound _unitDeathSoundEffect;
 
     public UnitManager(Path path, final MapSettings settings) {

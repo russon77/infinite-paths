@@ -417,7 +417,6 @@ public class GameScreen implements Screen {
 		_transformation = new TurretTransformation(turretManager);
 
 		// instantiate the fpsLogger
-		// TODO the fpsLogger should display in the corner of the screen if toggled `on`
 		fpsLogger = new FPSLogger();
 	}
 
@@ -426,7 +425,7 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// log the FPS to the console
-		fpsLogger.log();
+//		fpsLogger.log();
 
 		// write all updates to the game state to the game user interface
 		updateUi();
