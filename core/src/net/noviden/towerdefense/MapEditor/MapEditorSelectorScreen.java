@@ -49,6 +49,7 @@ public class MapEditorSelectorScreen implements Screen {
     private Image _selectedMapIdentifierImage;
 
     private Table _mapListTable;
+    private Table rootTable;
 
     public MapEditorSelectorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
@@ -60,7 +61,7 @@ public class MapEditorSelectorScreen implements Screen {
 
         stage = new Stage();
 
-        Table rootTable = new Table();
+        rootTable = new Table();
         rootTable.setFillParent(true);
 
         Table containerTable = new Table();
@@ -208,5 +209,11 @@ public class MapEditorSelectorScreen implements Screen {
 
     public void dispose() {}
 
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        stage.dispose();
+        stage = new Stage();
+        stage.addActor(rootTable);
+
+        Gdx.input.setInputProcessor(stage);
+    }
 }
