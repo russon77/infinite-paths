@@ -49,20 +49,19 @@ public class HomingMissile extends Missile {
         this.speedMultiple = 1.0f;
         this.target = initialTarget;
         this.unitManager = unitManager;
-
-        // TODO fix this behavior
+        
         // find a random point within small radius and set course for that
         //  before locking on and heading towards main target
         Point randomHeading = new Point(
-                origin.x - 5.0f + (float) Math.random() * 5.0f,
-                origin.y - 5.0f + (float) Math.random() * 5.0f);
+                origin.x - 15.0f + (float) Math.random() * 15.0f,
+                origin.y - 15.0f + (float) Math.random() * 15.0f);
 
         float distanceBetween = (float) Math.sqrt(
                 Math.pow(origin.x - randomHeading.x, 2) +
                         Math.pow(origin.y - randomHeading.y, 2));
 
-        this.xVelocity = (randomHeading.x - origin.x) / distanceBetween * BASE_SPEED * 0.33f;
-        this.yVelocity = (randomHeading.y - origin.y) / distanceBetween * BASE_SPEED * 0.33f;
+        this.xVelocity = (randomHeading.x - origin.x) / distanceBetween * BASE_SPEED * 0.66f;
+        this.yVelocity = (randomHeading.y - origin.y) / distanceBetween * BASE_SPEED * 0.66f;
 
         this.ignoredUnits = new LinkedList<Unit>();
     }
@@ -74,32 +73,18 @@ public class HomingMissile extends Missile {
         if (timeAlive > BASE_TIME_UNTIL_LOCKON) {
             // test if target unit still exists
             if (target.isDead()) {
-                // find a new target
-                for (Unit unit : unitManager.units) {
+                // don't change direction
 
-                    if (unit.isDead()) {
-                        continue;
-                    }
-
-                    float distanceBetween = (float) Math.sqrt(
-                            Math.pow(this.location.x - target.location.x, 2) +
-                                    Math.pow(this.location.y - target.location.y, 2));
-
-                    if (distanceBetween < this.range) {
-                        target = unit;
-                    }
-                }
-            }
-
-            // if target is alive, recalculate velocities to hit the target
-            if (!target.isDead()) {
-                // recalculate velocities
+            } else  {
+                // target is alive, recalculate velocities to hit the target
                 float distanceBetween = (float) Math.sqrt(
                         Math.pow(this.location.x - target.location.x, 2) +
                                 Math.pow(this.location.y - target.location.y, 2));
 
-                this.xVelocity = (target.location.x - this.location.x) / distanceBetween * BASE_SPEED;
-                this.yVelocity = (target.location.y - this.location.y) / distanceBetween * BASE_SPEED;
+                this.xVelocity =
+                        (target.location.x - this.location.x) / distanceBetween * BASE_SPEED;
+                this.yVelocity =
+                        (target.location.y - this.location.y) / distanceBetween * BASE_SPEED;
             }
         }
 
