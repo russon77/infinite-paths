@@ -33,11 +33,7 @@ public class MapThumbnail {
     /*
      * pixmap -> texture -> sprite -> spriteDrawable
      */
-    public static SpriteDrawable createThumbnail(Map map, float scale) {
-
-//        Pixmap pixmap = new Pixmap((int) (scale * TowerDefense.SCREEN_WIDTH),
-//                (int) (scale * TowerDefense.SCREEN_HEIGHT), Pixmap.Format.RGB565);
-        int dims = 200;
+    public static SpriteDrawable createThumbnail(Map map, int dims) {
 
         Pixmap pixmap = new Pixmap(dims, dims, Pixmap.Format.RGB565);
 

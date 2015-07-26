@@ -162,7 +162,7 @@ public class MapEditorSelectorScreen implements Screen {
 
             final Map map = towerDefense.maps.get(i);
             final ImageButton imageButton =
-                    new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
+                    new ImageButton(MapThumbnail.createThumbnail(map, 200));
 
             ClickListener clickListener = new ClickListener() {
                 @Override
@@ -180,7 +180,7 @@ public class MapEditorSelectorScreen implements Screen {
                         _selectedMapButton.clearChildren();
 
                         Image image = new Image(
-                                MapThumbnail.createThumbnail(_selectedMap, 0.25f));
+                                MapThumbnail.createThumbnail(_selectedMap, 200));
 
                         _selectedMapButton.add(image);
                         _selectedMapButton.row();

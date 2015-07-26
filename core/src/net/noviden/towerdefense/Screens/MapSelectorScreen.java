@@ -40,6 +40,7 @@ public class MapSelectorScreen implements Screen {
     private final TowerDefense towerDefense;
 
     private Stage stage;
+    private Table rootTable;
 
     public MapSelectorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
@@ -48,7 +49,7 @@ public class MapSelectorScreen implements Screen {
 
         stage = new Stage();
 
-        Table rootTable = new Table();
+        rootTable = new Table();
         rootTable.setFillParent(true);
 
         Table containerTable = new Table();
@@ -70,7 +71,7 @@ public class MapSelectorScreen implements Screen {
             TextButton textButton = new TextButton(map.getName(), skin);
             textButton.addListener(clickListener);
 
-            ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 0.25f));
+            ImageButton imageButton = new ImageButton(MapThumbnail.createThumbnail(map, 200));
             imageButton.addListener(clickListener);
 
             mapListTable.add(imageButton).pad(10.0f);
@@ -115,5 +116,11 @@ public class MapSelectorScreen implements Screen {
 
     public void dispose() {}
 
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        stage.dispose();
+        stage = new Stage();
+        stage.addActor(rootTable);
+
+        Gdx.input.setInputProcessor(stage);
+    }
 }
