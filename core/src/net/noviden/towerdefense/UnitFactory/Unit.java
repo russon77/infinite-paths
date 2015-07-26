@@ -27,7 +27,6 @@ import com.badlogic.gdx.math.Vector2;
 import net.noviden.towerdefense.MissileFactory.Missile;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.TowerDefense;
 
 public class Unit {
 

@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import net.noviden.towerdefense.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
-import net.noviden.towerdefense.TowerDefense;
 
 public class MapThumbnail {
 

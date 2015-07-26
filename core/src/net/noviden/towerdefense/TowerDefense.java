@@ -20,8 +20,6 @@
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

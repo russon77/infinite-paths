@@ -23,8 +23,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class GameSettings implements Serializable {
 
