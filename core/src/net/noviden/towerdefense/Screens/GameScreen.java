@@ -133,8 +133,10 @@ public class GameScreen implements Screen {
 		// set up the camera
 		// FIXME there's something fishy with this and the screen size
 		orthoCamera = new OrthographicCamera();
-		orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
-		orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
+//		orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
+//		orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
+		orthoCamera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		orthoCamera.update();
 
 		// set up the ui by creating the base Stage, where the resources table, upgrade table,

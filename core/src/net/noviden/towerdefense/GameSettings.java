@@ -29,6 +29,9 @@ public class GameSettings implements Serializable {
 
     private static final String PREFERENCES_FILE_NAME = "settings.xml";
     private static final String AUDIO_ENABLED_KEY = "audio_enabled";
+    private static final String SFX_VOLUME_KEY = "sfx_volume",
+                    MUSIC_VOLUME_KEY = "music_volume";
+    private static final String FULLSCREEN_ENABLED_KEY = "fullscreen";
 
     public enum Actions {
         PAUSE_GAME,
@@ -57,9 +60,6 @@ public class GameSettings implements Serializable {
 
     private Preferences _preferences;
 
-    private boolean _isFullScreen;
-    private float _soundVolume, _musicVolume;
-
     private HashMap<Integer, Actions> _keyboardShortcutsMap;
 
     private GameSettings() {
@@ -70,7 +70,9 @@ public class GameSettings implements Serializable {
         if (_instance == null) {
             _instance = new GameSettings();
 
-            _instance.loadDefaultSettings();
+            if (!_instance.loadSettingsFromFile()) {
+                _instance.loadDefaultSettings();
+            }
         }
     }
 
@@ -83,10 +85,11 @@ public class GameSettings implements Serializable {
     }
 
     private void loadDefaultSettings() {
-        _musicVolume = _soundVolume = 1.0f;
+        _preferences.putFloat(SFX_VOLUME_KEY, 1.0f);
+        _preferences.putFloat(MUSIC_VOLUME_KEY, 1.0f);
 
-        _isFullScreen = false;
 
+        // set up defaults for keyboard shortcuts
         _keyboardShortcutsMap.put(Input.Keys.SPACE, Actions.PAUSE_GAME);
         _keyboardShortcutsMap.put(Input.Keys.END, Actions.QUICK_EXIT);
 
@@ -123,32 +126,32 @@ public class GameSettings implements Serializable {
         return true;
     }
 
-    private void writeSettingsToFile() {
-
+    public static void writeSettingsToFile() {
+        _instance._preferences.flush();
     }
 
     public static void setMusicVolume(float pVolume) {
-        _instance._musicVolume = pVolume;
+        _instance._preferences.putFloat(MUSIC_VOLUME_KEY, pVolume);
     }
 
     public static float getMusicVolume() {
-        return _instance._musicVolume;
+        return _instance._preferences.getFloat(MUSIC_VOLUME_KEY);
     }
 
     public static void setSoundVolume(float pVolume) {
-        _instance._soundVolume = pVolume;
+        _instance._preferences.putFloat(SFX_VOLUME_KEY, pVolume);
     }
 
     public static float getSoundVolume() {
-        return _instance._soundVolume;
+        return _instance._preferences.getFloat(SFX_VOLUME_KEY);
     }
 
     public static void setFullScreen(boolean pIsEnabled) {
-        _instance._isFullScreen = pIsEnabled;
+        _instance._preferences.putBoolean(FULLSCREEN_ENABLED_KEY, pIsEnabled);
     }
 
     public static boolean isFullScreen() {
-        return _instance._isFullScreen;
+        return _instance._preferences.getBoolean(FULLSCREEN_ENABLED_KEY);
     }
 
     public static Actions getShortcutAction(int pMapKey) {
@@ -170,7 +173,7 @@ public class GameSettings implements Serializable {
             putShortcut(key, pMap.get(key));
         }
 
-//        _instance._keyboardShortcutsMap.putAll(pMap);
+        // DEBUG
         System.out.println("Put all shortcuts into table");
     }
 

@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.noviden.towerdefense.GameSettings;
 import net.noviden.towerdefense.Map;
@@ -54,6 +55,9 @@ public class MainMenuScreen implements Screen {
     private ShapeRenderer _shapeRenderer;
     private OrthographicCamera _orthoCamera;
 
+    private Skin _skin;
+    private Table menuTable;
+
     public MainMenuScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
@@ -61,67 +65,18 @@ public class MainMenuScreen implements Screen {
         GameSettings.initialize();
 
         // set up ui
-        Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
+        _skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
         stage = new Stage();
 
-        Table menuTable = new Table();
+        menuTable = new Table();
         menuTable.setFillParent(true);
-
-        Label welcomeLabel = new Label("Welcome to TowerDefense!", skin);
-
-        TextButton startGame = new TextButton("Start Game", skin);
-        TextButton mapEditor = new TextButton("Map Editor", skin);
-        TextButton settings = new TextButton("Settings", skin);
-        TextButton exitGame = new TextButton("Exit", skin);
-
-        menuTable.add(welcomeLabel).padBottom(50.0f);
-        menuTable.row();
-        menuTable.add(startGame).padBottom(5.0f);
-        menuTable.row();
-        menuTable.add(mapEditor).padBottom(5.0f);
-        menuTable.row();
-        menuTable.add(settings).padBottom(5.0f);
-        menuTable.row();
-        menuTable.add(exitGame);
-
-        menuTable.center();
 
         stage.addActor(menuTable);
 
         Gdx.input.setInputProcessor(stage);
 
-        startGame.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new net.noviden.towerdefense.Screens.MapSelectorScreen(towerDefense));
-                dispose();
-            }
-        });
-
-        mapEditor.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new MapEditorSelectorScreen(towerDefense));
-                dispose();
-            }
-        });
-
-        settings.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                towerDefense.setScreen(new GameSettingsScreen(towerDefense));
-                dispose();
-            }
-        });
-
-        exitGame.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-                dispose();
-            }
-        });
+        setupUi();
 
         // set up dynamic background
 
@@ -185,7 +140,71 @@ public class MainMenuScreen implements Screen {
 
     public void resume() {}
 
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        System.out.println("Resized to " + width + " " + height);
+
+        stage = new Stage();
+        stage.addActor(menuTable);
+
+        Gdx.input.setInputProcessor(stage);
+
+//        menuTable.clearChildren();
+
+//        setupUi();
+    }
 
     public void dispose() {}
+
+    private void setupUi() {
+        Label welcomeLabel = new Label("Welcome to TowerDefense!", _skin);
+
+        TextButton startGame = new TextButton("Start Game", _skin);
+        TextButton mapEditor = new TextButton("Map Editor", _skin);
+        TextButton settings = new TextButton("Settings", _skin);
+        TextButton exitGame = new TextButton("Exit", _skin);
+
+        menuTable.add(welcomeLabel).padBottom(50.0f);
+        menuTable.row();
+        menuTable.add(startGame).padBottom(5.0f);
+        menuTable.row();
+        menuTable.add(mapEditor).padBottom(5.0f);
+        menuTable.row();
+        menuTable.add(settings).padBottom(5.0f);
+        menuTable.row();
+        menuTable.add(exitGame);
+
+        menuTable.center();
+
+        startGame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new MapSelectorScreen(towerDefense));
+                dispose();
+            }
+        });
+
+        mapEditor.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new MapEditorSelectorScreen(towerDefense));
+                dispose();
+            }
+        });
+
+        settings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                towerDefense.setScreen(new GameSettingsScreen(towerDefense));
+                dispose();
+            }
+        });
+
+        exitGame.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+                dispose();
+            }
+        });
+    }
 }

@@ -49,21 +49,14 @@ public class TowerDefense extends Game {
             fileInputStream.close();
 
             System.out.println("Successfully loaded maps!");
-
-            fileInputStream = new FileInputStream("settings.ser");
-            objectInputStream = new ObjectInputStream(fileInputStream);
-            GameSettings gameSettings = (GameSettings) objectInputStream.readObject();
-            GameSettings.initialize(gameSettings);
-            objectInputStream.close();
-            fileInputStream.close();
-
-            System.out.println("Successfully loaded settings!");
-
         } catch (IOException i) {
             i.printStackTrace();
         } catch (ClassNotFoundException c) {
             c.printStackTrace();
         }
+
+        // initialize settings
+        GameSettings.initialize();
 
         if (maps == null) {
             maps = new ArrayList<Map>();
@@ -92,11 +85,7 @@ public class TowerDefense extends Game {
 
             System.out.println("Serialized maps to disk!");
 
-            fileOutputStream = new FileOutputStream("settings.ser");
-            objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(GameSettings.getInstance());
-            objectOutputStream.close();
-            fileOutputStream.close();
+            GameSettings.writeSettingsToFile();
 
             System.out.println("Serialized settings to disk!");
 
