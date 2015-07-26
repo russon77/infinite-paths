@@ -34,22 +34,19 @@ public class HomingMissile extends Missile {
 
     private float speedMultiple;
     private Unit target;
-    private UnitManager unitManager;
 
     private float timeAlive;
     private float range;
 
-    public HomingMissile(Point origin, Unit initialTarget, UnitManager unitManager,
-                         float damage, float range) {
+    public HomingMissile(Point origin, Unit initialTarget, float damage, float range) {
         this.location = origin.clone();
         this.radius = BASE_RADIUS; this.damage = damage;
-        this.range =range;
+        this.range = range;
         this.timeAlive = 0.0f;
 
         this.speedMultiple = 1.0f;
         this.target = initialTarget;
-        this.unitManager = unitManager;
-        
+
         // find a random point within small radius and set course for that
         //  before locking on and heading towards main target
         Point randomHeading = new Point(

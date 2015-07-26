@@ -57,7 +57,6 @@ public class TurretManager {
         turrets.remove(turret);
     }
 
-    // TODO add in map path testing
     public boolean validPlacementForTurret(Point target, Map map) {
         for (BaseTurret turret : turrets) {
             if (turret.containsPoint(target)) {

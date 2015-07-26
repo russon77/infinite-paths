@@ -18,12 +18,17 @@
 
 package net.noviden.towerdefense;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class GameSettings implements Serializable {
+
+    private static final String PREFERENCES_FILE_NAME = "settings.xml";
+    private static final String AUDIO_ENABLED_KEY = "audio_enabled";
 
     public enum Actions {
         PAUSE_GAME,
@@ -49,6 +54,8 @@ public class GameSettings implements Serializable {
     }
 
     private static GameSettings _instance;
+
+    private Preferences _preferences;
 
     private boolean _isFullScreen;
     private float _soundVolume, _musicVolume;
@@ -101,8 +108,23 @@ public class GameSettings implements Serializable {
         _keyboardShortcutsMap.put(Input.Keys.F, Actions.TOGGLE_SHOW_FPS);
     }
 
-    private void loadSettingsFromFile() {
+    private boolean loadSettingsFromFile() {
         // TODO reading and writing a settings file
+
+        _preferences = Gdx.app.getPreferences(PREFERENCES_FILE_NAME);
+
+        // test if preferences is empty or not
+        if (!_preferences.contains(AUDIO_ENABLED_KEY)) {
+            return false;
+        }
+
+
+
+        return true;
+    }
+
+    private void writeSettingsToFile() {
+
     }
 
     public static void setMusicVolume(float pVolume) {

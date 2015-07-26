@@ -81,12 +81,12 @@ public class HomingTurret extends BaseTurret {
     public void attack(Unit target, UnitManager unitManager) {
         // always shoot at least one missile
         MissileManager.addMissile(new HomingMissile(this.location,
-                target, unitManager, this.damage, this.range));
+                target, this.damage, this.range));
 
         // shoot every extra missile
         for (int i = 0; i < this.extraMissilesPerShot; i++) {
             MissileManager.addMissile(new HomingMissile(this.location,
-                    target, unitManager, this.damage, this.range));
+                    target, this.damage, this.range));
         }
 
         cooldownTimer = cooldownLength;

@@ -20,6 +20,8 @@
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,14 +32,11 @@ import java.util.ArrayList;
 
 public class TowerDefense extends Game {
 
-    public static final float SCREEN_WIDTH = 800.0f, SCREEN_HEIGHT = 800.0f;
+    public static final float SCREEN_WIDTH = 1000.0f, SCREEN_HEIGHT = 1000.0f;
 
     public ArrayList<Map> maps;
 
-    public int highScore;
-
     public void create() {
-        highScore = 0;
 
         maps = null;
 

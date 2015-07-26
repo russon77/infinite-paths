@@ -547,6 +547,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void gameOver() {
+		/*
 		// show gameOverTable, with button for 'continue'
 		if (player.getScore() > towerDefense.highScore) {
 			towerDefense.highScore = player.getScore();
@@ -554,6 +555,7 @@ public class GameScreen implements Screen {
 		} else {
 			highScoreLabel.setText("High Score: " + towerDefense.highScore);
 		}
+		*/
 
 		lastScoreLabel.setText("Last score: " + player.getScore());
 
