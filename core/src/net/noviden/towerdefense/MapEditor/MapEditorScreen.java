@@ -78,7 +78,7 @@ public class MapEditorScreen implements Screen {
         _map = pMap.clone();
 
         _orthoCamera = new OrthographicCamera();
-        _orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
+        _orthoCamera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         _orthoCamera.update();
 
         _spriteBatch = new SpriteBatch();

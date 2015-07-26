@@ -72,7 +72,7 @@ public class MapCreatorScreen implements Screen {
         this.towerDefense = towerDefense;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
+        camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
 
         stage = new Stage();

@@ -19,6 +19,7 @@
 
 package net.noviden.towerdefense.MissileFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.noviden.towerdefense.Point;
@@ -64,8 +65,8 @@ public class Missile {
         this.location.x += xVelocity * deltaTime * BASE_SPEED;
         this.location.y += yVelocity * deltaTime * BASE_SPEED;
 
-        if (this.location.x < 0.0f || this.location.x > TowerDefense.SCREEN_WIDTH ||
-                this.location.y < 0.0f || this.location.y > TowerDefense.SCREEN_HEIGHT) {
+        if (this.location.x < 0.0f || this.location.x > Gdx.graphics.getWidth() ||
+                this.location.y < 0.0f || this.location.y > Gdx.graphics.getHeight()) {
             this.isAlive = false;
         }
     }

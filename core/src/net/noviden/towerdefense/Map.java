@@ -51,7 +51,6 @@ public class Map implements Serializable {
 
         this.paths = Map.computeGenericPaths(dimensions, paths);
 
-//        this.paths = paths;
         this.name = name;
 
         _settings = new MapSettings();
@@ -71,12 +70,6 @@ public class Map implements Serializable {
                 h = Gdx.graphics.getHeight();
 
         for (Path path : paths) {
-
-//            for (int i = 0; i < (path.set.size() - 1); i++) {
-//                Point a = path.set.get(i),
-//                        b = path.set.get(i + 1);
-//                shapeRenderer.line(a.x, a.y, b.x, b.y);
-//            }
 
             for (int i = 0; i < (path.set.size() - 1); i++) {
                 Point a = path.set.get(i),
@@ -147,10 +140,6 @@ public class Map implements Serializable {
 
     public void setSettings(MapSettings pSettings) {
         _settings = pSettings;
-    }
-
-    public static Map createFromFile(String filename) {
-        return null;
     }
 
     public static Map createFromDefault(DefaultMaps id) {
