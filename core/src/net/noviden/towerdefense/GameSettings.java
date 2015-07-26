@@ -23,11 +23,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map;
 
 public class GameSettings implements Serializable {
 
     private static final String PREFERENCES_FILE_NAME = "settings.xml";
+    private static final String KEYBOARD_SHORTCUTS_FILE_NAME = "shortcuts.xml";
+
     private static final String AUDIO_ENABLED_KEY = "audio_enabled";
     private static final String SFX_VOLUME_KEY = "sfx_volume",
                     MUSIC_VOLUME_KEY = "music_volume";
@@ -58,7 +61,7 @@ public class GameSettings implements Serializable {
 
     private static GameSettings _instance;
 
-    private Preferences _preferences;
+    private Preferences _preferences, _keyboardShortcuts;
 
     private HashMap<Integer, Actions> _keyboardShortcutsMap;
 
@@ -73,22 +76,19 @@ public class GameSettings implements Serializable {
             if (!_instance.loadSettingsFromFile()) {
                 _instance.loadDefaultSettings();
             }
+
+            if (!_instance.loadShortcutsFromFile()) {
+                _instance.loadDefaultShortcuts();
+            }
         }
-    }
-
-    public static void initialize(GameSettings pInstance) {
-        _instance = pInstance;
-    }
-
-    public static GameSettings getInstance() {
-        return _instance;
     }
 
     private void loadDefaultSettings() {
         _preferences.putFloat(SFX_VOLUME_KEY, 1.0f);
         _preferences.putFloat(MUSIC_VOLUME_KEY, 1.0f);
+    }
 
-
+    private void loadDefaultShortcuts() {
         // set up defaults for keyboard shortcuts
         _keyboardShortcutsMap.put(Input.Keys.SPACE, Actions.PAUSE_GAME);
         _keyboardShortcutsMap.put(Input.Keys.END, Actions.QUICK_EXIT);
@@ -109,6 +109,13 @@ public class GameSettings implements Serializable {
         _keyboardShortcutsMap.put(Input.Keys.ESCAPE, Actions.TOGGLE_SHOW_INTERFACE);
 
         _keyboardShortcutsMap.put(Input.Keys.F, Actions.TOGGLE_SHOW_FPS);
+
+        // add each entry in shortcuts to preferences
+        for (Map.Entry entry : _keyboardShortcutsMap.entrySet()) {
+            _keyboardShortcuts.putString(
+                    Input.Keys.toString((Integer) entry.getKey()),
+                    entry.getValue().toString());
+        }
     }
 
     private boolean loadSettingsFromFile() {
@@ -121,6 +128,27 @@ public class GameSettings implements Serializable {
             return false;
         }
 
+        return true;
+    }
+
+    private boolean loadShortcutsFromFile() {
+        _keyboardShortcuts = Gdx.app.getPreferences(KEYBOARD_SHORTCUTS_FILE_NAME);
+
+        // test if empty
+        if (_keyboardShortcuts.get().size() == 0) {
+            return false;
+        }
+
+        // now, write shortcuts to hashmap
+        Map shortcutsMap = _keyboardShortcuts.get();
+        Set<Map.Entry> entrySet = shortcutsMap.entrySet();
+        Iterator iterator = entrySet.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            _keyboardShortcutsMap.put(
+                    Input.Keys.valueOf((String) entry.getKey()),
+                    Actions.valueOf((String) entry.getValue()));
+        }
 
 
         return true;
@@ -128,6 +156,7 @@ public class GameSettings implements Serializable {
 
     public static void writeSettingsToFile() {
         _instance._preferences.flush();
+        _instance._keyboardShortcuts.flush();
     }
 
     public static void setMusicVolume(float pVolume) {
