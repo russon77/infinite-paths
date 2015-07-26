@@ -65,6 +65,9 @@ public class MapCreatorScreen implements Screen {
     private ArrayList<Point> pointSet;
     private String name;
 
+    private Table table;
+    private InputMultiplexer inputMultiplexer;
+
     public MapCreatorScreen(final TowerDefense towerDefense) {
         this.towerDefense = towerDefense;
 
@@ -76,7 +79,7 @@ public class MapCreatorScreen implements Screen {
 
         final Skin skin = new Skin(Gdx.files.internal("assets/uiskin.json"));
 
-        Table table = new Table();
+        table = new Table();
         table.setFillParent(true);
 
         name = UUID.randomUUID().toString().substring(0, 5);
@@ -175,7 +178,7 @@ public class MapCreatorScreen implements Screen {
 
         stage.addActor(table);
 
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(new GestureDetector(new MyGestureListener()));
 
@@ -335,7 +338,7 @@ public class MapCreatorScreen implements Screen {
 
                 // finally create the map
                 Map map = new Map(
-                        new Map.Dimensions(TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT),
+                        new Map.Dimensions(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()),
                         pathsForMap,
                         nameField.getText(),
                         mapSettings);
@@ -444,7 +447,19 @@ public class MapCreatorScreen implements Screen {
 
     public void dispose() {}
 
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        stage.dispose();
+        stage = new Stage();
+        stage.addActor(table);
+
+        inputMultiplexer.clear();
+        inputMultiplexer = new InputMultiplexer(stage,
+                new GestureDetector(new MyGestureListener()));
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
+        camera.setToOrtho(true, width, height);
+    }
 
     private class MyGestureListener implements GestureDetector.GestureListener {
 

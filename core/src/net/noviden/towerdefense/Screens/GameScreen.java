@@ -106,6 +106,8 @@ public class GameScreen implements Screen {
 
 	private Transformation _transformation;
 
+	private InputMultiplexer inputMultiplexer;
+
 	public GameScreen(final TowerDefense towerDefense, Map gameMap) {
 
 		// store our callback to the Game class
@@ -406,7 +408,7 @@ public class GameScreen implements Screen {
 		});
 
 		// now set input processing, by adding all input sources to the inputMultiplexer
-		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer = new InputMultiplexer();
 
 		inputMultiplexer.addProcessor(gameOverStage);
 		inputMultiplexer.addProcessor(stage);
@@ -668,7 +670,34 @@ public class GameScreen implements Screen {
 	public void show() {}
 	public void hide() {}
 
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+
+		stage.dispose();
+		stage = new Stage();
+		stage.addActor(rootTable);
+
+		gameOverStage.dispose();
+		gameOverStage = new Stage();
+		gameOverStage.addActor(gameOverTable);
+
+		inputMultiplexer.clear();
+
+		inputMultiplexer.addProcessor(gameOverStage);
+		inputMultiplexer.addProcessor(stage);
+		// TODO save these objects so they don't have to be re-instantiated every time
+		//   the screen is resized
+		inputMultiplexer.addProcessor(new GestureDetector(new MyGestureListener()));
+		inputMultiplexer.addProcessor(new MyInputProcessor());
+
+		Gdx.input.setInputProcessor(inputMultiplexer);
+
+		orthoCamera.setToOrtho(true, width, height);
+
+		Path[] paths = map.getPaths();
+		for (int i = 0; i < unitManagers.length; i++) {
+			unitManagers[i].updatePath(paths[i]);
+		}
+	}
 
 	private class MyGestureListener implements GestureDetector.GestureListener {
 

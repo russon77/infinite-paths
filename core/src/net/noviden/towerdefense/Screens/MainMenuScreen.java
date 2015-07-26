@@ -85,8 +85,10 @@ public class MainMenuScreen implements Screen {
         _shapeRenderer.setAutoShapeType(true);
 
         _orthoCamera = new OrthographicCamera();
-        _orthoCamera.setToOrtho(true, TowerDefense.SCREEN_WIDTH, TowerDefense.SCREEN_HEIGHT);
-        _orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
+        _orthoCamera.setToOrtho(true,
+                Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight());
+//        _orthoCamera.position.set(TowerDefense.SCREEN_WIDTH / 2, TowerDefense.SCREEN_HEIGHT / 2, 0);
         _orthoCamera.update();
 
         int randomMapNo = (int) (Math.random() * (towerDefense.maps.size()));
@@ -141,16 +143,20 @@ public class MainMenuScreen implements Screen {
     public void resume() {}
 
     public void resize(int width, int height) {
-        System.out.println("Resized to " + width + " " + height);
+//        System.out.println("Resized to " + width + " " + height);
 
+        stage.dispose();
         stage = new Stage();
         stage.addActor(menuTable);
 
         Gdx.input.setInputProcessor(stage);
 
-//        menuTable.clearChildren();
+        _orthoCamera.setToOrtho(true, width, height);
 
-//        setupUi();
+        Path[] paths = _map.getPaths();
+        for (int i = 0; i < _unitManagers.length; i++) {
+            _unitManagers[i].updatePath(paths[i]);
+        }
     }
 
     public void dispose() {}

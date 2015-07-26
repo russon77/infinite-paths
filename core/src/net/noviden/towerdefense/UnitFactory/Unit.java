@@ -19,6 +19,7 @@
 
 package net.noviden.towerdefense.UnitFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -125,8 +126,8 @@ public class Unit {
         }
 
         // check for boundaries
-        if (location.x < 0 || location.x > TowerDefense.SCREEN_WIDTH ||
-                location.y < 0 || location.y > TowerDefense.SCREEN_HEIGHT) {
+        if (location.x < 0 || location.x > Gdx.graphics.getWidth() ||
+                location.y < 0 || location.y > Gdx.graphics.getHeight()) {
 
             // set unit to be removed
             this.health = (-1.0f);
@@ -189,6 +190,10 @@ public class Unit {
 
     protected void setUpBoundaries() {
         // circle unit has circle boundaries
+    }
+
+    public void updatePath(Path pNewPath) {
+        this.path = pNewPath;
     }
 
     public boolean collidesWith(Missile missile) {

@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -68,6 +69,9 @@ public class MapEditorScreen implements Screen {
     private UnitManager[] _unitManagers;
     private MapSettings _mapSettings;
 
+    private Table rootTable;
+    private InputMultiplexer inputMultiplexer;
+
     public MapEditorScreen(final TowerDefense towerDefense, Map pMap) {
         _towerDefense = towerDefense;
         _originalMapReference = pMap;
@@ -95,7 +99,7 @@ public class MapEditorScreen implements Screen {
 
         stage = new Stage();
 
-        Table rootTable = new Table();
+        rootTable = new Table();
         rootTable.setFillParent(true);
 
         Table pathAddDeleteTable = new Table();
@@ -245,7 +249,7 @@ public class MapEditorScreen implements Screen {
 
         stage.addActor(rootTable);
 
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(stage,
+        inputMultiplexer = new InputMultiplexer(stage,
                 new GestureDetector(new MyGestureListener()));
 
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -434,7 +438,7 @@ public class MapEditorScreen implements Screen {
         deleteLastNodeOnPathButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Path[] paths = _map.getPaths();
+                Path[] paths = _map.getGenericPaths();
 
                 if (_selectedPathIndex >= paths.length) {
                     return;
@@ -575,7 +579,22 @@ public class MapEditorScreen implements Screen {
 
     public void dispose() {}
 
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+
+        stage.dispose();
+        stage = new Stage();
+        stage.addActor(rootTable);
+
+        inputMultiplexer.clear();
+        inputMultiplexer = new InputMultiplexer(stage,
+                new GestureDetector(new MyGestureListener()));
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
+        _orthoCamera.setToOrtho(true, width, height);
+
+        resetUnitManagers();
+    }
 
     private class MyGestureListener implements GestureDetector.GestureListener {
         @Override
@@ -588,8 +607,19 @@ public class MapEditorScreen implements Screen {
         public boolean tap(float screenX, float screenY, int count, int button) {
 
             // add latest `click` to path set
-            _map.getPath(_selectedPathIndex).set.add(new Point(screenX, screenY));
-            resetUnitManagers();
+            // TODO FIXME Maybe
+
+            Vector3 vector = new Vector3(screenX, screenY, 0);
+            _orthoCamera.unproject(vector);
+
+            Point target = new Point(vector.x, vector.y);
+            target.x /= Gdx.graphics.getWidth();
+            target.y /= Gdx.graphics.getHeight();
+
+            if (_selectedPathIndex < _map.getNumPaths()) {
+                _map.getRealPath(_selectedPathIndex).set.add(target);
+                resetUnitManagers();
+            }
 
             return true;
         }

@@ -36,8 +36,11 @@ public class MapThumbnail {
      */
     public static SpriteDrawable createThumbnail(Map map, float scale) {
 
-        Pixmap pixmap = new Pixmap((int) (scale * TowerDefense.SCREEN_WIDTH),
-                (int) (scale * TowerDefense.SCREEN_HEIGHT), Pixmap.Format.RGB565);
+//        Pixmap pixmap = new Pixmap((int) (scale * TowerDefense.SCREEN_WIDTH),
+//                (int) (scale * TowerDefense.SCREEN_HEIGHT), Pixmap.Format.RGB565);
+        int dims = 200;
+
+        Pixmap pixmap = new Pixmap(dims, dims, Pixmap.Format.RGB565);
 
         // draw border around pixmap
         pixmap.setColor(Color.PURPLE);
@@ -46,13 +49,13 @@ public class MapThumbnail {
         // draw paths
         pixmap.setColor(Color.RED);
 
-        for (Path path : map.getPaths()) {
+        for (Path path : map.getGenericPaths()) {
             for (int j = 0; j < path.set.size() - 1; j++) {
                 Point a = path.set.get(j),
                         b = path.set.get(j + 1);
 
-                int ax = (int) (a.x * scale), ay = (int) (a.y * scale),
-                    bx = (int) (b.x * scale), by = (int) (b.y * scale);
+                int ax = (int) (a.x * dims), ay = (int) (a.y * dims),
+                    bx = (int) (b.x * dims), by = (int) (b.y * dims);
 
                 pixmap.drawLine(ax, ay, bx, by);
             }

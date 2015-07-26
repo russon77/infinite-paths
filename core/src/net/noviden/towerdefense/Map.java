@@ -19,6 +19,7 @@
 
 package net.noviden.towerdefense;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -38,14 +39,19 @@ public class Map implements Serializable {
         }
     }
 
-    public Dimensions dimensions;
     private Path[] paths;
     private String name;
     private MapSettings _settings;
 
+    public Map(Path[] pPaths, String pName, MapSettings pMapSettings) {
+        this.paths = pPaths; this.name = pName; this._settings = pMapSettings;
+    }
+
     public Map(Dimensions dimensions, Path[] paths, String name) {
-        this.dimensions = dimensions;
-        this.paths = paths;
+
+        this.paths = Map.computeGenericPaths(dimensions, paths);
+
+//        this.paths = paths;
         this.name = name;
 
         _settings = new MapSettings();
@@ -61,13 +67,26 @@ public class Map implements Serializable {
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.GRAY);
 
+        float w = Gdx.graphics.getWidth(),
+                h = Gdx.graphics.getHeight();
+
         for (Path path : paths) {
+
+//            for (int i = 0; i < (path.set.size() - 1); i++) {
+//                Point a = path.set.get(i),
+//                        b = path.set.get(i + 1);
+//                shapeRenderer.line(a.x, a.y, b.x, b.y);
+//            }
+
             for (int i = 0; i < (path.set.size() - 1); i++) {
                 Point a = path.set.get(i),
                         b = path.set.get(i + 1);
-                shapeRenderer.line(a.x, a.y, b.x, b.y);
+
+                shapeRenderer.line(a.x * w, a.y * h,
+                        b.x * w, b.y * h);
             }
 
+            /*
             // draw a triangle at the origin point
             // TODO
             Point originPoint = path.set.get(0);
@@ -77,6 +96,7 @@ public class Map implements Serializable {
             // TODO
             Point endPoint = path.set.get(path.set.size() - 1);
             shapeRenderer.circle(endPoint.x, endPoint.y, 10.0f);
+            */
         }
     }
 
@@ -85,7 +105,7 @@ public class Map implements Serializable {
         for (int i = 0; i < clonedPaths.length; i++) {
             clonedPaths[i] = this.paths[i].clone();
         }
-        return new Map(this.dimensions, clonedPaths, new String(name), _settings.clone());
+        return new Map(clonedPaths, new String(name), _settings.clone());
     }
 
     public String getName() {
@@ -93,15 +113,32 @@ public class Map implements Serializable {
     }
 
     public void setPaths(Path[] paths) {
+        // TODO fix this
+//        this.paths = Map.computeGenericPaths(paths);
         this.paths = paths;
     }
 
-    public Path[] getPaths() {
-        return this.paths;
+    public Path getPath(int pIndex) {
+        if (pIndex >= this.paths.length) {
+            return null;
+        }
+
+        Path[] relativePaths = computeRelativePaths(this.paths);
+
+        return relativePaths[pIndex];
     }
 
-    public Path getPath(int pIndex) {
+    // aka getGenericPath
+    public Path getRealPath(int pIndex) {
+        if (pIndex >= this.paths.length) {
+            return null;
+        }
+
         return this.paths[pIndex];
+    }
+
+    public int getNumPaths() {
+        return this.paths.length;
     }
 
     public MapSettings getSettings() {
@@ -118,13 +155,13 @@ public class Map implements Serializable {
 
     public static Map createFromDefault(DefaultMaps id) {
         Map.Dimensions dimensions =
-                new Map.Dimensions(TowerDefense.SCREEN_WIDTH,
-                        TowerDefense.SCREEN_HEIGHT);
+                new Map.Dimensions(Gdx.graphics.getWidth(),
+                        Gdx.graphics.getHeight());
         ArrayList<Point> pathSet = new ArrayList<Point>();
         Path[] paths;
 
-        float height = TowerDefense.SCREEN_HEIGHT,
-                width = TowerDefense.SCREEN_WIDTH;
+        float height = dimensions.height,
+                width = dimensions.width;
 
         switch (id) {
             case X:
@@ -172,5 +209,53 @@ public class Map implements Serializable {
         }
 
         return null;
+    }
+
+    private static Path[] computeGenericPaths(Dimensions pDimensions, Path[] pPaths) {
+        Path[] genericPaths = new Path[pPaths.length];
+
+        for (int i = 0; i < genericPaths.length; i++) {
+            ArrayList<Point> genericPointSet = new ArrayList<Point>();
+            for (Point point : pPaths[i].set) {
+                // TODO fixme probably broken lols
+                Point genericPoint = new Point(
+                        point.x / pDimensions.width,
+                        point.y / pDimensions.height);
+
+                genericPointSet.add(genericPoint);
+            }
+
+            genericPaths[i] = new Path(genericPointSet, 5.0f);
+        }
+
+        return genericPaths;
+    }
+
+    private static Path[] computeRelativePaths(Path[] pPaths) {
+        Path[] relativePaths = new Path[pPaths.length];
+
+        for (int i = 0; i < relativePaths.length; i++) {
+            ArrayList<Point> relativePointSet = new ArrayList<Point>();
+            for (Point point : pPaths[i].set) {
+                // TODO fixme probably broken lols
+                Point genericPoint = new Point(
+                        point.x * Gdx.graphics.getWidth(),
+                        point.y * Gdx.graphics.getHeight());
+
+                relativePointSet.add(genericPoint);
+            }
+
+            relativePaths[i] = new Path(relativePointSet, 5.0f);
+        }
+
+        return relativePaths;
+    }
+
+    public Path[] getPaths() {
+        return computeRelativePaths(this.paths);
+    }
+
+    public Path[] getGenericPaths() {
+        return this.paths;
     }
 }

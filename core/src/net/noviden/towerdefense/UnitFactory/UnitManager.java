@@ -179,4 +179,12 @@ public class UnitManager {
             spawnIndex++;
         }
     }
+
+    public void updatePath(Path pNewPath) {
+        this.path = pNewPath;
+
+        for (Unit unit : units) {
+            unit.updatePath(pNewPath);
+        }
+    }
 }

@@ -35,7 +35,7 @@ public class HomingTurret extends BaseTurret {
     private static final float BASE_DAMAGE = 100.0f;
     private static final float BASE_COOLDOWN = 5.0f;
 
-    private static final String UNIQUE_MODIFIER_NAME = "Extra activeMissiles";
+    private static final String UNIQUE_MODIFIER_NAME = "Bonus Missiles";
 
     private int extraMissilesPerShot;
 
