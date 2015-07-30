@@ -20,45 +20,45 @@
 package net.noviden.towerdefense;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 
 public class TowerDefense extends Game {
 
-    public static final float SCREEN_WIDTH = 1000.0f, SCREEN_HEIGHT = 1000.0f;
+//    public static final float SCREEN_WIDTH = 1000.0f, SCREEN_HEIGHT = 1000.0f;
 
     public ArrayList<Map> maps;
 
     public void create() {
 
-        maps = null;
+        maps = new ArrayList<Map>();
 
-        // attempt to serialize from disk
-        try {
-            FileInputStream fileInputStream = new FileInputStream("maps.ser");
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            maps = (ArrayList<Map>) objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
+        FileHandle[] files = Gdx.files.local("maps/").list();
+        for (FileHandle file : files) {
+            Map tmpMap = MapReader.createMapFromFile(file);
 
-            System.out.println("Successfully loaded maps!");
-        } catch (IOException i) {
-            i.printStackTrace();
-        } catch (ClassNotFoundException c) {
-            c.printStackTrace();
+            if (tmpMap != null)
+                maps.add(tmpMap);
+//            maps.add(MapReader.createMapFromFile(file));
         }
 
         // initialize settings
         GameSettings.initialize();
 
-        if (maps == null) {
-            maps = new ArrayList<Map>();
-
+        // create default maps, add them to game
+        if (maps.size() == 0) {
             maps.add(Map.createFromDefault(Map.DefaultMaps.X));
             maps.add(Map.createFromDefault(Map.DefaultMaps.Z));
             maps.add(Map.createFromDefault(Map.DefaultMaps.STAR));
@@ -73,23 +73,15 @@ public class TowerDefense extends Game {
 
     public void dispose() {
 
-        // serialize/write to disk
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream("maps.ser");
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(maps);
-            objectOutputStream.close();
-            fileOutputStream.close();
+        FileHandle fileHandle;
+        for (Map map : maps) {
+            fileHandle = Gdx.files.local("maps/").child(map.getName());
 
-            System.out.println("Serialized maps to disk!");
-
-            GameSettings.writeSettingsToFile();
-
-            System.out.println("Serialized settings to disk!");
-
-        } catch (IOException e) {
-            System.out.println("ERROR: " + e.getMessage());
-            e.printStackTrace();
+            MapWriter.writeMapToFile(map, fileHandle);
         }
+
+        GameSettings.writeSettingsToFile();
+
+        System.out.println("Serialized settings to disk!");
     }
 }
