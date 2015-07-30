@@ -187,18 +187,37 @@ public class MapEditorScreen implements Screen {
         final Table disableTurretsTable = new Table();
         disableTurretsTable.setVisible(false);
 
+        // TODO set box to checked if setting already exists
+
         final CheckBox disableChaingunTurretCheckbox =
                 new CheckBox("Disable Chaingun", skin);
+        disableChaingunTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.CHAINGUN));
+
         final CheckBox disableBasicTurretCheckbox =
                 new CheckBox("Disable Basic", skin);
+        disableBasicTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.NORMAL));
+
         final CheckBox disableBuffTurretCheckbox =
                 new CheckBox("Disable Buff", skin);
+        disableBuffTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.BUFF));
+
         final CheckBox disableHomingTurretCheckbox =
                 new CheckBox("Disable Homing", skin);
+        disableHomingTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.HOMING));
+
         final CheckBox disableRocketTurretCheckbox =
                 new CheckBox("Disable Rocket", skin);
+        disableRocketTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.ROCKET));
+
         final CheckBox disableShotgunTurretCheckbox =
                 new CheckBox("Disable Shotgun", skin);
+        disableShotgunTurretCheckbox.setChecked(
+                currentSettings.isTurretTypeDisabled(BaseTurret.Type.SHOTGUN));
 
         disableTurretsTable.add(disableChaingunTurretCheckbox);
         disableTurretsTable.row();

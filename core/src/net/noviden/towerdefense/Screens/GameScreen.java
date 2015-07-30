@@ -653,6 +653,11 @@ public class GameScreen implements Screen {
 
 				break;
 			case QUICK_SELL:
+				// error checking: catch null pointer exception if no turret is selected
+				if (player.getTurretSelectedForUpgrade() == null) {
+					return;
+				}
+
 				player.addResources(player.getTurretSelectedForUpgrade().getWorth());
 				turretManager.removeTurret(player.getTurretSelectedForUpgrade());
 				player.setState(Player.State.TURRET_PLACE);

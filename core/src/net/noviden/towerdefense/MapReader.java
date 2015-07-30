@@ -20,6 +20,8 @@ package net.noviden.towerdefense;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import net.noviden.towerdefense.TurretFactory.BaseTurret;
+
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,6 +147,7 @@ public class MapReader {
 
     private static HashMap<String, Integer> _settingsMap;
 
+    // thanks source = 1.6 UGHHHHHH plz switch(string) nao
     private static MapSettings parseSettingsFromReader(BufferedReader pReader) {
 
         if (_settingsMap == null) {
@@ -157,9 +160,20 @@ public class MapReader {
 
             _settingsMap.put(MapSettings.PLAYER_INITIAL_RESOURCES_KEY, 4);
             _settingsMap.put(MapSettings.PLAYER_INITIAL_HEALTH_KEY, 5);
+
+            _settingsMap.put(BaseTurret.Type.BUFF.toString(), 6);
+            _settingsMap.put(BaseTurret.Type.NORMAL.toString(), 7);
+            _settingsMap.put(BaseTurret.Type.ROCKET.toString(), 8);
+            _settingsMap.put(BaseTurret.Type.CHAINGUN.toString(), 9);
+            _settingsMap.put(BaseTurret.Type.HOMING.toString(), 10);
+            _settingsMap.put(BaseTurret.Type.SHOTGUN.toString(), 11);
         }
 
         MapSettings mapSettings = new MapSettings();
+
+        BaseTurret.Type[] disabledTurretTypes;
+        ArrayList<BaseTurret.Type> disabledTurretTypeList =
+                new ArrayList<BaseTurret.Type>();
 
         String s, key, value;
         int splitIndex;
@@ -182,7 +196,7 @@ public class MapReader {
                 }
 
                 key = s.substring(0, splitIndex).trim();
-                value = s.substring(splitIndex + 1, s.length() - 1).trim();
+                value = s.substring(splitIndex + 1, s.length()).trim();
 
                 // check for error in key existence
                 if (!_settingsMap.containsKey(key)) {
@@ -221,11 +235,51 @@ public class MapReader {
 
                         break;
 
+                    case 6:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.BUFF);
+
+                        break;
+                    case 7:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.NORMAL);
+
+                        break;
+                    case 8:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.ROCKET);
+
+                        break;
+                    case 9:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.CHAINGUN);
+
+                        break;
+                    case 10:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.HOMING);
+
+                        break;
+                    case 11:
+                        if (Boolean.parseBoolean(value))
+                            disabledTurretTypeList.add(BaseTurret.Type.SHOTGUN);
+
+                        break;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // insert any disabled turrets
+        disabledTurretTypes = new BaseTurret.Type[disabledTurretTypeList.size()];
+        disabledTurretTypes = disabledTurretTypeList.toArray(disabledTurretTypes);
+
+        // DEBUG only
+//        for (BaseTurret.Type type : disabledTurretTypes)
+//            System.out.println(type.toString());
+
+        mapSettings.setDisabledTurretTypes(disabledTurretTypes);
 
         return mapSettings;
     }
