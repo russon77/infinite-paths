@@ -140,6 +140,8 @@ public class MapEditorSelectorScreen implements Screen {
                 if (_selectedMap != null) {
                     towerDefense.maps.remove(_selectedMap);
                     updateMapList();
+
+                    _selectedMap = null;
                 }
             }
         });
