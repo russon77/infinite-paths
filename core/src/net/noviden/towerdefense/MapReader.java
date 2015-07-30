@@ -78,10 +78,9 @@ public class MapReader {
                         Path tmpPath = parsePathFromReader(reader);
                         if (tmpPath != null)
                             paths.add(tmpPath);
-//                        paths.add(parsePathFromReader(reader));
 
                         break;
-                    case 1:
+                    case 2:
                         mapSettings = parseSettingsFromReader(reader);
 
                         break;
@@ -94,15 +93,14 @@ public class MapReader {
             return null;
         }
 
-        if (mapSettings == null) {
-            // if an error occurred, or if there were no settings supplied in the file,
-            // default to initializing a default mapsettings instance
-            mapSettings = new MapSettings();
-        }
-
         // error: no paths supplied on map
         if (paths.size() == 0) {
             return null;
+        }
+
+        // error: map settings aren't supplied in file
+        if (mapSettings == null) {
+//            mapSettings = new MapSettings();
         }
 
         // convert arraylist to array -- bleh
@@ -155,8 +153,10 @@ public class MapReader {
             _settingsMap.put(MapSettings.UNIT_SPAWN_RATE_KEY, 0);
             _settingsMap.put(MapSettings.UNIT_INITIAL_DAMAGE_KEY, 1);
             _settingsMap.put(MapSettings.UNIT_INITIAL_SPEED_KEY, 2);
+            _settingsMap.put(MapSettings.UNIT_INITIAL_HEALTH_KEY, 3);
 
-            // TODO fill me in
+            _settingsMap.put(MapSettings.PLAYER_INITIAL_RESOURCES_KEY, 4);
+            _settingsMap.put(MapSettings.PLAYER_INITIAL_HEALTH_KEY, 5);
         }
 
         MapSettings mapSettings = new MapSettings();
@@ -167,30 +167,66 @@ public class MapReader {
 
         try {
             while (pReader.ready()) {
-                s = pReader.readLine();
+                s = pReader.readLine().trim();
+
+                if (s.equals("ENDSETTINGS")) {
+
+                    break;
+                }
 
                 splitIndex = s.indexOf(splitKey);
+
+                // check for error in finding split token
+                if (splitIndex < 0) {
+                    continue;
+                }
+
                 key = s.substring(0, splitIndex).trim();
                 value = s.substring(splitIndex + 1, s.length() - 1).trim();
 
-                // TODO fill me in
+                // check for error in key existence
+                if (!_settingsMap.containsKey(key)) {
+                    continue;
+                }
 
                 switch (_settingsMap.get(key)) {
+                    case 0:
+                        mapSettings.putValue(MapSettings.UNIT_SPAWN_RATE_KEY,
+                                Float.parseFloat(value));
+
+                        break;
+                    case 1:
+                        mapSettings.putValue(MapSettings.UNIT_INITIAL_DAMAGE_KEY,
+                                Float.parseFloat(value));
+
+                        break;
                     case 2:
                         mapSettings.putValue(MapSettings.UNIT_INITIAL_SPEED_KEY,
                                 Float.parseFloat(value));
 
                         break;
+                    case 3:
+                        mapSettings.putValue(MapSettings.UNIT_INITIAL_HEALTH_KEY,
+                                Float.parseFloat(value));
 
+                        break;
+                    case 4:
+                        mapSettings.putValue(MapSettings.PLAYER_INITIAL_RESOURCES_KEY,
+                                Float.parseFloat(value));
+
+                        break;
+                    case 5:
+                        mapSettings.putValue(MapSettings.PLAYER_INITIAL_HEALTH_KEY,
+                                Float.parseFloat(value));
+
+                        break;
 
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-            return null;
         }
 
-        return null;
+        return mapSettings;
     }
 }
