@@ -187,8 +187,6 @@ public class MapEditorScreen implements Screen {
         final Table disableTurretsTable = new Table();
         disableTurretsTable.setVisible(false);
 
-        // TODO set box to checked if setting already exists
-
         final CheckBox disableChaingunTurretCheckbox =
                 new CheckBox("Disable Chaingun", skin);
         disableChaingunTurretCheckbox.setChecked(
