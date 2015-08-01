@@ -66,6 +66,7 @@ public class MapEditorScreen implements Screen {
 
     private int _selectedPathIndex;
 
+    private boolean _displayUnits;
     private UnitManager[] _unitManagers;
     private MapSettings _mapSettings;
 
@@ -89,6 +90,9 @@ public class MapEditorScreen implements Screen {
         _mapSettings = new MapSettings();
         _mapSettings.putValue(MapSettings.UNIT_INITIAL_SPEED_KEY, 150.0f);
 
+        // set units display to true initially
+        _displayUnits = true;
+
         // instantiate/create unit managers for paths
         resetUnitManagers();
 
@@ -111,6 +115,7 @@ public class MapEditorScreen implements Screen {
         TextButton deleteLastNodeOnPathButton =
                 new TextButton("Delete End Node", skin);
         TextButton displayOptionsButton = new TextButton("Options", skin);
+        TextButton toggleUnitsDisplayButton = new TextButton("Toggle Units Display", skin);
 
         pathAddDeleteTable.add(deletePathButton);
         pathAddDeleteTable.add(addPathButton);
@@ -119,6 +124,7 @@ public class MapEditorScreen implements Screen {
         pathAddDeleteTable.row();
         pathAddDeleteTable.add(deleteLastNodeOnPathButton).expandX().left();
         pathAddDeleteTable.add(displayOptionsButton);
+        pathAddDeleteTable.add(toggleUnitsDisplayButton);
 
         Table pathSelectorTable = new Table();
 
@@ -511,6 +517,13 @@ public class MapEditorScreen implements Screen {
                 transformationsTable.setVisible(!transformationsTable.isVisible());
             }
         });
+
+        toggleUnitsDisplayButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                _displayUnits = !_displayUnits;
+            }
+        });
     }
 
     public void render(float deltaTime) {
@@ -543,8 +556,6 @@ public class MapEditorScreen implements Screen {
             if (paths[i].set.size() > 0) {
                 Point lastPoint = paths[i].set.get(paths[i].set.size() - 1);
 
-//                _shapeRenderer.circle(lastPoint.x, lastPoint.y, 8.0f);
-
                 float length = 12.0f;
                 _shapeRenderer.triangle(lastPoint.x, lastPoint.y,
                         lastPoint.x - length, lastPoint.y - length,
@@ -555,10 +566,12 @@ public class MapEditorScreen implements Screen {
             }
         }
 
-        for (UnitManager unitManager : _unitManagers) {
-            if (unitManager != null) {
-                unitManager.act(deltaTime, null);
-                unitManager.draw(_shapeRenderer);
+        if (_displayUnits) {
+            for (UnitManager unitManager : _unitManagers) {
+                if (unitManager != null) {
+                    unitManager.act(deltaTime, null);
+                    unitManager.draw(_shapeRenderer);
+                }
             }
         }
 
@@ -624,7 +637,6 @@ public class MapEditorScreen implements Screen {
         public boolean tap(float screenX, float screenY, int count, int button) {
 
             // add latest `click` to path set
-            // TODO FIXME Maybe
 
             Vector3 vector = new Vector3(screenX, screenY, 0);
             _orthoCamera.unproject(vector);
