@@ -22,7 +22,7 @@ package net.noviden.towerdefense.TurretFactory;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.UnitFactory.UnitManager;
 

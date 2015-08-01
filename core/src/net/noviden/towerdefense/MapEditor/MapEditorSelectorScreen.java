@@ -33,7 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.MapCreator.MapCreatorScreen;
 import net.noviden.towerdefense.MapCreator.MapThumbnail;
 import net.noviden.towerdefense.Screens.MainMenuScreen;

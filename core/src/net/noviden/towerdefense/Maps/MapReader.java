@@ -16,10 +16,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Maps;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import net.noviden.towerdefense.MapSettings;
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 
 import java.io.BufferedReader;
@@ -49,7 +52,7 @@ public class MapReader {
 
     private static HashMap<String, Integer> _tokenMap;
 
-    public static Map createMapFromFile(FileHandle pFileHandle) {
+    public static net.noviden.towerdefense.Maps.Map createMapFromFile(FileHandle pFileHandle) {
 
         if (_tokenMap == null) {
             _tokenMap = new HashMap<String, Integer>();
@@ -110,7 +113,7 @@ public class MapReader {
         for (int i = 0; i < returnablePaths.length; i++)
             returnablePaths[i] = paths.get(i);
 
-        return new Map(returnablePaths, name, mapSettings);
+        return new net.noviden.towerdefense.Maps.Map(returnablePaths, name, mapSettings);
     }
 
     // read until "ENDPATH", at which point return constructed path

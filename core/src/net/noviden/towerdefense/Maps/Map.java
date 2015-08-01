@@ -17,11 +17,15 @@
  */
 
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Maps;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import net.noviden.towerdefense.MapSettings;
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Point;
 
 import java.io.Serializable;
 import java.util.ArrayList;

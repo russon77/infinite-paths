@@ -16,17 +16,20 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.noviden.towerdefense;
+package net.noviden.towerdefense.Maps;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import net.noviden.towerdefense.MapSettings;
+import net.noviden.towerdefense.Path;
+import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
 
 import java.io.Writer;
 
 public class MapWriter {
 
-    public static void writeMapToFile(Map pMap, FileHandle pFileHandle) {
+    public static void writeMapToFile(net.noviden.towerdefense.Maps.Map pMap, FileHandle pFileHandle) {
         try {
             Writer writer = pFileHandle.writer(false);
 

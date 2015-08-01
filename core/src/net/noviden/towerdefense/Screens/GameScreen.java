@@ -42,7 +42,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import net.noviden.towerdefense.CollisionManager;
 import net.noviden.towerdefense.GameSettings;
-import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.MapTransformation.Transformation;
 import net.noviden.towerdefense.MapTransformation.TurretTransformation;
 import net.noviden.towerdefense.MissileFactory.MissileManager;

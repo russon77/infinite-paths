@@ -23,21 +23,23 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+import net.noviden.towerdefense.Maps.MapWriter;
+
 import java.util.ArrayList;
 
 public class TowerDefense extends Game {
 
 //    public static final float SCREEN_WIDTH = 1000.0f, SCREEN_HEIGHT = 1000.0f;
 
-    public ArrayList<Map> maps;
+    public ArrayList<net.noviden.towerdefense.Maps.Map> maps;
 
     public void create() {
 
-        maps = new ArrayList<Map>();
+        maps = new ArrayList<net.noviden.towerdefense.Maps.Map>();
 
         FileHandle[] files = Gdx.files.local("maps/").list();
         for (FileHandle file : files) {
-            Map tmpMap = MapReader.createMapFromFile(file);
+            net.noviden.towerdefense.Maps.Map tmpMap = net.noviden.towerdefense.Maps.MapReader.createMapFromFile(file);
 
             if (tmpMap != null)
                 maps.add(tmpMap);
@@ -49,9 +51,9 @@ public class TowerDefense extends Game {
 
         // create default maps, add them to game
         if (maps.size() == 0) {
-            maps.add(Map.createFromDefault(Map.DefaultMaps.X));
-            maps.add(Map.createFromDefault(Map.DefaultMaps.Z));
-            maps.add(Map.createFromDefault(Map.DefaultMaps.STAR));
+            maps.add(net.noviden.towerdefense.Maps.Map.createFromDefault(net.noviden.towerdefense.Maps.Map.DefaultMaps.X));
+            maps.add(net.noviden.towerdefense.Maps.Map.createFromDefault(net.noviden.towerdefense.Maps.Map.DefaultMaps.Z));
+            maps.add(net.noviden.towerdefense.Maps.Map.createFromDefault(net.noviden.towerdefense.Maps.Map.DefaultMaps.STAR));
         }
 
         this.setScreen(new net.noviden.towerdefense.Screens.MainMenuScreen(this));
@@ -64,7 +66,7 @@ public class TowerDefense extends Game {
     public void dispose() {
 
         FileHandle fileHandle;
-        for (Map map : maps) {
+        for (net.noviden.towerdefense.Maps.Map map : maps) {
             fileHandle = Gdx.files.local("maps/").child(map.getName());
 
             MapWriter.writeMapToFile(map, fileHandle);

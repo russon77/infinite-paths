@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
-import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 

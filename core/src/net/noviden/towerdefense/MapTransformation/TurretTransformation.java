@@ -18,7 +18,7 @@
 
 package net.noviden.towerdefense.MapTransformation;
 
-import net.noviden.towerdefense.Map;
+import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 import net.noviden.towerdefense.TurretFactory.BaseTurret;
