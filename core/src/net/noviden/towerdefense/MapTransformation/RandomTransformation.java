@@ -18,11 +18,25 @@
 
 package net.noviden.towerdefense.MapTransformation;
 
+import com.badlogic.gdx.Gdx;
+
 import net.noviden.towerdefense.Maps.Map;
 import net.noviden.towerdefense.Path;
 import net.noviden.towerdefense.Point;
 
 public class RandomTransformation implements Transformation {
+
+    private enum func {
+        SIN,
+        COS,
+        TAN
+    }
+
+    private func _randomSeed;
+
+    public RandomTransformation() {
+        _randomSeed = func.values()[(int) (3 * Math.random())];
+    }
 
     public void transform(Map pMap, float pDelta) {
         float tmpX, tmpY;
@@ -31,14 +45,14 @@ public class RandomTransformation implements Transformation {
             for (Point point : path.set) {
                 tmpX = point.x + ((-1.0f) + (2.0f * (float) Math.random())) * pDelta;
 
-//                if (tmpX >= 0.0f && tmpX <= pMap.dimensions.width) {
-//                    point.x = tmpX;
-//                }
-//
-//                tmpY = point.y + ((-1.0f) + (2.0f * (float) Math.random())) * pDelta;
-//                if (tmpY >= 0.0f && tmpY <= pMap.dimensions.height) {
-//                    point.y = tmpY;
-//                }
+                if (tmpX >= 0.0f && tmpX <= Gdx.graphics.getWidth()) {
+                    point.x = tmpX;
+                }
+
+                tmpY = point.y + ((-1.0f) + (2.0f * (float) Math.random())) * pDelta;
+                if (tmpY >= 0.0f && tmpY <= Gdx.graphics.getHeight()) {
+                    point.y = tmpY;
+                }
             }
         }
     }
