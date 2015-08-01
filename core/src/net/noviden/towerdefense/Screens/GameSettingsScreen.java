@@ -89,9 +89,6 @@ public class GameSettingsScreen implements Screen {
         volumeTable.add(sfxVolumeLabel);
         volumeTable.add(sfxVolumeSlider).pad(8.0f);
 
-        final CheckBox fullscreenCheckBox = new CheckBox(" Fullscreen", skin);
-        fullscreenCheckBox.setChecked(GameSettings.isFullScreen());
-
         Table keyboardShortcutsTable = new Table();
 
         HashMap<Integer, GameSettings.Actions> currentShortcutMap = GameSettings.getShortcutMap();
@@ -147,8 +144,6 @@ public class GameSettingsScreen implements Screen {
         // finally, construct display table
         rootTable.add(volumeTable);
         rootTable.row();
-        rootTable.add(fullscreenCheckBox);
-        rootTable.row();
         rootTable.add(keyboardShortcutsScrollPane);
         rootTable.row();
         rootTable.add(exitFunctionalityTable);
@@ -170,8 +165,6 @@ public class GameSettingsScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // attempt to save settings
-
-                GameSettings.setFullScreen(fullscreenCheckBox.isChecked());
 
                 GameSettings.setMusicVolume(musicVolumeSlider.getPercent());
 

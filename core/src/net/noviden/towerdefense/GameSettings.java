@@ -36,7 +36,6 @@ public class GameSettings implements Serializable {
     private static final String AUDIO_ENABLED_KEY = "audio_enabled";
     private static final String SFX_VOLUME_KEY = "sfx_volume",
                     MUSIC_VOLUME_KEY = "music_volume";
-    private static final String FULLSCREEN_ENABLED_KEY = "fullscreen";
 
     public enum Actions {
         PAUSE_GAME,
@@ -175,14 +174,6 @@ public class GameSettings implements Serializable {
 
     public static float getSoundVolume() {
         return _instance._preferences.getFloat(SFX_VOLUME_KEY);
-    }
-
-    public static void setFullScreen(boolean pIsEnabled) {
-        _instance._preferences.putBoolean(FULLSCREEN_ENABLED_KEY, pIsEnabled);
-    }
-
-    public static boolean isFullScreen() {
-        return _instance._preferences.getBoolean(FULLSCREEN_ENABLED_KEY);
     }
 
     public static Actions getShortcutAction(int pMapKey) {
